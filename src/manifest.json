@@ -1,0 +1,21 @@
+{
+  "name": "override",
+  "description": "a better way to organize your browser and manage your notes and tasks in one place.",
+  "version": null,
+  "manifest_version": 2,
+  "icons": {
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  },
+  "browser_action": {
+    "default_title": "override",
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "chrome_url_overrides": {
+    "newtab": "tab/tab.html"
+  },
+  "permissions": ["tabs", "storage"]
+}

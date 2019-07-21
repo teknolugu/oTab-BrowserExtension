@@ -1,0 +1,21 @@
+@mixin slideTransition($direction, $value: 10px, $duration: 0.3s) {
+  $translateOrientation: translateX($value);
+  @if $direction == left or $direction == right {
+    $translateOrientation: translateX($value);
+  } @else {
+    $translateOrientation: translateY($value);
+  }
+  .slide-fade-#{$direction}-enter-active {
+    transition: all $duration ease;
+    overflow: hidden;
+  }
+  .slide-fade-#{$direction}-leave-active {
+    transition: all $duration ease;
+  }
+  .slide-fade-#{$direction}-enter,
+  .slide-fade-#{$direction}-leave-to {
+    transform: $translateOrientation;
+    overflow: hidden;
+    opacity: 0;
+  }
+}

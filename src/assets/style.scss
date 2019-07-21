@@ -1,0 +1,29 @@
+#app {
+  height: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  overflow: hidden;
+}
+.nb {
+  border: none !important;
+}
+.bb {
+  border-bottom: 1px solid #eee;
+}
+.br {
+  border-right: 1px solid #eee;
+}
+.right {
+  float: right !important;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.font-weight-bold {
+  font-weight: 600;
+}
