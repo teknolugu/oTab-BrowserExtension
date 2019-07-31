@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import 'element-ui/lib/theme-chalk/reset.css';
 import 'element-ui/lib/theme-chalk/index.css';
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import {
   Dialog,
   Menu,
@@ -26,7 +27,7 @@ import {
   MessageBox,
   Message,
 } from 'element-ui';
-
+Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(Dialog);
 Vue.use(Option);
 Vue.use(Scrollbar);

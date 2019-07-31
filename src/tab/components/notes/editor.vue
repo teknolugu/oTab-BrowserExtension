@@ -33,7 +33,7 @@
             <span>Blockquote</span>
           </el-button>
           <el-button size="mini" :class="{ 'is-active': isActive.code_block() }" class="menubar__button" @click="commands.code_block">
-            <span> </> </span>
+            <span> <> </span>
           </el-button>
         </div>
       </div>

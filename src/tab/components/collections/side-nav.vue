@@ -1,160 +1,150 @@
 <template>
-  <div class="open-tabs">
-    <p class="open-tabs-title">Open Tabs</p>
-    <Draggable :clone="cloneTab" class="list-group" :list="openTabs" :group="groupOptions" style="min-height: 200px" v-if="openTabs.length !== 0">
-      <el-card shadow="never" class="tabs-card" v-for="(tab, index) in openTabs" :key="index + tab.url">
-        <div class="tabs-favicon">
-          <el-image :src="tab.favIconUrl" v-if="tab.favIconUrl">
-            <i class="el-icon-picture-outline-round" slot="error"></i>
-          </el-image>
-          <i class="el-icon-picture-outline-round" v-else></i>
+    <div class="open-tabs">
+        <p class="open-tabs-title">Open Tabs</p>
+        <Draggable :clone="cloneTab" class="list-group" :list="openTabs" :group="groupOptions" style="min-height: 200px" v-if="openTabs.length !== 0">
+            <el-card shadow="never" class="tabs-card" v-for="(tab, index) in openTabs" :key="index + tab.url">
+                <div class="tabs-favicon">
+                    <el-image :src="tab.favIconUrl" v-if="tab.favIconUrl">
+                        <i class="el-icon-picture-outline-round" slot="error"></i>
+                    </el-image>
+                    <i class="el-icon-picture-outline-round" v-else></i>
+                </div>
+                <div class="tabs-content">
+                    <p class="tabs-title">{{ tab.title }}</p>
+                    <p class="tabs-url">{{ tab.url }}</p>
+                </div>
+                <unicon name="grip-horizontal-line" fill="#a6a6a6" />
+            </el-card>
+        </Draggable>
+        <div class="no-open-tabs" v-else>
+            <div class="no-open-tabs-icon">
+                <span>
+                    <unicon height="35px" width="35px" name="window"></unicon>
+                </span>
+            </div>
+            <div class="no-open-tabs-content">
+                <p>There's no open tabs</p>
+            </div>
         </div>
-        <div class="tabs-content">
-          <p class="tabs-title">{{ tab.title }}</p>
-          <p class="tabs-url">{{ tab.url }}</p>
-        </div>
-        <unicon name="grip-horizontal-line" fill="#a6a6a6" />
-      </el-card>
-    </Draggable>
-    <div class="no-open-tabs" v-else>
-      <div class="no-open-tabs-icon">
-        <span>
-          <unicon height="35px" width="35px" name="window"></unicon>
-        </span>
-      </div>
-      <div class="no-open-tabs-content">
-        <p>There's no open tabs</p>
-      </div>
     </div>
-  </div>
 </template>
 <script>
 import Draggable from 'vuedraggable';
+import openTabs from '../../../mixins/open-tabs'
 export default {
-  components: { Draggable },
-  data: () => ({
-    openTabs: [],
-    groupOptions: { name: 'tabs', pull: 'clone', put: false, revertClone: true },
-  }),
-  methods: {
-    cloneTab(tab) {
-      let copyTab = { ...tab };
-      return copyTab;
+    components: { Draggable },
+    mixins: [openTabs],
+    data: () => ({
+        groupOptions: { name: 'tabs', pull: 'clone', put: false, revertClone: true },
+    }),
+    methods: {
+        cloneTab(tab) {
+            let copyTab = { ...tab };
+            return copyTab;
+        },
     },
-    async getAllTabs() {
-      try {
-        let tabs = await this.$browser.tabs.query({});
-        const regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        let allTabs = tabs.map(({ title, url, favIconUrl }) => ({ title, url, favIconUrl })).filter(tab => regex.test(tab.url) === true);
-        return allTabs;
-      } catch (err) {
-        return err;
-      }
+    watch: {
+        openTabs: {
+            handler(tabs) {
+                this.$emit('change', tabs)
+            },
+            deep: true
+        },
     },
-  },
-  mounted() {
-    this.getAllTabs().then(allTabs => (this.openTabs = allTabs));
-    this.$browser.tabs.onUpdated.addListener(async (id, info, tab) => {
-      if (info.status === 'complete') {
-        this.openTabs = await this.getAllTabs();
-      }
-    });
-    this.$browser.tabs.onRemoved.addListener(id => {
-      let index = this.openTabs.findIndex(tab => tab.id === id);
-      this.openTabs.splice(index, 1);
-    });
-  },
 };
 </script>
 <style lang="scss">
 .no-open-tabs {
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  justify-content: center;
-  padding: 20px;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    justify-content: center;
+    padding: 20px;
+    align-items: center;
 }
+
 .no-open-tabs-content {
-  font-size: 16px;
-  font-weight: 500;
-  color: #818181;
+    font-size: 16px;
+    font-weight: 500;
+    color: #818181;
 }
+
 .no-open-tabs-icon {
-  svg {
-    vertical-align: bottom;
-    fill: #9e9e9e;
-  }
-  margin-bottom: 5px;
-  padding: 20px;
-  background: #f5f5f5;
-  border-radius: 50px;
+    svg {
+        vertical-align: bottom;
+        fill: #9e9e9e;
+    }
+
+    margin-bottom: 5px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 50px;
 }
 
 .open-tabs-title {
-  margin: 0 20px;
-  font-weight: 600;
+    margin: 0 20px;
+    font-weight: 600;
 }
 
 .tabs-favicon {
-  margin-right: 10px;
+    margin-right: 10px;
 
-  .el-image {
-    width: 25px;
-  }
+    .el-image {
+        width: 25px;
+    }
 
-  i {
-    font-size: 25px;
-  }
+    i {
+        font-size: 25px;
+    }
 }
 
 .tabs-title {
-  font-weight: 600;
-  line-height: 1.4;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 .tabs-url {
-  color: #606266;
-  font-size: 13px;
-  line-height: 1.3;
+    color: #606266;
+    font-size: 13px;
+    line-height: 1.3;
 }
 
 .tabs-content {
-  width: calc(100% - 65px);
-  margin-right: 10px;
+    width: calc(100% - 65px);
+    margin-right: 10px;
 
-  p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0;
-  }
+    p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+    }
 }
 
 .tabs-card {
-  cursor: -webkit-grab;
-  transition: border 0.2s ease !important;
+    cursor: -webkit-grab;
+    transition: border 0.2s ease !important;
 
-  &:hover {
-    background-color: #fafcff;
-    border-left: 3px solid #20a0ff;
-  }
+    &:hover {
+        background-color: #fafcff;
+        border-left: 3px solid #20a0ff;
+    }
 
-  margin: 10px 20px 0 20px;
+    margin: 10px 20px 0 20px;
 
-  .el-card__body {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    padding: 13px;
-  }
+    .el-card__body {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        padding: 13px;
+    }
 
-  .tabs-favicon {
-    display: inline-block;
-  }
+    .tabs-favicon {
+        display: inline-block;
+    }
 
-  .tabs-content {
-    display: inline-block;
-  }
+    .tabs-content {
+        display: inline-block;
+    }
 }
 </style>

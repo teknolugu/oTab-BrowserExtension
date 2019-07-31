@@ -2,27 +2,13 @@ import Vue from 'vue';
 import App from './App';
 import store from '../store/';
 import '../assets/style.scss';
+import '../assets/fonts.css'
 
 // Element UI
 import './element'
 
-import Unicon from 'vue-unicons';
-import {
-  uniGripHorizontalLine,
-  uniLayers,
-  uniNotes,
-  uniWindow,
-  uniPen,
-  uniMultiply,
-  uniFilePlusAlt,
-  uniBold,
-  uniUnderline,
-  uniItalic,
-  uniCode,
-  uniClipboardNotes,
-} from 'vue-unicons/src/icons';
-Unicon.add([uniGripHorizontalLine, uniLayers, uniNotes, uniWindow, uniPen, uniMultiply, uniFilePlusAlt, uniBold, uniUnderline, uniItalic, uniCode, uniClipboardNotes]);
-Vue.use(Unicon);
+// Icons
+import './icons'
 
 global.browser = require('webextension-polyfill');
 

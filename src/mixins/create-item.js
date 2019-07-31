@@ -13,7 +13,7 @@ export default {
         inputValidator: this.inputValidator,
         inputErrorMessage: 'Invalid Name',
         beforeClose: (action, instance, done) => {
-          if (action === 'confirm') this.$store.commit(commitName, instance.inputValue);
+          if (action === 'confirm') this.$store.commit(commitName, {title: instance.inputValue});
           done();
         },
       })

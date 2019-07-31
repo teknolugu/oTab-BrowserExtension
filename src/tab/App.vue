@@ -8,9 +8,6 @@
             <Collections v-if="activeMenu === '0'"></Collections>
             <Notes v-if="activeMenu === '1'"></Notes>
             <Tasks v-if="activeMenu === '2'"></Tasks>
-            <template v-else>
-              <p>it's empty</p>
-            </template>
           </keep-alive>
         </transition>
       </template>
@@ -39,7 +36,7 @@ import Collections from './views/collections';
 import Notes from './views/notes';
 import Tasks from './views/tasks';
 import Bus from './utils/bus';
-import newBoard from './mixins/new-board';
+import newBoard from '../mixins/new-board';
 export default {
   mixins: [newBoard],
   components: { Menu, Collections, Tasks, Notes },
@@ -48,14 +45,14 @@ export default {
       handler(val) {
         if (!this.$store.state.firstChange) {
           this.allData.boards.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
-          this.$browser.storage.sync.set({ myApp: this.allData });
+          this.$browser.storage.sync.set({ oTabData: this.allData });
         }
       },
       deep: true,
     },
     activeBoard(val) {
       Bus.$emit('changeBoard', val);
-    },
+    }
   },
   data: () => ({
     isEmpty: false,
@@ -73,8 +70,10 @@ export default {
   },
   async created() {
     let storage = this.$browser.storage.sync;
-    let data = await storage.get('myApp');
-    this.isEmpty = data.myApp.boards.length === 0 ? true : false;
+    let data = await storage.get('oTabData');
+    let menu = await storage.get('oTabMenu');
+    this.$store.commit('activeMenu', menu.oTabMenu)
+    this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
     this.$store.dispatch('setAllData', { data, isEmpty: this.isEmpty });
   },
 };

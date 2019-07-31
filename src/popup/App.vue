@@ -27,18 +27,17 @@ export default {
     }),
     async created() {
         let storage = this.$browser.storage.sync;
-        let data = await storage.get('myApp');
-        this.isEmpty = data.myApp.boards.length === 0 ? true : false;
+        let data = await storage.get('oTabData');
+        this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
         this.$store.dispatch('setAllData', { data, isEmpty: this.isEmpty });
         this.isUrl = await this.checkUrl()
-        console.log(this.$store)
     },
     watch: {
         allData: {
             handler(val) {
                 if (!this.$store.state.firstChange) {
                     this.allData.boards.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
-                    this.$browser.storage.sync.set({ myApp: this.allData });
+                    this.$browser.storage.sync.set({ oTabData: this.allData });
                 }
             },
             deep: true,
@@ -48,7 +47,7 @@ export default {
         async checkUrl(){
             let regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
             let tab = await this.$browser.tabs.query({active: true, currentWindow: true})
-            return regex.test(tab[0].url) === true ? true : false
+            return regex.test(tab[0].url) ? true : false
         },
     },
     computed: {
@@ -72,7 +71,7 @@ export default {
 }
 
 .collections-container {
-    height: 60%;
+    height: 53%;
 }
 
 body {
@@ -94,7 +93,7 @@ body {
 }
 
 #app {
-    width: 330px;
-    height: 440px !important;
+    width: 350px;
+    height: 480px !important;
 }
 </style>

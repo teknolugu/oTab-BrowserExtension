@@ -1,6 +1,6 @@
 <template>
   <div class="menu">
-    <el-menu class="el-menu" mode="horizontal" text-color="#a0cfff" active-text-color="#409EFF" :default-active="activeIndex">
+    <el-menu class="el-menu" mode="horizontal" text-color="#a0cfff" active-text-color="#409EFF" :default-active="activeMenu">
       <el-menu-item class="select-board-item">
         <el-select placeholder="Select Board" name="select-input" size="medium" :value="board.id" @change="activeBoardChange">
           <div class="new-board-item el-select-dropdown__item" value="new-board" @click="createNewBoard" disabled>
@@ -16,20 +16,15 @@
       </el-menu-item>
       <el-menu-item v-for="menu in menus" :index="menu.index" :key="menu.index" @click="changeActiveTab(menu.index)">
         <unicon :name="menu.icon" height="23px" width="23px"></unicon>
-        {{ menu.name }}
+        <span class="menu-name">{{ menu.name }}</span>
       </el-menu-item>
+      <!-- <el-menu-item class="right">
+        <div class="settings-button">
+          <unicon name="cog"></unicon>
+        </div>
+      </el-menu-item> -->
       <el-menu-item class="tag-select-menu">
-        <el-select :value="$store.state.activeTag" placeholder="Select Tag" size="small" @change="activeTag">
-          <template slot="prefix">
-            <i class="el-icon-price-tag"></i>
-          </template>
-          <el-option v-for="item in allTags" :key="item.id" :label="item.name" :value="item.id" class="option-tag">
-            <div>
-              <p :style="{ 'background-color': item.color }" :class="{ 'tag-menu-item': item.id !== 'all_tags#e4e4e4' }">{{ item.name }}</p>
-              <el-button type="danger" @click.stop="delTag(item.id)" icon="el-icon-delete" size="mini" v-if="item.id !== 'all_tags#e4e4e4'"></el-button>
-            </div>
-          </el-option>
-        </el-select>
+        <select-tag :allTags="allTags" @change="activeTag" :value="$store.state.activeTag"></select-tag>
       </el-menu-item>
       <el-menu-item class="right">
         <el-popover placement="bottom" width="260" trigger="click">
@@ -44,19 +39,21 @@
               <button :style="{ 'background-color': newTag.color }" @click="changeColor" size="small">Change Color</button>
             </div>
           </div>
-          <el-button size="small" slot="reference" class="new-tag-button" :style="{ 'background-color': activeTagColor }" type="primary">+ New Tag</el-button>
+          <el-button size="small" slot="reference" class="new-tag-button" type="primary">+ New Tag</el-button>
         </el-popover>
       </el-menu-item>
     </el-menu>
   </div>
 </template>
 <script>
-import newBoard from '../mixins/new-board';
+import newBoard from '../../mixins/new-board';
+import SelectTag from './select-tag'
 export default {
   mixins: [newBoard],
+  components: {SelectTag},
   data: () => ({
     menus: [{ index: '0', name: 'Collections', icon: 'layers' }, { index: '1', name: 'Notes', icon: 'notes' }, { index: '2', name: 'Tasks', icon: 'clipboard-notes' }],
-    activeIndex: '0',
+    activeMenu: '0',
     predefine: {
       index: 0,
       colors: ['#409EFF', '#fea49f', '#51d0de', '#F7C331', '#F56C6C', '#7575dd'],
@@ -117,9 +114,6 @@ export default {
           });
       }
     },
-    delTag(tagId) {
-      this.$store.dispatch('deleteTag', tagId);
-    },
     changeColor() {
       if (this.predefine.index === this.predefine.colors.length - 1) {
         this.predefine.index = 0;
@@ -129,9 +123,10 @@ export default {
       this.newTag.color = this.predefine.colors[(this.predefine.index += 1)];
     },
     activeTag(tag) {
-      this.$store.commit('activeTag', tag);
+      this.$store.commit('activeTag', tag.id);
     },
     changeActiveTab(index) {
+     this.$browser.storage.sync.set({oTabMenu: index})
       this.$store.commit('activeMenu', index);
     },
     activeBoardChange(id) {
@@ -139,9 +134,17 @@ export default {
       this.$store.commit('activeBoard', this.$store.state.boards[boardIndex].id);
     },
   },
+  mounted(){
+    this.activeMenu = this.$store.state.activeMenu
+  }
 };
 </script>
 <style lang="scss">
+.settings-button{
+  svg{
+    fill: #bfbfbf !important
+  }
+}
 .board-item-name:hover {
   .delete-board {
     opacity: 1;
@@ -156,6 +159,9 @@ export default {
   float: right;
 }
 .menu {
+  .menu-name{
+    font-weight: 500;
+  }
   .el-menu {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   }
@@ -198,8 +204,8 @@ export default {
 
 .tag-select-menu {
   float: right !important;
-  padding-left: 0 !important;
-
+  padding: 0 !important;
+  margin: 0 20px !important;
   input {
     text-transform: capitalize !important;
   }

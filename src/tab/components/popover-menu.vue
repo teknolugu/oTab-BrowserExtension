@@ -166,9 +166,7 @@ export default {
 }
 
 .item-popover {
-  float: right;
   margin-right: 10px;
-
   button {
     font-size: 17px;
     transform: rotate(90deg);

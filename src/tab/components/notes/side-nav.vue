@@ -54,10 +54,10 @@
   </div>
 </template>
 <script>
-import SearchItem from '../../mixins/search-item';
-import getUnique from '../../utils/get-unique';
 import Draggable from 'vuedraggable';
-import Tag from '../../mixins/tag';
+import SearchItem from '../../../mixins/search-item';
+import Tag from '../../../mixins/tag';
+import getUnique from '../../utils/get-unique';
 import Bus from '../../utils/bus';
 export default {
   props: {

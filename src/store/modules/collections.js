@@ -35,11 +35,12 @@ export default {
         if (tagIndex !== -1) board[index].tags.push(allTags[tagIndex]);
       }
     },
-    createCollection(state, title) {
+    createCollection(state, {title, tabs}) {
+      let getTabs = typeof tabs === 'undefined' ? [] : tabs
       let board = state.items[state.activeBoard];
       board.push({
         title: title,
-        tabs: [],
+        tabs: getTabs,
         tags: [],
       });
     },

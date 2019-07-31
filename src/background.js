@@ -7,7 +7,10 @@ browser.runtime.onInstalled.addListener(async e => {
   let data = await storage.get('myApp');
   if (Object.entries(data).length === 0 && data.constructor === Object) {
     storage.set({
-      myApp: {
+      oTabMenu: '0'
+    }),
+    storage.set({
+      oTabData: {
         boards: [
           {
             title: 'Primary Board',

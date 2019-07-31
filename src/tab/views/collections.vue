@@ -3,7 +3,8 @@
         <el-row :gutter="20">
             <el-col :span="18">
                 <div class="collection-header">
-                    <el-button size="medium" type="primary" icon="el-icon-plus" plain @click="createItem('collections/createCollection')">Create Collection</el-button>
+                    <el-button size="medium" type="primary" icon="el-icon-plus" @click="createItem('collections/createCollection')">Create Collection</el-button>
+                    <el-button :disabled="openTabs.length === 0" size="medium" icon="el-icon-download" @click="saveSession" plain>Save Session</el-button>
                     <el-input size="medium" placeholder="Search items" clearable v-model="search" @focus="isSearch = true" @blur="isSearch = false">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
@@ -16,9 +17,12 @@
                                 <el-tag effect="dark" @click.stop="activeTag(tag.id)" class="capitalize collection-tag" size="small" closable v-for="tag in collection.tags" :color="tag.color" :key="tag.id" @close="delCollectionTag(tag.id, collectionIndex)">
                                     {{ tag.name }}
                                 </el-tag>
-                                <popover-menu name="Collection" class="item-popover" direction="left" @editTitle="editTitle" @addTag="addTag" @delete="deleteCollection" :index="collectionIndex" :items="collection">
-                                    <el-button icon="el-icon-more" type="text"></el-button>
-                                </popover-menu>
+                                <div class="right">
+                                    <el-button type="primary" plain class="capitalize open-all-tabs-btn" size="mini" @click.stop="openAllTabs(collection.tabs)">open {{collection.tabs.length}} tabs</el-button>
+                                    <popover-menu name="Collection" class="item-popover" direction="left" @editTitle="editTitle" @addTag="addTag" @delete="deleteCollection" :index="collectionIndex" :items="collection">
+                                        <el-button icon="el-icon-more" type="text"></el-button>
+                                    </popover-menu>
+                                </div>
                             </div>
                             <Draggable class="list-group custom-flex" ghost-class="ghost-card" v-model="collection.tabs" group="tabs" tag="el-row" handle=".drag-handle" :component-data="getComponentData" :key="collection.id">
                                 <el-col v-for="(tab, index) in searchHandle(collection.tabs, 'title', 'url')" :key="index" class="tab-card-col" :xl="4">
@@ -41,25 +45,26 @@
             </el-col>
             <el-col :span="6" class="side-navigation">
                 <el-scrollbar class="side-nav-scrollbar" :native="false">
-                    <SideNav></SideNav>
+                    <SideNav @change="getOpenTabs"></SideNav>
                 </el-scrollbar>
             </el-col>
         </el-row>
     </el-main>
 </template>
 <script>
-import SideNav from '../components/collections/side-nav';
 import Draggable from 'vuedraggable';
+import SideNav from '../components/collections/side-nav';
 import TabCard from '../components/collections/tab-card';
-import SearchItem from '../mixins/search-item';
-import createItem from '../mixins/create-item';
-import Tag from '../mixins/tag';
 import PopoverMenu from '../components/popover-menu';
+import SearchItem from '../../mixins/search-item';
+import createItem from '../../mixins/create-item';
+import Tag from '../../mixins/tag';
 export default {
     components: { SideNav, Draggable, TabCard, PopoverMenu },
     mixins: [SearchItem, Tag('collections/list'), createItem],
     data() {
         return {
+            openTabs: [],
             delCollectionPromt: false,
             activeCollapse: [0, 1, 2, 3],
             getComponentData: {
@@ -70,6 +75,18 @@ export default {
         };
     },
     methods: {
+        getOpenTabs(tabs){
+            this.openTabs = tabs
+        },
+        saveSession(){
+            let date = new Date(Date.now()).toString();
+            let collectionName = date.slice(4, 10) + ', '+date.slice(16, 21);
+            this.$store.commit('collections/createCollection', {title: collectionName, tabs: [...this.openTabs]})
+            this.$browser.tabs.remove(this.openTabs.map(tab => tab.id))
+        },
+        openAllTabs(allTabs){
+            allTabs.forEach(async (tab) => await this.$browser.tabs.create({url: tab.url}))
+        },
         deleteCollection(index) {
             this.$store.commit('collections/delCollection', index);
         },
@@ -84,6 +101,7 @@ export default {
         },
         activeTag(tagId) {
             this.$store.commit('activeTag', tagId);
+            console.log(this.$store.state.activeTag)
         },
         delCollectionTag(tagId, collectionIndex) {
             this.$store.commit('collections/delCollectionTag', { tagId, collectionIndex });
@@ -118,6 +136,10 @@ export default {
     margin: 0 !important;
     display: flex !important;
     flex-flow: row wrap !important;
+}
+
+.open-all-tabs-btn{
+    margin-right: 10px !important;
 }
 
 .option-tag {

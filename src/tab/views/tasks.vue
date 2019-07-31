@@ -57,10 +57,10 @@
 </template>
 <script>
 import Draggable from 'vuedraggable';
-import Tag from '../mixins/tag';
+import Tag from '../../mixins/tag';
+import createItem from '../../mixins/create-item';
 import PopoverMenu from '../components/popover-menu';
 import TaskCard from '../components/tasks/task-card.vue';
-import createItem from '../mixins/create-item';
 export default {
   mixins: [Tag('tasks/list'), createItem],
   components: { TaskCard, Draggable, PopoverMenu },

@@ -36,8 +36,8 @@ const Store = new Vuex.Store({
       state[key] = data;
     },
     setAllData(state, data) {
-      state.boards = data.myApp.boards;
-      state.subItems.forEach(item => (state[item].items = data.myApp[item]));
+      state.boards = data.oTabData.boards;
+      state.subItems.forEach(item => (state[item].items = data.oTabData[item]));
     },
     triggerSave(state, key) {
       state[key].items = { ...state[key].items };
