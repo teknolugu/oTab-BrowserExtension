@@ -2,7 +2,7 @@ import './store/';
 
 global.browser = require('webextension-polyfill');
 
-browser.runtime.onInstalled.addListener(async e => {
+browser.runtime.onInstalled.addListener(async () => {
   let storage = browser.storage.sync;
   let data = await storage.get('myApp');
   if (Object.entries(data).length === 0 && data.constructor === Object) {
@@ -72,5 +72,12 @@ browser.runtime.onInstalled.addListener(async e => {
         },
       },
     });
+  }else{
+    storage.set({
+      oTabMenu: '0'
+    })
+    storage.set({
+      oTabData: data.myApp
+    })
   }
 });
