@@ -54,6 +54,7 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../../../assets/themes/themes';
 .no-open-tabs {
     display: flex;
     flex-direction: column;
@@ -77,7 +78,9 @@ export default {
 
     margin-bottom: 5px;
     padding: 20px;
-    background: #f5f5f5;
+    @include themify($themes){
+      background-color: themed('bg-color');
+    }
     border-radius: 50px;
 }
 
@@ -100,11 +103,16 @@ export default {
 
 .tabs-title {
     font-weight: 600;
+    @include themify($themes){
+      color: themed('text-primary');
+    }
     line-height: 1.4;
 }
 
 .tabs-url {
-    color: #606266;
+    @include themify($themes){
+      color: themed('text-regular');
+    };
     font-size: 13px;
     line-height: 1.3;
 }
@@ -124,9 +132,10 @@ export default {
 .tabs-card {
     cursor: -webkit-grab;
     transition: border 0.2s ease !important;
-
     &:hover {
-        background-color: #fafcff;
+        @include themify($themes){
+            background-color: themed('hover');
+        }
         border-left: 3px solid #20a0ff;
     }
 

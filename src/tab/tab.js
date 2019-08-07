@@ -1,16 +1,18 @@
 import Vue from 'vue';
 import App from './App';
 import store from '../store/';
+global.browser = require('webextension-polyfill');
 import '../assets/style.scss';
 import '../assets/fonts.css'
 
 // Element UI
+browser.storage.sync.get('oTabDark').then(isDark => {
+	isDark.oTabDark ? import('element-theme-dark') : import('element-ui/lib/theme-chalk/index.css')
+})
 import './element'
 
 // Icons
 import './icons'
-
-global.browser = require('webextension-polyfill');
 
 Vue.prototype.$browser = global.browser;
 

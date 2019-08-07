@@ -125,6 +125,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../../../assets/themes/themes';
+
 .collection-tag.note {
   margin-right: 4px;
 }
@@ -169,7 +171,9 @@ export default {
   }
 
   &.is-active {
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    @include themify($themes){
+      box-shadow: 0 2px 12px 0 themed('shadow');
+    }
   }
 
   margin-top: 15px;
@@ -191,14 +195,18 @@ export default {
     -webkit-box-orient: vertical;
     margin-bottom: 3px;
     font-weight: 600;
-    color: #606266;
+    @include themify($themes){
+      color: themed('text-primary');
+    }
   }
 
   .notes-card-text {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    color: #909399;
+    @include themify($themes){
+      color: themed('regular-primary');
+    }
     margin: 0;
   }
 }

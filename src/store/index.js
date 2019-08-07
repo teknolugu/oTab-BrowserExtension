@@ -132,7 +132,7 @@ const Store = new Vuex.Store({
         await commit('activeBoard', state.boards[0].id);
       }
       await commit('changeBoolean', { key: 'firstChange', data: false });
-      await commit('changeBoolean', { key: 'isLoaded', data: true });
+      setTimeout(() => { commit('changeBoolean', { key: 'isLoaded', data: true }) }, 1000)
     },
   },
 });

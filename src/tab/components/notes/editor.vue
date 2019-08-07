@@ -123,6 +123,7 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../../../assets/themes/themes';
 .editor p.is-empty:first-child::before {
   content: attr(data-empty-text);
   float: left;
@@ -137,7 +138,29 @@ export default {
   margin-top: -0.2rem !important;
   margin-left: -45px !important;
 }
+.note-editor {
+  .is-empty:first-child::before {
+    content: attr(data-empty-text);
+    float: left;
+    color: #aaa;
+    pointer-events: none;
+    height: 0;
+    font-size: 15px;
+    font-style: italic;
+  }
 
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .ProseMirror {
+    outline: none;
+    @include themify($themes){
+      color: themed('text-regular');
+    }
+  }
+}
 .ProseMirror {
   * {
     font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'å¾®è½¯é›…é»‘', Arial, sans-serif;
@@ -181,13 +204,14 @@ export default {
   h1,
   h2,
   h3 {
-    color: #606266;
+    @include themify($themes){
+      color: themed('text-regular') !important;
+    }
   }
 }
 
 .editor {
   position: relative;
-
   &__floating-menu {
     button {
       margin: 0 2px !important;

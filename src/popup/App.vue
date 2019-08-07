@@ -81,11 +81,6 @@ body {
 .search-form-container{
     padding: 10px 15px;
 }
-.search-form {
-    input {
-        background-color: #fbfbfb;
-    }
-}
 
 .el-main {
     padding: 0 !important;

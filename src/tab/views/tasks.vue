@@ -109,6 +109,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../../assets/themes/themes';
+
 .column-tags {
   padding-right: 20px;
 }
@@ -142,12 +144,14 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: white;
+  @include themify($themes){
+    background-color: themed('bg-color');
+    border: 2px dashed themed('light-border');
+  }
   width: 340px;
-  border: 2px dashed #dbdbdb;
   border-radius: 4px;
   flex: 0 0 auto;
-
+  transition: all .1s ease;
   .title {
     font-size: 16px;
     color: #606266;
@@ -155,7 +159,9 @@ export default {
   }
 
   &:hover {
-    background-color: #fefefe;
+    @include themify($themes){
+      background-color: themed('hover');
+    }
 
     .icon {
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -166,9 +172,11 @@ export default {
     transition: all 0.3s ease;
     padding: 13px 14px;
     border-radius: 30px;
-    background-color: #eee;
+    @include themify($themes){
+      background-color: themed('bg-color2');
+      color: themed('text-placeholder');
+    }
     font-size: 16px;
-    color: #adadad;
   }
 }
 

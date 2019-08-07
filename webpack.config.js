@@ -17,6 +17,7 @@ const config = {
   output: {
     path: __dirname + '/dist',
     filename: '[name].js',
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.vue'],
@@ -30,6 +31,11 @@ const config = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        options: {
+            plugins: [
+                "@babel/plugin-syntax-dynamic-import"
+            ]
+        },
         exclude: /node_modules/,
       },
       {

@@ -122,27 +122,6 @@ export default {
 .save-note-btn {
   margin-left: 15px !important;
 }
-.note-editor {
-  .is-empty:first-child::before {
-    content: attr(data-empty-text);
-    float: left;
-    color: #aaa;
-    pointer-events: none;
-    height: 0;
-    font-size: 15px;
-    font-style: italic;
-  }
-
-  p {
-    margin: 0;
-    font-size: 16px;
-  }
-
-  .ProseMirror {
-    outline: none;
-    color: #606266;
-  }
-}
 
 .note-wrapper {
   padding: 0 30px !important;

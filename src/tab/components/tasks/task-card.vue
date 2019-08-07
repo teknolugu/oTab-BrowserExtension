@@ -69,6 +69,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../../../assets/themes/themes';
+
 .checked {
   .task-name {
     color: #c0c4cc;
@@ -106,7 +108,9 @@ export default {
   }
 
   border-radius: 4px;
-  border: 1px solid #ebeef5;
+  @include themify($themes){
+    border: 1px solid themed('light-border');
+  }
   padding: 10px 13px;
   margin-top: 10px;
 

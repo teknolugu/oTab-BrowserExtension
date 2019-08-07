@@ -67,7 +67,7 @@ export default {
 
     cursor: pointer;
     padding: 13px 15px;
-    border: 1px solid #E4E7ED;
+    border: 1px solid #00000038;
     border-radius: 4px;
     margin-top: 9px;
 

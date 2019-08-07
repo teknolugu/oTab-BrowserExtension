@@ -3,7 +3,6 @@ import Vue from 'vue'
 import {main, input, scrollbar, select, button, option } from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/reset.css';
-import 'element-ui/lib/theme-chalk/index.css';
 
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'

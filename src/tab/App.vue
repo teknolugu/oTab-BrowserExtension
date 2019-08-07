@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="[dark ? 'theme-dark' : 'theme-light']">
     <template v-if="$store.state.isLoaded">
       <template v-if="!isEmpty">
         <Menu></Menu>
@@ -10,6 +10,7 @@
             <Tasks v-if="activeMenu === '2'"></Tasks>
           </keep-alive>
         </transition>
+        <settings></settings>
       </template>
       <template v-else>
         <div class="empty-board">
@@ -33,13 +34,14 @@
 <script>
 import Menu from './components/menu';
 import Collections from './views/collections';
+import Settings from './components/settings';
 import Notes from './views/notes';
 import Tasks from './views/tasks';
 import Bus from './utils/bus';
 import newBoard from '../mixins/new-board';
 export default {
   mixins: [newBoard],
-  components: { Menu, Collections, Tasks, Notes },
+  components: { Menu, Collections, Tasks, Notes, Settings },
   watch: {
     allData: {
       handler(val) {
@@ -56,6 +58,7 @@ export default {
   },
   data: () => ({
     isEmpty: false,
+    dark: false
   }),
   computed: {
     activeBoard() {
@@ -70,15 +73,17 @@ export default {
   },
   async created() {
     let storage = this.$browser.storage.sync;
-    let data = await storage.get('oTabData');
-    let menu = await storage.get('oTabMenu');
-    this.$store.commit('activeMenu', menu.oTabMenu)
+    let store = this.$store
+    let data = await storage.get(['oTabData', 'oTabMenu', 'oTabDark']);
+    this.dark = data.oTabDark
+    store.commit('activeMenu', data.oTabMenu)
     this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
-    this.$store.dispatch('setAllData', { data, isEmpty: this.isEmpty });
+    store.dispatch('setAllData', { data, isEmpty: this.isEmpty });
   },
 };
 </script>
 <style lang="scss">
+@import '../assets/themes/themes';
 @import '../assets/slide-transitions.scss';
 
 @include slideTransition(left, -10px);
@@ -98,8 +103,10 @@ html, body{
     height: 45px;
     padding: 10px 13px;
     border-radius: 50px;
-    background-color: #ececec;
-    color: #7d7d7d;
+    @include themify($themes){
+      background-color: themed('bg-color2');
+      color: themed('text-primary');
+    }
     transition: all 0.5s ease;
     margin: 0 auto;
     width: 40px;
@@ -108,7 +115,9 @@ html, body{
   .empty-board-text {
     margin-top: 10px;
     font-size: 16px;
-    color: #606266;
+    @include themify($themes){
+      color: themed('text-regular');
+    }
   }
 }
 

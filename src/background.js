@@ -8,7 +8,10 @@ browser.runtime.onInstalled.addListener(async () => {
   if (Object.entries(data).length === 0 && data.constructor === Object) {
     storage.set({
       oTabMenu: '0'
-    }),
+    })
+    storage.set({
+      oTabDark: false
+    })
     storage.set({
       oTabData: {
         boards: [

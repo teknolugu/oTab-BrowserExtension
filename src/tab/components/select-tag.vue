@@ -75,6 +75,8 @@ export default {
 }
 </script>
 <style lang="scss">
+@import '../../assets/themes/themes';
+
 .delete-tag{
 	position: absolute;
 	right: -30px;
@@ -115,7 +117,9 @@ export default {
     position: absolute;
     max-height: 300px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
-    background-color: white;
+    @include themify($themes){
+        background-color: themed('bg-color');
+    }
     width: 200px;
     border-radius: 4px;
 
@@ -128,7 +132,9 @@ export default {
             	.delete-tag{
             		right: 15px;
             	}
-                background-color: #f5f7fa;
+                @include themify($themes){
+                    background-color: themed('hover')
+                }
             }
 
             padding: 0 15px;

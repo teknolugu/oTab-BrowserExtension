@@ -2336,6 +2336,11 @@ electron-to-chromium@^1.3.164:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.176.tgz#df54c54386e0f205dc6d1f5582d9e8b0cd30532b"
   integrity sha512-hsQ/BH6x2iCvJ7WOIbNTAlsT39vsVGIVoJJ9i6ZkGXUE2LdzWsNv0xJI2uZ5/Hkqv1oTTLxAYjbtGKVJzqYbjA==
 
+element-theme-dark@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/element-theme-dark/-/element-theme-dark-1.0.3.tgz#6de433f10f6286ca1576827f0bafee34ce12a2d5"
+  integrity sha512-za/9dIJYEWF8coKbDCF2VWvu9k9xT3UkLDrQdDaY3c6FD24LHxEMM+LHJeRif8nx9eIpLDwOcyOGELZbhw9Q9w==
+
 element-ui@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.10.0.tgz#e6129f6b6d6ffe0dbad125a4a8d17d447a5f639c"

@@ -115,6 +115,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../../assets/themes/themes';
+
 @media only screen and (min-width: 1264px) {
     .tab-card-col.el-col.el-col-24.el-col-xl-4 {
         width: 24%;
@@ -198,13 +200,17 @@ export default {
     height: 130px;
     margin-top: 10px !important;
     width: 220px;
-    background-color: #fbfbfb;
+    @include themify($themes) {
+              background-color: themed('bg-color2') !important;
+            }
 }
 
 .collapse-title {
     font-size: 16px;
     font-weight: 600;
-    color: #606266;
+    @include themify($themes){
+        color: themed('text-primary');
+    }
     margin-right: 15px;
 }
 
@@ -217,8 +223,9 @@ export default {
 
 .side-nav-scrollbar {
     height: 100%;
-    border-left: 1px solid #dcdfe6;
-
+    @include themify($themes){
+        border-left: 1px solid themed('base-border');
+    }
     .el-scrollbar__wrap {
         overflow-x: hidden;
     }

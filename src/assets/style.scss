@@ -1,30 +1,52 @@
+@import './themes/themes.scss';
+
 #app {
-  height: 100%;
+    height: 100%;
 }
 
 html,
 body {
-  margin: 0;
-  overflow: hidden;
-  font-family: 'Roboto', sans-serif !important;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif !important;
 }
+
 .nb {
-  border: none !important;
+    border: none !important;
 }
+
 .bb {
-  border-bottom: 1px solid #eee;
+    @include themify($themes) {
+        border-bottom: 1px solid themed('base-border');
+    }
 }
 .br {
-  border-right: 1px solid #eee;
+    @include themify($themes) {
+        border-right: 1px solid themed('base-border');
+    }
+}
+.el-input__count-inner{
+    background-color: transparent !important;
+}
+.el-color-predefine__color-selector.selected{
+    box-shadow: 0 0 3px 2px #0000001a !important
 }
 .right {
-  float: right !important;
+    float: right !important;
 }
 
 .capitalize {
-  text-transform: capitalize;
+    text-transform: capitalize;
+}
+
+.el-tag {
+    color: white !important;
+
+    .el-icon-close {
+        color: white !important
+    }
 }
 
 .font-weight-bold {
-  font-weight: 600;
+    font-weight: 600;
 }
