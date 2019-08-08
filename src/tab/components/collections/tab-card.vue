@@ -222,7 +222,7 @@ $transition-icon: all 0.2s ease;
         fill: #686868;
     }
 
-    cursor: -webkit-grab;
+    cursor: grab;
 }
 
 .header-image-utils {

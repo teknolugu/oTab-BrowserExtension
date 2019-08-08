@@ -130,7 +130,7 @@ export default {
 }
 
 .tabs-card {
-    cursor: -webkit-grab;
+    cursor: grab;
     transition: border 0.2s ease !important;
     &:hover {
         @include themify($themes){

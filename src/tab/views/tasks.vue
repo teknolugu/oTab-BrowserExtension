@@ -130,7 +130,7 @@ export default {
 }
 
 .task-handler {
-  cursor: -webkit-grab;
+  cursor: grab;
   margin-left: 10px;
 }
 
