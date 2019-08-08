@@ -22,7 +22,7 @@
 import Bus from '../utils/bus'
 export default {
     data: () => ({
-        visible: true,
+        visible: false,
         isDark: false,
     }),
     methods: {
