@@ -22,12 +22,14 @@ import {
   Scrollbar,
   Main,
   Divider,
+  Switch,
   Option,
   MessageBox,
   Message,
 } from 'element-ui';
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(Dialog);
+Vue.use(Switch);
 Vue.use(Option);
 Vue.use(Scrollbar);
 Vue.use(Menu);

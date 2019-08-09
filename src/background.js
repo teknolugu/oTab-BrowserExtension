@@ -4,13 +4,16 @@ global.browser = require('webextension-polyfill');
 
 browser.runtime.onInstalled.addListener(async () => {
   let storage = browser.storage.sync;
-  let data = await storage.get('myApp');
+  let data = await storage.get('oTabData');
   if (Object.entries(data).length === 0 && data.constructor === Object) {
     storage.set({
       oTabMenu: '0'
     })
     storage.set({
-      oTabDark: false
+      oTabSettings: {
+        dark: false,
+        openInCurrentTab: false
+      }
     })
     storage.set({
       oTabData: {
@@ -75,12 +78,5 @@ browser.runtime.onInstalled.addListener(async () => {
         },
       },
     });
-  }else{
-    storage.set({
-      oTabMenu: '0'
-    })
-    storage.set({
-      oTabData: data.myApp
-    })
   }
 });

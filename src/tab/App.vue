@@ -3,6 +3,8 @@
     <template v-if="$store.state.isLoaded">
       <template v-if="!isEmpty">
         <Menu></Menu>
+        <board-manager></board-manager>
+        <settings></settings>
         <transition name="el-fade-in-linear" mode="out-in">
           <keep-alive>
             <Collections v-if="activeMenu === '0'"></Collections>
@@ -10,7 +12,6 @@
             <Tasks v-if="activeMenu === '2'"></Tasks>
           </keep-alive>
         </transition>
-        <settings></settings>
       </template>
       <template v-else>
         <div class="empty-board">
@@ -33,15 +34,16 @@
 </template>
 <script>
 import Menu from './components/menu';
-import Collections from './views/collections';
 import Settings from './components/settings';
+import BoardManager from './components/board-manager.vue'
+import Collections from './views/collections';
 import Notes from './views/notes';
 import Tasks from './views/tasks';
 import Bus from './utils/bus';
 import newBoard from '../mixins/new-board';
 export default {
   mixins: [newBoard],
-  components: { Menu, Collections, Tasks, Notes, Settings },
+  components: { Menu, Collections, Tasks, Notes, Settings, BoardManager },
   watch: {
     allData: {
       handler(val) {
@@ -74,10 +76,15 @@ export default {
   async created() {
     let storage = this.$browser.storage.sync;
     let store = this.$store
-    let data = await storage.get(['oTabData', 'oTabMenu', 'oTabDark']);
-    this.dark = data.oTabDark
+    let data = await storage.get(['oTabData', 'oTabMenu', 'oTabSettings']);
+    //Active Menu
     store.commit('activeMenu', data.oTabMenu)
+    // Settings
+    store.commit('settings/changeSettings', data.oTabSettings)
+    this.dark = data.oTabSettings.dark
+    // Check if board empty
     this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
+    // if board not empty set all data
     store.dispatch('setAllData', { data, isEmpty: this.isEmpty });
   },
 };

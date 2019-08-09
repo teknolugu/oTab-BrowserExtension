@@ -13,6 +13,7 @@
                         <el-button circle size="mini" type="danger" plain icon="el-icon-delete" class="delete-board" @click.stop="deleteBoard(board.id)"></el-button>
                     </el-option>
                 </el-select>
+                <el-button icon="el-icon-menu" class="allBoards-button" size="small" @click="openBoardManager"></el-button>
             </el-menu-item>
             <el-menu-item v-for="menu in menus" :index="menu.index" :key="menu.index" class="menu-item" @click="changeActiveTab(menu.index)">
                 <unicon :name="menu.icon" height="23px" width="23px"></unicon>
@@ -77,6 +78,9 @@ export default {
         },
     },
     methods: {
+        openBoardManager(){
+            Bus.$emit('boardManager')
+        },
         openSettings(){
             Bus.$emit('settings', true)
         },
@@ -145,6 +149,15 @@ export default {
 </script>
 <style lang="scss">
 @import '../../assets/themes/themes';
+
+.allBoards-button{
+    padding: 8px !important;
+    margin-left: 10px !important;
+    i{
+        color: #409eff !important;
+        margin-right: 0 !important;
+    }
+}
 
 .settings-button {
     svg {
@@ -226,7 +239,7 @@ export default {
 .tag-select-menu {
     float: right !important;
     padding: 0 !important;
-    margin: 0 20px !important;
+    margin: 0px !important;
 
     input {
         text-transform: capitalize !important;

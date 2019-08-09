@@ -6,8 +6,8 @@ import '../assets/style.scss'
 global.browser = require('webextension-polyfill');
 
 // Element UI
-browser.storage.sync.get('oTabDark').then(isDark => {
-	isDark.oTabDark ? import('element-theme-dark') : import('element-ui/lib/theme-chalk/index.css')
+browser.storage.sync.get('oTabSettings').then(settings => {
+	settings.oTabSettings.dark ? import('element-theme-dark') : import('element-ui/lib/theme-chalk/index.css')
 })
 import './element'
 

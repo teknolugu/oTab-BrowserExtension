@@ -5,12 +5,20 @@
         	<div class="el-list">
         		<div class="el-list-item settings">
             	    <div class="el-list-icon">
-            	        <el-checkbox :value="isDark" @change="darkMode"></el-checkbox>
+                        <el-switch :value="settings.dark" @change="darkMode"></el-switch>
             	    </div>
             	    <div class="el-list-text">
             	        <p>Dark Mode</p>
             	    </div>
             	</div>
+                <div class="el-list-item settings">
+                    <div class="el-list-icon">
+                        <el-switch :value="settings.openInCurrentTab" @change="openInCurrentTab"></el-switch>
+                    </div>
+                    <div class="el-list-text">
+                        <p>Open Collection Tab in Current Tab</p>
+                    </div>
+                </div>
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -23,25 +31,28 @@ import Bus from '../utils/bus'
 export default {
     data: () => ({
         visible: false,
-        isDark: false,
     }),
     methods: {
-        openSettings() {
-            this.visible = true
+        openInCurrentTab(value){
+            this.commitSetting('openInCurrentTab', value)
         },
-        darkMode() {
-            this.$browser.storage.sync.set({ oTabDark: !this.isDark })
-            const message = !this.isDark ? 'Dark Mode will be active after you reload the tab.' : 'Dark Mode will be deactive after you reload the tab.'
+        darkMode(value) {
+            this.commitSetting('dark', value)
+            const message = this.settings.dark ? 'Dark Mode will be active after you reload the tab.' : 'Dark Mode will be deactive after you reload the tab.'
             this.$message(message);
-            this.isDark = !this.isDark
         },
+        commitSetting(key, value){
+            this.$store.commit('settings/change', {key: key, value: value})
+            this.$browser.storage.sync.set({ oTabSettings: this.settings })
+        }
     },
-    async mounted() {
-        let theme = await this.$browser.storage.sync.get('oTabDark')
-        this.isDark = theme.oTabDark
+    computed:{
+        settings(){
+            return this.$store.state.settings.items
+        }
     },
     created() {
-        Bus.$on('settings', this.openSettings)
+        Bus.$on('settings', () => this.visible = true)
     }
 }
 </script>
@@ -57,7 +68,10 @@ export default {
 	}
 }
 .el-list-item.settings{
-	padding: 10px;
+    .el-list-icon{
+        width: 50px;
+    }
+	padding: 13px 10px;
 	&:hover{	
 		@include themify($themes){
 			background-color: themed('bg-color2')

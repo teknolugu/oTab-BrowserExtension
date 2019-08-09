@@ -30,7 +30,7 @@
         </div>
         <el-input class="copy-url" placeholder="URL" v-model="edit.url" :readonly="!editMode" size="mini" v-if="copyUrl || editMode" :autofocus="!editMode" :id="'copy' + index"></el-input>
         <p class="tab-url" :title="tab.url + ' | click to copy'" @click="copyToClipboard('copy' + index, tab.url)" v-else>{{ tab.url }}</p>
-        <span class="open-new-tab" @click="openNewTab(tab.url)">
+        <span class="open-new-tab" @click="openTab(tab.url)">
             <i class="el-icon-top-right"></i>
         </span>
     </el-card>
@@ -109,8 +109,9 @@ export default {
             let collectionIndex = this.$props.collectionIndex;
             this.$store.commit('collections/removeCollectionTab', { tabIndex: tabIndex, collectionIndex: collectionIndex });
         },
-        openNewTab(link) {
-            window.open(link);
+        openTab(link) {
+            let inCurrentTab = this.$store.state.settings.items.openInCurrentTab ? '_self' : '_blank'
+            window.open(link, inCurrentTab);
         },
     },
     created() {

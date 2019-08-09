@@ -84,8 +84,34 @@ const Store = new Vuex.Store({
     deleteBoardSubitem(state, boardId) {
       state.subItems.forEach(item => delete state[item].items[boardId]);
     },
+    renameBoardIndex(state, {newName, newBoardId, boardId}){
+      let boardIndex = state.boards.findIndex(board => board.id === boardId)
+      let board = state.boards[boardIndex]
+      board.title = newName
+      board.id = newBoardId
+    },
+    renameBoardSubItem(state, {subItem, newBoardId, boardId}){
+      state[subItem].items[newBoardId] = state[subItem].items[boardId]
+      delete state[subItem].items[boardId]
+    }
   },
   actions: {
+    renameBoard({state, commit}, {newName, boardId}){
+      return new Promise((resolve, reject) => {
+        let newBoardId = newName.toLowerCase().replace(/ /g, '_');
+        let dataExist = state.boards.some(board => board.id === newBoardId)
+        if(dataExist){
+          reject('Board already exist')
+        }else{
+          boardId === state.activeBoard ? commit('activeBoard', newBoardId) : null
+          commit('renameBoardIndex', {newName, newBoardId, boardId})
+          state.subItems.forEach(async (item) => {
+            await commit('renameBoardSubItem', {subItem: item, newBoardId, boardId})
+          })
+          resolve()
+        }
+      })
+    },
     async deleteBoard({ state, commit }, boardId) {
       let boardIndex = state.boards.findIndex(board => board.id === boardId);
       await commit('deleteBoard', boardIndex);
