@@ -7,9 +7,10 @@ $themes: (
                 hover: #fafcff,
                 base-border: #DCDFE6,
                 light-border: #E4E7ED,
-                bg-color: white,
-                bg-color2: #f1f1f1,
-                shadow: #0000001a
+                bg-color: #f9f9f9,
+                bg-color2: #f7f7f7,
+                shadow: #0000001a,
+                card: white
         ),
         dark: (
                 text-primary: white,
@@ -21,7 +22,8 @@ $themes: (
                 light-border: #323e4d,
                 bg-color: #262d38,
                 bg-color2: #2a323f,
-                shadow: #fdfdfd24
+                shadow: #fdfdfd24,
+                card: #262d37
         ),
 );
 

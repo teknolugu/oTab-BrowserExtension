@@ -9,8 +9,8 @@ export default {
     },
   },
   mutations: {
-    addTab(state, {collectionIndex, payload}){
-      state.items[state.activeBoard][collectionIndex].tabs.push(payload)
+    addTab(state, { collectionIndex, payload }) {
+      state.items[state.activeBoard][collectionIndex].tabs.push(payload);
     },
     editTab(state, { title, url, collectionIndex, index }) {
       let tab = state.items[state.activeBoard][collectionIndex].tabs[index];
@@ -35,8 +35,8 @@ export default {
         if (tagIndex !== -1) board[index].tags.push(allTags[tagIndex]);
       }
     },
-    createCollection(state, {title, tabs}) {
-      let getTabs = typeof tabs === 'undefined' ? [] : tabs
+    createCollection(state, { title, tabs }) {
+      let getTabs = typeof tabs === 'undefined' ? [] : tabs;
       let board = state.items[state.activeBoard];
       board.push({
         title: title,

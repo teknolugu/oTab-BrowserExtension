@@ -156,7 +156,7 @@ export default {
 
   .ProseMirror {
     outline: none;
-    @include themify($themes){
+    @include themify($themes) {
       color: themed('text-regular');
     }
   }
@@ -204,7 +204,7 @@ export default {
   h1,
   h2,
   h3 {
-    @include themify($themes){
+    @include themify($themes) {
       color: themed('text-regular') !important;
     }
   }

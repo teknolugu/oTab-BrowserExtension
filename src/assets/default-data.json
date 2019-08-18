@@ -1,0 +1,195 @@
+{
+    "settings":{
+        "dark": false,
+        "openInCurrentTab": false,
+        "home": false,
+        "searchEngine": "google",
+        "searchBar": true,
+        "homeBackground":
+        {
+            "url": "https://images.pexels.com/photos/66997/pexels-photo-66997.jpeg",
+            "author": "no name"
+        }
+    },
+    "oTabData": {
+        "boards": [
+        {
+            "title": "Primary Board",
+            "id": "primary_board",
+            "allTags": [
+            {
+                "name": "daily",
+                "color": "#7cd451",
+                "id": "daily#7cd451"
+            },
+            {
+                "name": "social",
+                "color": "#409EFF",
+                "id": "social#409EFF"
+            },
+            {
+                "name": "work",
+                "color": "#F56C6C",
+                "id": "work#F56C6C"
+            }]
+        }],
+        "collections":
+        {
+            "primary_board": [
+            {
+                "title": "my collections",
+                "tags": [
+                {
+                    "name": "daily",
+                    "color": "#7cd451",
+                    "id": "daily#7cd451"
+                },
+                {
+                    "name": "social",
+                    "color": "#409EFF",
+                    "id": "social#409EFF"
+                }],
+                "tabs": [
+                {
+                    "title": "Google",
+                    "url": "https://google.com",
+                    "favIconUrl": "https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+                },
+                {
+                    "title": "Facebook",
+                    "url": "https://www.facebook.com",
+                    "favIconUrl": "https://static.xx.fbcdn.net/rsrc.php/yo/r/iRmz9lCMBD2.ico"
+                }]
+            }]
+        },
+        "notes":
+        {
+            "primary_board": [
+            {
+                "title": "My Note",
+                "content": "<p>This is my first note</p>",
+                "tags": [
+                {
+                    "name": "social",
+                    "color": "#409EFF",
+                    "id": "social#409EFF"
+                }],
+                "id": "kx20rhdcrt"
+            }]
+        },
+        "tasks":
+        {
+            "primary_board": [
+            {
+                "title": "my task",
+                "tasks": [
+                {
+                    "name": "something",
+                    "done": false
+                },
+                {
+                    "name": "to do",
+                    "done": true
+                }],
+                "tags": [
+                {
+                    "name": "daily",
+                    "color": "#7cd451",
+                    "id": "daily#7cd451"
+                },
+                {
+                    "name": "social",
+                    "color": "#409EFF",
+                    "id": "social#409EFF"
+                }]
+            }]
+        }
+    },
+    "backgrounds": [
+    	{
+    	    "url": "https://images.pexels.com/photos/4827/nature-forest-trees-fog.jpeg",
+    	    "category": ["forest", "nature"],
+    	    "author": "jaymantri"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/66997/pexels-photo-66997.jpeg",
+    	    "category": ["mountain", "nature"],
+    	    "author": "no name"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/1366922/pexels-photo-1366922.jpeg",
+    	    "category": ["nature", "mountain"],
+    	    "author": "eberhard grossgasteiger"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/733475/pexels-photo-733475.jpeg",
+    	    "category": ["space"],
+    	    "author": "juan"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/5439/earth-space.jpg",
+    	    "category": ["space"],
+    	    "author": "jaymantri"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/1434608/pexels-photo-1434608.jpeg",
+    	    "category": ["space"],
+    	    "author": "Lucas Ettore Chiereguini"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg",
+    	    "category": ["forest", "sky"],
+    	    "author": "hristo fidanov"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/1025469/pexels-photo-1025469.jpeg",
+    	    "category": ["mountain", "sky"],
+    	    "author": "faaiq ackmerd"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg",
+    	    "category": ["city"],
+    	    "author": "burst"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg",
+    	    "category": ["city"],
+    	    "author": "burst"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg",
+    	    "category": ["city"],
+    	    "author": "quintin gellar"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/1619569/pexels-photo-1619569.jpeg",
+    	    "category": ["city"],
+    	    "author": "aleksandar pasaric"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/776390/pexels-photo-776390.jpeg",
+    	    "category": ["mountain", "nature"],
+    	    "author": "eberhard grossgasteiger"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg",
+    	    "category": ["mountain", "sky"],
+    	    "author": "pixabay"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/1260841/pexels-photo-1260841.jpeg",
+    	    "category": ["mountain", "nature"],
+    	    "author": "may barros"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/76969/cold-front-warm-front-hurricane-felix-76969.jpeg",
+    	    "category": ["space"],
+    	    "author": "pixabay"
+    	},
+    	{
+    	    "url": "https://images.pexels.com/photos/533923/pexels-photo-533923.jpeg",
+    	    "category": ["beach"],
+    	    "author": "pixabay"
+    	}
+    ]
+}

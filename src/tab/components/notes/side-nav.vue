@@ -171,7 +171,7 @@ export default {
   }
 
   &.is-active {
-    @include themify($themes){
+    @include themify($themes) {
       box-shadow: 0 2px 12px 0 themed('shadow');
     }
   }
@@ -184,6 +184,9 @@ export default {
 
   .el-card__body {
     padding: 6px 13px !important;
+    @include themify($themes) {
+      background-color: themed('bg-color2');
+    }
   }
 
   .notes-card-title {
@@ -195,7 +198,7 @@ export default {
     -webkit-box-orient: vertical;
     margin-bottom: 3px;
     font-weight: 600;
-    @include themify($themes){
+    @include themify($themes) {
       color: themed('text-primary');
     }
   }
@@ -204,7 +207,7 @@ export default {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    @include themify($themes){
+    @include themify($themes) {
       color: themed('regular-primary');
     }
     margin: 0;

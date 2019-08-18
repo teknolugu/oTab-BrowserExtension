@@ -14,8 +14,18 @@ const Store = new Vuex.Store({
     boards: [],
     activeBoard: '',
     activeTag: 'all_tags#e4e4e4',
+    starBoard: '',
+    homeCollection: '',
   },
   getters: {
+    homeTabs: state => {
+      if (state.homeCollection !== '') {
+        let getId = state.homeCollection.split('=>');
+        return state.collections.items[getId[0]][getId[1]].tabs.slice(0, 5);
+      } else {
+        return null;
+      }
+    },
     allData: state => {
       return {
         boards: state.boards,
@@ -32,6 +42,12 @@ const Store = new Vuex.Store({
     },
   },
   mutations: {
+    homeCollection(state, collection) {
+      state.homeCollection = collection;
+    },
+    starBoard(state, boardId) {
+      state.starBoard = boardId;
+    },
     changeBoolean(state, { key, data }) {
       state[key] = data;
     },
@@ -72,6 +88,9 @@ const Store = new Vuex.Store({
         [boardId]: [],
       };
     },
+    changeBoards(state, boards) {
+      state.boards = boards;
+    },
     delAllRelatedItem(state, { key, tagId }) {
       state[key].items[state.activeBoard].forEach(item => {
         let findTagIndex = item.tags.findIndex(tag => tag.id === tagId);
@@ -84,33 +103,33 @@ const Store = new Vuex.Store({
     deleteBoardSubitem(state, boardId) {
       state.subItems.forEach(item => delete state[item].items[boardId]);
     },
-    renameBoardIndex(state, {newName, newBoardId, boardId}){
-      let boardIndex = state.boards.findIndex(board => board.id === boardId)
-      let board = state.boards[boardIndex]
-      board.title = newName
-      board.id = newBoardId
+    renameBoardIndex(state, { newName, newBoardId, boardId }) {
+      let boardIndex = state.boards.findIndex(board => board.id === boardId);
+      let board = state.boards[boardIndex];
+      board.title = newName;
+      board.id = newBoardId;
     },
-    renameBoardSubItem(state, {subItem, newBoardId, boardId}){
-      state[subItem].items[newBoardId] = state[subItem].items[boardId]
-      delete state[subItem].items[boardId]
-    }
+    renameBoardSubItem(state, { subItem, newBoardId, boardId }) {
+      state[subItem].items[newBoardId] = state[subItem].items[boardId];
+      delete state[subItem].items[boardId];
+    },
   },
   actions: {
-    renameBoard({state, commit}, {newName, boardId}){
+    renameBoard({ state, commit }, { newName, boardId }) {
       return new Promise((resolve, reject) => {
         let newBoardId = newName.toLowerCase().replace(/ /g, '_');
-        let dataExist = state.boards.some(board => board.id === newBoardId)
-        if(dataExist){
-          reject('Board already exist')
-        }else{
-          boardId === state.activeBoard ? commit('activeBoard', newBoardId) : null
-          commit('renameBoardIndex', {newName, newBoardId, boardId})
-          state.subItems.forEach(async (item) => {
-            await commit('renameBoardSubItem', {subItem: item, newBoardId, boardId})
-          })
-          resolve()
+        let dataExist = state.boards.some(board => board.id === newBoardId);
+        if (dataExist) {
+          reject('Board already exist');
+        } else {
+          boardId === state.activeBoard ? commit('activeBoard', newBoardId) : null;
+          commit('renameBoardIndex', { newName, newBoardId, boardId });
+          state.subItems.forEach(async item => {
+            await commit('renameBoardSubItem', { subItem: item, newBoardId, boardId });
+          });
+          resolve();
         }
-      })
+      });
     },
     async deleteBoard({ state, commit }, boardId) {
       let boardIndex = state.boards.findIndex(board => board.id === boardId);
@@ -152,13 +171,18 @@ const Store = new Vuex.Store({
         }
       });
     },
-    async setAllData({ state, commit, getters }, { data, isEmpty }) {
+    async initData({ state, commit, getters }, { data, isEmpty }) {
       if (!isEmpty) {
         await commit('setAllData', data);
-        await commit('activeBoard', state.boards[0].id);
+        let activeBoard = data.starBoard === '' ? state.boards[0].id : data.starBoard;
+        await commit('starBoard', data.starBoard);
+        await commit('activeBoard', activeBoard);
+        commit('homeCollection', data.homeCollection);
       }
       await commit('changeBoolean', { key: 'firstChange', data: false });
-      setTimeout(() => { commit('changeBoolean', { key: 'isLoaded', data: true }) }, 1000)
+      setTimeout(() => {
+        commit('changeBoolean', { key: 'isLoaded', data: true });
+      }, 500);
     },
   },
 });

@@ -3,16 +3,16 @@ import App from './App';
 import store from '../store/';
 global.browser = require('webextension-polyfill');
 import '../assets/style.scss';
-import '../assets/fonts.css'
+import '../assets/fonts.css';
 
 // Element UI
-browser.storage.sync.get('oTabSettings').then(settings => {
-	settings.oTabSettings.dark ? import('element-theme-dark') : import('element-ui/lib/theme-chalk/index.css')
-})
-import './element'
+browser.storage.local.get('oTabSettings').then(settings => {
+  settings.oTabSettings.dark ? import('element-theme-dark') : null;
+});
+import './element';
 
 // Icons
-import './icons'
+import './icons';
 
 Vue.prototype.$browser = global.browser;
 

@@ -28,7 +28,7 @@ export default {
     delTask(state, { columnIndex, taskIndex }) {
       state.items[state.activeBoard][columnIndex].tasks.splice(taskIndex, 1);
     },
-    createItem(state, {title}) {
+    createItem(state, { title }) {
       state.items[state.activeBoard].push({
         title: title,
         tasks: [],

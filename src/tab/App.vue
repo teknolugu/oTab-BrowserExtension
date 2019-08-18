@@ -4,6 +4,7 @@
       <template v-if="!isEmpty">
         <Menu></Menu>
         <board-manager></board-manager>
+        <Home></Home>
         <settings></settings>
         <transition name="el-fade-in-linear" mode="out-in">
           <keep-alive>
@@ -34,33 +35,36 @@
 </template>
 <script>
 import Menu from './components/menu';
-import Settings from './components/settings';
-import BoardManager from './components/board-manager.vue'
+import Settings from './components/settings/settings';
+import BoardManager from './components/board-manager';
+import Home from './components/home';
+
 import Collections from './views/collections';
 import Notes from './views/notes';
 import Tasks from './views/tasks';
+
 import Bus from './utils/bus';
 import newBoard from '../mixins/new-board';
 export default {
   mixins: [newBoard],
-  components: { Menu, Collections, Tasks, Notes, Settings, BoardManager },
+  components: { Menu, Collections, Tasks, Notes, Settings, BoardManager, Home },
   watch: {
     allData: {
       handler(val) {
         if (!this.$store.state.firstChange) {
           this.allData.boards.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
-          this.$browser.storage.sync.set({ oTabData: this.allData });
+          this.$browser.storage.local.set({ oTabData: this.allData });
         }
       },
       deep: true,
     },
     activeBoard(val) {
       Bus.$emit('changeBoard', val);
-    }
+    },
   },
   data: () => ({
     isEmpty: false,
-    dark: false
+    dark: false,
   }),
   computed: {
     activeBoard() {
@@ -74,18 +78,18 @@ export default {
     },
   },
   async created() {
-    let storage = this.$browser.storage.sync;
-    let store = this.$store
-    let data = await storage.get(['oTabData', 'oTabMenu', 'oTabSettings']);
+    let storage = this.$browser.storage.local;
+    let store = this.$store;
+    let data = await storage.get(['oTabData', 'oTabMenu', 'oTabSettings', 'starBoard', 'homeCollection']);
     //Active Menu
-    store.commit('activeMenu', data.oTabMenu)
+    store.commit('activeMenu', data.oTabMenu);
     // Settings
-    store.commit('settings/changeSettings', data.oTabSettings)
-    this.dark = data.oTabSettings.dark
+    store.commit('settings/changeSettings', data.oTabSettings);
+    this.dark = data.oTabSettings.dark;
     // Check if board empty
     this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
     // if board not empty set all data
-    store.dispatch('setAllData', { data, isEmpty: this.isEmpty });
+    store.dispatch('initData', { data, isEmpty: this.isEmpty });
   },
 };
 </script>
@@ -94,7 +98,8 @@ export default {
 @import '../assets/slide-transitions.scss';
 
 @include slideTransition(left, -10px);
-html, body{
+html,
+body {
   height: 100%;
 }
 .empty-board {
@@ -110,7 +115,7 @@ html, body{
     height: 45px;
     padding: 10px 13px;
     border-radius: 50px;
-    @include themify($themes){
+    @include themify($themes) {
       background-color: themed('bg-color2');
       color: themed('text-primary');
     }
@@ -122,7 +127,7 @@ html, body{
   .empty-board-text {
     margin-top: 10px;
     font-size: 16px;
-    @include themify($themes){
+    @include themify($themes) {
       color: themed('text-regular');
     }
   }

@@ -26,21 +26,31 @@ import {
   Option,
   MessageBox,
   Message,
+  RadioGroup,
+  Tabs,
+  TabPane,
+  RadioButton,
+  Form,
+  FormItem,
 } from 'element-ui';
-Vue.component(CollapseTransition.name, CollapseTransition)
+Vue.component(CollapseTransition.name, CollapseTransition);
+Vue.use(Form);
+Vue.use(FormItem);
 Vue.use(Dialog);
 Vue.use(Switch);
+Vue.use(Tabs);
+Vue.use(TabPane);
 Vue.use(Option);
 Vue.use(Scrollbar);
 Vue.use(Menu);
-Vue.use(MenuItem)
+Vue.use(MenuItem);
 Vue.use(Input);
 Vue.use(Checkbox);
 Vue.use(Select);
 Vue.use(Button);
 Vue.use(Popover);
 Vue.use(Tag);
-Vue.use(Image)
+Vue.use(Image);
 Vue.use(Icon);
 Vue.use(Row);
 Vue.use(Col);
@@ -50,11 +60,13 @@ Vue.use(CollapseItem);
 Vue.use(ColorPicker);
 Vue.use(Main);
 Vue.use(Divider);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);
 
-import lang from 'element-ui/lib/locale/lang/en'
-import locale from 'element-ui/lib/locale'
+import lang from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale';
 
-locale.use(lang)
+locale.use(lang);
 
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;

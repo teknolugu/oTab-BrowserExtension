@@ -1,19 +1,18 @@
 <template>
-  <div class="task-card" :class="{ checked: task.done, isEdit: isEdit(taskIndex, columnIndex) }">
+  <div class="task-card" :class="{ checked: task.done, isEdit: edit }">
     <el-checkbox size="medium" class="checkbox-task" :value="task.done" @change="changeStatus({ columnIndex, taskIndex, data: !task.done })"></el-checkbox>
     <el-input
       placeholder="Task name"
       size="mini"
       class="editTask-input"
-      autofocus
       :value="task.name"
-      @blur="editTaskHandler"
-      @keyup.enter.native="editTaskHandler"
-      v-if="isEdit(taskIndex, columnIndex, task.name)"
-      v-model="activeEditTask.value"
-      @focus="setEditActive(columnIndex, taskIndex, task.name)"
+      @blur="editTaskHandler(columnIndex, taskIndex)"
+      @keyup.enter.native="editTaskHandler(columnIndex, taskIndex)"
+      v-if="edit || task.name === ''"
+      v-model="value"
+      @focus="setEditActive(task.name)"
     ></el-input>
-    <p :title="task.name" class="task-name" @click="setEditActive(columnIndex, taskIndex, task.name)" v-else>{{ task.name }}</p>
+    <p :title="task.name" class="task-name" @click="setEditActive(task.name)" v-else>{{ task.name }}</p>
     <unicon name="grip-horizontal-line" class="task-handler right" fill="#a6a6a6" />
     <el-button type="danger" size="mini" plain icon="el-icon-delete" class="delete-task right" circle @click="delTask(columnIndex, taskIndex)"></el-button>
   </div>
@@ -22,47 +21,26 @@
 export default {
   props: ['columnIndex', 'editTask', 'task', 'taskIndex'],
   data: () => ({
-    activeEditTask: {
-      column: null,
-      index: null,
-      value: '',
-    },
+    edit: false,
+    value: '',
   }),
-  watch: {
-    editTask: {
-      handler(task) {
-        this.activeEditTask = task;
-      },
-      deep: true,
-    },
-  },
   methods: {
-    isEdit(taskIndex, columnIndex, value) {
-      return (this.activeEditTask.index === taskIndex && this.activeEditTask.column === columnIndex) || value === '' ? true : false;
-    },
     delTask(columnIndex, taskIndex) {
       this.$store.commit('tasks/delTask', { columnIndex, taskIndex });
     },
     clearAll() {
-      this.activeEditTask = {
-        column: null,
-        index: null,
-        id: null,
-      };
+      this.edit = false;
+      this.value = '';
     },
-    setEditActive(columnIndex, taskIndex, value) {
-      this.activeEditTask = {
-        column: columnIndex,
-        index: taskIndex,
-        value: value,
-      };
+    setEditActive(value) {
+      this.edit = true;
+      this.value = value;
     },
     changeStatus(payload) {
       this.$store.commit('tasks/editTask', { ...payload, type: 'status' });
     },
-    editTaskHandler() {
-      let activeEditTask = this.activeEditTask;
-      this.$store.commit('tasks/editTask', { columnIndex: activeEditTask.column, taskIndex: activeEditTask.index, data: activeEditTask.value, type: 'value' });
+    editTaskHandler(columnIndex, taskIndex) {
+      this.$store.commit('tasks/editTask', { columnIndex, taskIndex, data: this.value, type: 'value' });
       this.clearAll();
     },
   },
@@ -97,7 +75,7 @@ export default {
 
 .task-card {
   &.isEdit {
-    border: 1px solid #409eff;
+    border: 1px solid #409eff !important;
   }
 
   &:hover {
@@ -108,7 +86,7 @@ export default {
   }
 
   border-radius: 4px;
-  @include themify($themes){
+  @include themify($themes) {
     border: 1px solid themed('light-border');
   }
   padding: 10px 13px;
