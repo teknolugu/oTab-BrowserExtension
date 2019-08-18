@@ -17,5 +17,11 @@
   "chrome_url_overrides": {
     "newtab": "tab/tab.html"
   },
-  "permissions": ["tabs", "storage"]
+  "permissions": ["tabs", "storage"],
+  "applications": {
+    "gecko" : {
+      "id": "@oTab-WebExtension", 
+      "strict_min_version": "53.0"
+    }
+  }
 }
