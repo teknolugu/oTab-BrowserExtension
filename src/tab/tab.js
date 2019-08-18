@@ -6,7 +6,7 @@ import '../assets/style.scss';
 import '../assets/fonts.css';
 
 // Element UI
-browser.storage.local.get('oTabSettings').then(settings => {
+browser.storage.sync.get('oTabSettings').then(settings => {
   settings.oTabSettings.dark ? import('element-theme-dark') : null;
 });
 import './element';

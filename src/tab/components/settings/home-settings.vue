@@ -262,6 +262,7 @@ export default {
   .el-image {
     height: 110px;
     transform: translateZ(0);
+    width: 100%;
     backface-visibility: hidden;
   }
 

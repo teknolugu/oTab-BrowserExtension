@@ -136,6 +136,7 @@ $shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     visibility: hidden;
     transform: translateY(-10px);
     opacity: 0;
+    bottom: -25px;
     transition: all 0.3s ease;
   }
   &:hover {

@@ -28,7 +28,7 @@ export default {
   methods: {
     commitSetting(payload) {
       this.$store.commit('settings/change', payload);
-      this.$browser.storage.local.set({ oTabSettings: this.settings });
+      this.$browser.storage.sync.set({ oTabSettings: this.settings });
     },
   },
   computed: {

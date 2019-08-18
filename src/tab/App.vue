@@ -78,14 +78,14 @@ export default {
     },
   },
   async created() {
-    let storage = this.$browser.storage.local;
+    let storage = this.$browser.storage;
     let store = this.$store;
-    let data = await storage.get(['oTabData', 'oTabMenu', 'oTabSettings', 'starBoard', 'homeCollection']);
+    let data = await storage.local.get(['oTabData', 'oTabMenu', 'oTabSettings', 'starBoard', 'homeCollection']);
     //Active Menu
     store.commit('activeMenu', data.oTabMenu);
-    // Settings
-    store.commit('settings/changeSettings', data.oTabSettings);
-    this.dark = data.oTabSettings.dark;
+    let settings = await storage.sync.get('oTabSettings')
+    this.$store.commit('settings/changeSettings', settings.oTabSettings)
+    this.dark = settings.oTabSettings.dark;
     // Check if board empty
     this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
     // if board not empty set all data

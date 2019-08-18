@@ -177,7 +177,7 @@ const Store = new Vuex.Store({
         let activeBoard = data.starBoard === '' ? state.boards[0].id : data.starBoard;
         await commit('starBoard', data.starBoard);
         await commit('activeBoard', activeBoard);
-        commit('homeCollection', data.homeCollection);
+        commit('homeCollection', data.homeCollection)
       }
       await commit('changeBoolean', { key: 'firstChange', data: false });
       setTimeout(() => {
