@@ -27,7 +27,7 @@ export default {
     isUrl: false,
   }),
   async created() {
-    let storage = this.$browser.storage.sync;
+    let storage = this.$browser.storage.local;
     let data = await storage.get(['oTabData', 'starBoard']);
     this.isEmpty = data.oTabData.boards.length === 0 ? true : false;
     this.$store.dispatch('initData', { data, isEmpty: this.isEmpty });
@@ -38,7 +38,7 @@ export default {
       handler(val) {
         if (!this.$store.state.firstChange) {
           this.allData.boards.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
-          this.$browser.storage.sync.set({ oTabData: this.allData });
+          this.$browser.storage.local.set({ oTabData: this.allData });
         }
       },
       deep: true,

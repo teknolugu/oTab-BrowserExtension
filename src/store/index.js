@@ -18,18 +18,6 @@ const Store = new Vuex.Store({
     homeCollection: '',
   },
   getters: {
-    boards: state => {
-      return state.boards
-    },
-    collections: state => {
-      return state.collections.items
-    },
-    notes: state => {
-      return state.notes.items
-    },
-    tasks: state => {
-      return state.tasks.items
-    },
     homeTabs: state => {
       if (state.homeCollection !== '') {
         let getId = state.homeCollection.split('=>');

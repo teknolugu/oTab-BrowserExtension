@@ -63,7 +63,7 @@ export default {
     },
     clearTabs() {
       this.$store.commit('homeCollection', '');
-      this.$browser.storage.sync.set({ homeCollection: '' });
+      this.$browser.storage.local.set({ homeCollection: '' });
     },
     openHomeSettings() {
       Bus.$emit('settings', 'home');

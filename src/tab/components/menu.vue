@@ -133,7 +133,7 @@ export default {
       this.$store.commit('activeTag', tag.id);
     },
     changeActiveTab(index) {
-      this.$browser.storage.sync.set({ oTabMenu: index });
+      this.$browser.storage.local.set({ oTabMenu: index });
       this.$store.commit('activeMenu', index);
     },
     activeBoardChange(id) {

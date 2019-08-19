@@ -5,7 +5,7 @@ global.browser = require('webextension-polyfill');
 
 browser.runtime.onInstalled.addListener(async () => {
   console.log(settings)
-  let storage = browser.storage.sync;
+  let storage = browser.storage.local;
   let data = await browser.storage.sync.get('oTabData');
   browser.storage.sync.set({
     oTabSettings: settings
@@ -20,6 +20,10 @@ browser.runtime.onInstalled.addListener(async () => {
   if (Object.entries(data).length === 0 && data.constructor === Object) {
     storage.set({
       oTabData: oTabData,
+    });
+  } else {
+    storage.set({
+      oTabData: data.oTabData,
     });
   }
 });
