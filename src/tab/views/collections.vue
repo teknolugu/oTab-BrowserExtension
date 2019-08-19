@@ -116,7 +116,7 @@ export default {
     addHomeCollection(collectionIndex) {
       let activeBoard = this.$store.state.activeBoard;
       const collectionId = `${activeBoard}=>${collectionIndex}`;
-      this.$browser.storage.local.set({ homeCollection: collectionId });
+      this.$browser.storage.sync.set({ homeCollection: collectionId });
       this.$store.commit('homeCollection', collectionId);
       this.$message.success('Add collection to home');
     },
@@ -146,7 +146,6 @@ export default {
     },
     activeTag(tagId) {
       this.$store.commit('activeTag', tagId);
-      console.log(this.$store.state.activeTag);
     },
     delCollectionTag(tagId, collectionIndex) {
       this.$store.commit('collections/delCollectionTag', { tagId, collectionIndex });

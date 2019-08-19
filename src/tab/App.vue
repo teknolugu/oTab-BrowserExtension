@@ -53,7 +53,7 @@ export default {
       handler(val) {
         if (!this.$store.state.firstChange) {
           this.allData.boards.length === 0 ? (this.isEmpty = true) : (this.isEmpty = false);
-          this.$browser.storage.local.set({ oTabData: this.allData });
+          this.$browser.storage.sync.set({ oTabData: this.allData });
         }
       },
       deep: true,
@@ -80,7 +80,7 @@ export default {
   async created() {
     let storage = this.$browser.storage;
     let store = this.$store;
-    let data = await storage.local.get(['oTabData', 'oTabMenu', 'oTabSettings', 'starBoard', 'homeCollection']);
+    let data = await storage.sync.get(['oTabData', 'oTabMenu', 'oTabSettings', 'starBoard', 'homeCollection']);
     //Active Menu
     store.commit('activeMenu', data.oTabMenu);
     let settings = await storage.sync.get('oTabSettings')

@@ -68,7 +68,7 @@ export default {
     myGallery: {
       handler(gallery) {
         this.storageUse();
-        this.$browser.storage.local.set({ myGallery: this.myGallery });
+        this.$browser.storage.sync.set({ myGallery: this.myGallery });
       },
       deep: true,
     },
@@ -97,7 +97,7 @@ export default {
       this.createFile(files[0]);
     },
     storageUse() {
-      this.$browser.storage.local.getBytesInUse('myGallery').then(used => {
+      this.$browser.storage.sync.getBytesInUse('myGallery').then(used => {
         this.storageLimit = parseFloat((used / (1024 * 1024)).toFixed(2)) / 5;
       });
     },
@@ -129,7 +129,7 @@ export default {
   },
   async created() {
     this.storageUse();
-    const gallery = await this.$browser.storage.local.get('myGallery');
+    const gallery = await this.$browser.storage.sync.get('myGallery');
     this.myGallery = gallery.myGallery;
   },
 };
