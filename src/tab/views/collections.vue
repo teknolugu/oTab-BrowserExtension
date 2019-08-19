@@ -116,7 +116,7 @@ export default {
     addHomeCollection(collectionIndex) {
       let activeBoard = this.$store.state.activeBoard;
       const collectionId = `${activeBoard}=>${collectionIndex}`;
-      this.$browser.storage.local.set({ homeCollection: collectionId });
+      this.$browser.storage.sync.set({ homeCollection: collectionId });
       this.$store.commit('homeCollection', collectionId);
       this.$message.success('Add collection to home');
     },

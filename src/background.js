@@ -4,15 +4,14 @@ import { settings, oTabData } from './assets/default-data.json';
 global.browser = require('webextension-polyfill');
 
 browser.runtime.onInstalled.addListener(async () => {
-  console.log(settings)
-  let storage = browser.storage.local;
-  let data = await browser.storage.sync.get('oTabData');
-  browser.storage.sync.set({
-    oTabSettings: settings
+  let storage = browser.storage.sync;
+  let data = await storage.get('oTabData');
+  browser.storage.local.set({
+    myGallery: []
   })
   storage.set({
+    oTabSettings: settings,
     homeCollection: 'primary_board=>0',
-    myGallery: [],
     starBoard: '',
     oTabMenu: '0',
   });

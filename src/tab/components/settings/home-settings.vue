@@ -13,9 +13,6 @@
           <el-option class="capitalize" v-for="category in photoCategories" :key="category" :value="category" :label="category"></el-option>
         </el-select>
       </div>
-      <div class="limit-storage" v-else>
-        <div class="bar" :style="{ width: storageLimit }"></div>
-      </div>
     </div>
     <div class="home-settings__content">
       <transition name="slide-fade-left" mode="out-in">
@@ -56,7 +53,6 @@ export default {
     settings: Object,
   },
   data: () => ({
-    storageLimit: 0,
     myGallery: [],
     imageSize: '?auto=compress&cs=tinysrgb&dpr=2&h=492&w=328',
     type: 'photos',
@@ -64,15 +60,6 @@ export default {
     backgroundTypes: ['photos', 'my gallery'],
     photoCategories: ['all', 'space', 'mountain', 'city', 'nature', 'sky'],
   }),
-  watch: {
-    myGallery: {
-      handler(gallery) {
-        this.storageUse();
-        this.$browser.storage.local.set({ myGallery: this.myGallery });
-      },
-      deep: true,
-    },
-  },
   methods: {
     deleteGallery(index) {
       this.myGallery.splice(index, 1);
@@ -81,6 +68,7 @@ export default {
       this.$emit('change', { key: 'homeBackground', value: image });
       if (!this.myGallery.some(gallery => gallery.url === image.url)) {
         this.myGallery.push(image);
+        this.$browser.storage.local.set({ myGallery: this.myGallery });
       }
     },
     onDrop(event) {
@@ -95,11 +83,6 @@ export default {
     onChange(event) {
       let files = event.target.files;
       this.createFile(files[0]);
-    },
-    storageUse() {
-      this.$browser.storage.local.getBytesInUse('myGallery').then(used => {
-        this.storageLimit = parseFloat((used / (1024 * 1024)).toFixed(2)) / 5;
-      });
     },
     async createFile(file) {
       if (!file.type.match('image.*')) {
@@ -116,6 +99,7 @@ export default {
         url: dataUrl,
         author: '',
       });
+      this.$browser.storage.local.set({ myGallery: this.myGallery });
     },
   },
   computed: {
@@ -128,9 +112,13 @@ export default {
     },
   },
   async created() {
-    this.storageUse();
     const gallery = await this.$browser.storage.local.get('myGallery');
-    this.myGallery = gallery.myGallery;
+    if(gallery.myGallery.length >= 1 && typeof gallery.myGallery[0].url === 'undefined'){
+      this.$browser.storage.local.remove('myGallery')
+      this.$browser.storage.local.set({myGallery: []})
+    }else{
+      this.myGallery = gallery.myGallery;
+    }
   },
 };
 </script>
@@ -140,18 +128,6 @@ export default {
 
 @include slideTransition(left, -10px, 0.3s);
 
-.limit-storage {
-  @include themify($themes) {
-    background-color: themed('bg-color2');
-  }
-  border-radius: 30px;
-  .bar {
-    border-radius: 30px;
-    height: 10px;
-    background-color: #409eff;
-  }
-  width: 250px;
-}
 
 .my-gallery {
   &__content {
