@@ -11,23 +11,23 @@
       alt="Contributions welcome" />
   </a>
  <!-- issues -->
-  <a href="https://github.com/WinTenDev/oTab-WebExtension/issues">
-    <img src="https://img.shields.io/github/issues/WinTenDev/oTab-WebExtension.svg"
+  <a href="https://github.com/WinTenDev/oTab-BrowserExtension/issues">
+    <img src="https://img.shields.io/github/issues/WinTenDev/oTab-BrowserExtension.svg"
       alt="Issues" />
   </a>
   <!-- Forks Status -->
-  <a href="https://github.com/WinTenDev/oTab-WebExtension/network/members">
-    <img src="https://img.shields.io/github/forks/WinTenDev/oTab-WebExtension.svg"
+  <a href="https://github.com/WinTenDev/oTab-BrowserExtension/network/members">
+    <img src="https://img.shields.io/github/forks/WinTenDev/oTab-BrowserExtension.svg"
       alt="Forks Status" />
   </a>
   <!-- Stars Status -->
-  <a href="https://github.com/WinTenDev/oTab-WebExtension/stargazers">
-    <img src="https://img.shields.io/github/stars/WinTenDev/oTab-WebExtension.svg"
+  <a href="https://github.com/WinTenDev/oTab-BrowserExtension/stargazers">
+    <img src="https://img.shields.io/github/stars/WinTenDev/oTab-BrowserExtension.svg"
       alt="Stars Status" />
   </a>
  <!-- License --> 
-  <a href="https://github.com/WinTenDev/oTab-WebExtension/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/WinTenDev/oTab-WebExtension.svg"
+  <a href="https://github.com/WinTenDev/oTab-BrowserExtension/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/WinTenDev/oTab-BrowserExtension.svg"
       alt="License MIT" />
   </a>
   <!-- Telegram -->
@@ -64,11 +64,11 @@ type `yarn build-zip` to build zip file from `dist` folder
 
 ## Bug Report
 
-If you find a bug, kindly open an issue [here](https://github.com/WinTenDev/oTab-WebExtension/issues/new).
+If you find a bug, kindly open an issue [here](https://github.com/WinTenDev/oTab-BrowserExtension/issues/new).
 
 ## Feature Request
 
-Feature requests are always welcome. If you'd like to request a new function, feel free to do so by opening an issue [here](https://github.com/WinTenDev/oTab-WebExtension/issues/new). Please include sample queries and their corresponding results.
+Feature requests are always welcome. If you'd like to request a new function, feel free to do so by opening an issue [here](https://github.com/WinTenDev/oTab-BrowserExtension/issues/new). Please include sample queries and their corresponding results.
 
 ## License
 The MIT License (MIT)
