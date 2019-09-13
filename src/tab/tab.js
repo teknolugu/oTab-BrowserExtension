@@ -1,24 +1,30 @@
 import Vue from 'vue';
 import App from './App';
-import store from '../store/';
-global.browser = require('webextension-polyfill');
+import store from '../store';
+
+import vuetify from '../vuetify';
+import Icons from './icons';
+
+Vue.prototype.$icons = Icons;
+
 import '../assets/style.scss';
 import '../assets/fonts.css';
 
-// Element UI
-browser.storage.sync.get('oTabSettings').then(settings => {
-  settings.oTabSettings.dark ? import('element-theme-dark') : null;
-});
-import './element';
+global.browser = require('webextension-polyfill');
 
-// Icons
-import './icons';
+Vue.mixin({
+  methods: {
+    sendMessage(type, data = null) {
+      return browser.runtime.sendMessage({ type, data });
+    },
+  },
+});
 
 Vue.prototype.$browser = global.browser;
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
+  vuetify,
   store,
   render: h => h(App),
 });

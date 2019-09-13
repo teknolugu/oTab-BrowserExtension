@@ -1,46 +1,51 @@
 <template>
-  <div class="open-tabs">
-    <p class="open-tabs-title">Open Tabs</p>
-    <Draggable :clone="cloneTab" class="list-group" :list="openTabs" :group="groupOptions" style="min-height: 200px" v-if="openTabs.length !== 0">
-      <el-card shadow="never" class="tabs-card" v-for="(tab, index) in openTabs" :key="index + tab.url">
-        <div class="tabs-favicon">
-          <el-image :src="tab.favIconUrl" v-if="tab.favIconUrl">
-            <i class="el-icon-picture-outline-round" slot="error"></i>
-          </el-image>
-          <i class="el-icon-picture-outline-round" v-else></i>
-        </div>
-        <div class="tabs-content">
-          <p class="tabs-title">{{ tab.title }}</p>
-          <p class="tabs-url">{{ tab.url }}</p>
-        </div>
-        <unicon name="grip-horizontal-line" fill="#a6a6a6" />
-      </el-card>
-    </Draggable>
-    <div class="no-open-tabs" v-else>
-      <div class="no-open-tabs-icon">
-        <span>
-          <unicon height="35px" width="35px" name="window"></unicon>
-        </span>
-      </div>
-      <div class="no-open-tabs-content">
-        <p>There's no open tabs</p>
-      </div>
+  <v-card class="side-nav-open-tabs fill-height" :max-height="sideNavMaxHeight">
+    <div class="d-flex align-center pa-4 justify-space-between">
+      <span class="grey--text body-2 text-uppercase">open tabs</span>
+      <v-btn small color="info" depressed @click="saveSession" :disabled="openTabs.length === 0">Save session</v-btn>
     </div>
-  </div>
+    <v-card-text class="pt-0 scroller side-nav-open-tabs--content">
+      <Draggable :clone="cloneTab" class="list-group" ghost-class="ghost-card" :list="openTabs" :group="groupOptions" style="min-height: 200px" v-if="openTabs.length !== 0">
+        <v-card outlined v-for="(tab, index) in openTabs" :key="index" class="tab-card">
+          <v-list-item dense @click.stop>
+            <v-list-item-icon class="mr-3 my-3">
+              <v-img contain width="30px" :src="tab.favIconUrl"></v-img>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ tab.title }}</v-list-item-title>
+              <v-list-item-subtitle>{{ tab.url }}</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-icon>{{ $icons.mdiDrag }}</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </v-card>
+      </Draggable>
+      <empty-item v-else title="You have no open tabs" :icon="$icons.mdiWeb"></empty-item>
+    </v-card-text>
+  </v-card>
 </template>
 <script>
 import Draggable from 'vuedraggable';
 import openTabs from '../../../mixins/open-tabs';
+import EmptyItem from '../empty-item';
+
 export default {
-  components: { Draggable },
+  components: { Draggable, EmptyItem },
   mixins: [openTabs],
   data: () => ({
     groupOptions: { name: 'tabs', pull: 'clone', put: false, revertClone: true },
   }),
   methods: {
     cloneTab(tab) {
-      let copyTab = { ...tab };
+      const copyTab = { ...tab };
       return copyTab;
+    },
+    saveSession() {
+      const date = new Date(Date.now()).toString();
+      const collectionName = `${date.slice(4, 10)}, ${date.slice(16, 21)}`;
+      this.$store.commit('collections/createCollection', { title: collectionName, tabs: [...this.openTabs] });
+      this.$browser.tabs.remove(this.openTabs.map(tab => tab.id));
     },
   },
   watch: {
@@ -51,109 +56,28 @@ export default {
       deep: true,
     },
   },
+  computed: {
+    sideNavMaxHeight() {
+      return window.innerHeight - 140;
+    },
+  },
 };
 </script>
 <style lang="scss">
-@import '../../../assets/themes/themes';
-.no-open-tabs {
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  justify-content: center;
-  padding: 20px;
-  align-items: center;
-}
-
-.no-open-tabs-content {
-  font-size: 16px;
-  font-weight: 500;
-  color: #818181;
-}
-
-.no-open-tabs-icon {
-  svg {
-    vertical-align: bottom;
-    fill: #9e9e9e;
+.side-nav-open-tabs {
+  &--content {
+    max-height: calc(100% - 80px);
+    overflow: auto;
   }
-
-  margin-bottom: 5px;
-  padding: 20px;
-  @include themify($themes) {
-    background-color: themed('bg-color2');
-  }
-  border-radius: 50px;
+  position: sticky;
+  top: 75px;
+  // box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important
 }
-
-.open-tabs-title {
-  margin: 0 20px;
-  font-weight: 600;
-}
-
-.tabs-favicon {
-  margin-right: 10px;
-
-  .el-image {
-    width: 25px;
-  }
-
-  i {
-    font-size: 25px;
-  }
-}
-
-.tabs-title {
-  font-weight: 600;
-  @include themify($themes) {
-    color: themed('text-primary');
-  }
-  line-height: 1.4;
-}
-
-.tabs-url {
-  @include themify($themes) {
-    color: themed('text-regular');
-  }
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-.tabs-content {
-  width: calc(100% - 65px);
-  margin-right: 10px;
-
-  p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0;
-  }
-}
-
-.tabs-card {
+.tab-card {
+  margin-top: 9px;
   cursor: grab;
-  transition: border 0.2s ease !important;
-  &:hover {
-    @include themify($themes) {
-      background-color: themed('hover');
-    }
-    border-left: 3px solid #20a0ff;
-  }
-
-  margin: 10px 20px 0 20px;
-
-  .el-card__body {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    padding: 13px;
-  }
-
-  .tabs-favicon {
-    display: inline-block;
-  }
-
-  .tabs-content {
-    display: inline-block;
+  &:first-child {
+    margin-top: 0;
   }
 }
 </style>

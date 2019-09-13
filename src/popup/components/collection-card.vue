@@ -1,25 +1,38 @@
 <template>
-  <div class="collection-card-container">
-    <template v-for="(collection, index) in collectionList">
-      <div
-        class="collection-card"
-        :class="{ 'active-collection': getId(collection.title, index) === activeCollection }"
-        @click="changeActive(collection.title, index)"
-        v-show="filterSearch(collection.title)"
-      >
-        <p class="title">{{ collection.title }}</p>
-        <div class="info">
-          <span class="length">{{ collection.tabs.length }} Tabs</span>
-          <el-button size="mini" type="primary" :disabled="collection.tabs.length === 0" @click="openAllTabs(collection.tabs)">Open all</el-button>
-        </div>
-      </div>
-    </template>
+  <div>
+    <v-card
+      outlined
+      v-for="(collection, index) in collectionList"
+      :key="index"
+      :class="{ 'active-collection': getId(collection.title, index) === activeCollection }"
+      class="collection-card"
+      @click="changeActive(collection.title, index)"
+      v-show="filterSearch(collection.title)"
+    >
+      <v-list-item @click="changeActive(collection.title, index)">
+        <v-list-item-content>
+          <v-list-item-title :title.native="collection.title">
+            <span class="d-inline-block text-truncate subtitle-2" style="max-width: 80%; vertical-align: middle;">{{ collection.title }}</span>
+            <span class="caption grey--text">({{ collection.tabs.length }})</span>
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action class="ma-0">
+          <v-btn small depressed color="primary" @click.stop="openAllTabs(collection.tabs)" class="px-1" :disabled="collection.tabs.length === 0">Open All</v-btn>
+        </v-list-item-action>
+      </v-list-item>
+    </v-card>
   </div>
 </template>
 <script>
 import Bus from '../bus';
+
 export default {
-  props: ['search'],
+  props: {
+    search: {
+      type: String,
+      default: '',
+    },
+  },
   watch: {
     activeCollection(value) {
       Bus.$emit('changeIndex', value[value.length - 1]);
@@ -41,7 +54,7 @@ export default {
       this.activeCollection = this.getId(name, index);
     },
     getId(name, index) {
-      let id = name.toLowerCase().replace(/ /g, '_') + index;
+      const id = name.toLowerCase().replace(/ /g, '_') + index;
       return id;
     },
     openAllTabs(tabs) {
@@ -51,7 +64,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.changeActive(this.collectionList[0].title, 0);
-    }, 500);
+    }, 1000);
   },
   created() {
     Bus.$on('changeBoard', () => this.changeActive(this.collectionList[0].title, 0));
@@ -59,55 +72,16 @@ export default {
 };
 </script>
 <style lang="scss">
-.collection-card-container {
-  padding: 0 15px;
-}
 .collection-card {
   transition: all 0.3s ease;
 
   &.active-collection {
-    border: 1px solid #409eff;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #409eff !important;
+    background-color: #00000008;
   }
-
-  cursor: pointer;
-  padding: 13px 15px;
-  border: 1px solid #00000038;
-  border-radius: 4px;
   margin-top: 9px;
-
   &:first-child {
     margin-top: 0px;
-  }
-
-  .title {
-    font-size: 14px;
-    display: inline-block;
-    text-transform: capitalize;
-    margin: 0;
-  }
-
-  .info {
-    margin-top: -6px;
-
-    .length {
-      margin-bottom: 3px;
-      text-align: center;
-      color: #909399;
-      font-size: 12px;
-    }
-
-    button {
-      font-size: 11px;
-      padding: 3px 5px !important;
-    }
-
-    display: inline-block;
-    float: right;
-
-    * {
-      display: block;
-    }
   }
 }
 </style>

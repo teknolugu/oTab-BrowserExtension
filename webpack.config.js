@@ -5,6 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtensionReloader = require('webpack-extension-reloader');
 const { VueLoaderPlugin } = require('vue-loader');
 const { version } = require('./package.json');
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+const Fiber = require('fibers');
 
 const config = {
   mode: process.env.NODE_ENV,
@@ -17,7 +19,7 @@ const config = {
   output: {
     path: __dirname + '/dist',
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.js', '.vue'],
@@ -32,9 +34,7 @@ const config = {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
-            plugins: [
-                "@babel/plugin-syntax-dynamic-import"
-            ]
+          plugins: ['@babel/plugin-syntax-dynamic-import'],
         },
         exclude: /node_modules/,
       },
@@ -52,12 +52,18 @@ const config = {
         },
       },
       {
-        test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-      },
-      {
-        test: /\.sass$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax'],
+        test: /\.s(c|a)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass'),
+              fiber: require('fibers'),
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif|svg|ico)$/,
@@ -69,6 +75,13 @@ const config = {
     ],
   },
   plugins: [
+    new VuetifyLoaderPlugin({
+      match(originalTag, { kebabTag, camelTag, path, component }) {
+        if (kebabTag.startsWith('core-')) {
+          return [camelTag, `import ${camelTag} from '@/components/core/${camelTag.substring(4)}.vue'`];
+        }
+      },
+    }),
     new webpack.DefinePlugin({
       global: 'window',
     }),

@@ -1,39 +1,66 @@
 <template>
-  <el-dialog :visible.sync="visible" width="90%" class="boardManager-dialog" fullscreen>
-    <div class="boardManager-header" slot="title">
-      <p class="boardManager-header--title">Boards</p>
-      <span class="boards-total">{{ boards.length }}</span>
-      <el-input v-model="search" icon="el-icon-search" prefix-icon="el-icon-search" placeholder="Search boards" size="medium" class="boardManager-header--search"></el-input>
-    </div>
-    <draggable v-model="boards" class="boardManager-content" handle=".board-card">
-      <template v-for="board in boards">
-        <board-card :board="board"></board-card>
-      </template>
-      <div class="new-board-card" @click="createNewBoard">
-        <div class="new-board-card--content">
-          <i class="el-icon-plus"></i>
-          <p>New Board</p>
+  <v-dialog origin="top center" v-model="visible" fullscreen content-class="custom-fullscreen-dialog">
+    <v-card>
+      <v-card-title>
+        <span>Boards</span>
+        <v-text-field outlined class="board-manager-search ml-4" v-model="search" hide-details placeholder="Search boards..."></v-text-field>
+        <v-btn icon @click="visible = false" class="right">
+          <v-icon>{{ $icons.mdiClose }}</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-divider class="mb-5 mt-2"></v-divider>
+      <v-card-text>
+        <div class="d-flex align-center mb-4 justify-space-between">
+          <v-btn depressed small color="primary" @click="newBoard">
+            <v-icon left>{{ $icons.mdiPlus }}</v-icon>
+            New board
+          </v-btn>
+          <span class="text-uppercase caption font-weight-medium">
+            you have <span class="font-weight-bold">{{ $store.state.boards.length }}</span> board(s)
+          </span>
         </div>
-      </div>
-    </draggable>
-  </el-dialog>
+        <draggable v-model="boards" class="boardManager-content d-flex flex-row flex-wrap" handle=".board-card">
+          <template v-for="board in boards">
+            <board-card :board="board"></board-card>
+          </template>
+        </draggable>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 <script>
+import Draggable from 'vuedraggable';
 import Bus from '../utils/bus';
 import BoardCard from './board-card';
-import Draggable from 'vuedraggable';
-import NewBoard from '../../mixins/new-board';
+
 export default {
   components: { BoardCard, Draggable },
-  mixins: [NewBoard],
   data: () => ({
     search: '',
     visible: false,
   }),
+  methods: {
+    async newBoard() {
+      const result = await this.$dialog.prompt({
+        text: 'Board name',
+        title: 'Create new board',
+      });
+      if (typeof result === 'undefined') {
+        this.$dialog.notify.error("Can't use current name");
+      } else {
+        this.$store.dispatch('createNewBoard', result).catch(message => {
+          this.$dialog.notify.error(message);
+        });
+      }
+    },
+  },
   computed: {
     boards: {
       get() {
-        return this.$store.getters.allData.boards.filter(board => board.title.toLowerCase().match(this.search));
+        if (this.$store.state.boards.length !== 0) {
+          return this.$store.state.boards.filter(board => board.title.toLowerCase().match(this.search));
+        }
+        return [];
       },
       set(boards) {
         this.$store.commit('changeBoards', boards);
@@ -46,58 +73,16 @@ export default {
 };
 </script>
 <style lang="scss">
-@import '../../assets/themes/themes';
-
-.boardManager-dialog {
-  .el-dialog__header {
-    padding: 20px !important;
-
-    button {
-      top: 25px !important;
-      right: 30px !important;
-      font-size: 23px;
-    }
-
-    @include themify($themes) {
-      border-bottom: 1px solid themed('light-border');
-    }
-  }
-
-  .el-dialog__body {
+.board-manager-search {
+  .v-input__slot {
+    width: 200px;
+    font-size: 14px;
+    min-height: 20px !important;
   }
 }
-
-.boardManager-header {
-  .boards-total {
-    padding: 5px 10px;
-    border-radius: 30px;
-    @include themify($themes) {
-      background-color: themed('bg-color2');
-    }
-    margin-left: 10px;
-    margin-right: 15px;
+.custom-fullscreen-dialog {
+  .v-card {
+    border-radius: 0px !important;
   }
-  &--title {
-    font-size: 16px;
-
-    @include themify($themes) {
-      color: themed('text-primary');
-    }
-
-    font-weight: 500;
-    display: inline-block;
-    margin: 0;
-  }
-
-  &--search {
-    width: 250px !important;
-    margin-left: 15px;
-  }
-}
-
-.boardManager-content {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
 }
 </style>

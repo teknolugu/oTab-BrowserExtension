@@ -1,21 +1,21 @@
 import Vue from 'vue';
 import App from './App';
-import store from '../store/';
+import store from '../store';
 import '../assets/style.scss';
 
-global.browser = require('webextension-polyfill');
+import vuetify from '../vuetify';
+import Icons from './icons';
 
-// Element UI
-browser.storage.sync.get('oTabSettings').then(settings => {
-  settings.oTabSettings.dark ? import('element-theme-dark') : null;
-});
-import './element';
+Vue.prototype.$icons = Icons;
+
+global.browser = require('webextension-polyfill');
 
 Vue.prototype.$browser = global.browser;
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  vuetify,
   store,
   render: h => h(App),
 });

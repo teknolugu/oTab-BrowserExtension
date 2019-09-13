@@ -1,55 +1,52 @@
 <template>
-  <div class="box-card" :class="{ 'edit-mode': editMode }">
-    <a :href="tab.url" :target="tabTarget" class="tab-link"></a>
-    <div class="tab-header">
-      <div class="header-image">
-        <el-image :src="tab.favIconUrl" class="header-favicon" v-if="tab.favIconUrl">
-          <span slot="error" class="header-error-favicon">
-            <i class="el-icon-picture-outline-round"></i>
-          </span>
-        </el-image>
-        <span class="header-no-favicon" v-else>
-          <i class="el-icon-picture-outline-round"></i>
-        </span>
-        <div class="header-image-utils" align="right">
-          <template v-if="editMode">
-            <el-button size="mini" @click="clearAll">Cancel</el-button>
-            <el-button size="mini" type="primary" @click="editTab">Done</el-button>
-          </template>
-          <template v-else>
-            <unicon name="multiply" height="20px" @click="deleteTab(index)" width="20px" title="edit" class="tab-delete-icon" fill="#a6a6a6" />
-            <unicon name="pen" height="20px" width="20px" title="edit" class="tab-edit-icon" fill="#a6a6a6" @click="editTabActive(tab)" />
-            <unicon name="grip-horizontal-line" class="drag-handle" fill="#a6a6a6" />
-          </template>
-        </div>
+  <v-card hover class="tab-card-comp">
+    <a :href="tab.url" :target="tabTarget" class="tab-link" v-show="!editMode"></a>
+    <v-card-title>
+      <v-img height="26px" max-width="23px" width="23px" contain :src="tab.favIconUrl"></v-img>
+      <div class="flex-grow-1"></div>
+      <div class="d-flex flex-row align-center clickable">
+        <template v-if="!editMode">
+          <v-icon title="Delete" color="error" class="tab-content-action" @click="deleteTab(index)">{{ $icons.mdiClose }}</v-icon>
+          <v-icon title="Edit" color="primary" class="mx-1 tab-content-action" style="font-size: 21px" @click="activateEditTab">{{ $icons.mdiPencil }}</v-icon>
+          <v-icon class="drag-handle">{{ $icons.mdiDrag }}</v-icon>
+        </template>
+        <template v-else>
+          <v-btn small text class="mr-2" @click="clearAll">Cancel</v-btn>
+          <v-btn small color="primary" depressed @click="editTab">Save</v-btn>
+        </template>
       </div>
-      <div class="header-content">
-        <el-input size="small" resize="none" autosize type="textarea" :autosize="{ minRows: 2, maxRows: 2 }" placeholder="Title" v-model="edit.title" v-if="editMode"> </el-input>
-        <p class="tab-title" :title="tab.title" v-else>{{ tab.title }}</p>
-        <p class="tab-url-host" v-show="!editMode">{{ tab.url | getHost }}</p>
-      </div>
-    </div>
-    <div class="box-card__content">
-      <el-input
-        class="copy-url"
-        placeholder="URL"
+    </v-card-title>
+    <v-card-text class="pb-2">
+      <template v-if="!editMode">
+        <p class="mb-0 font-weight-medium tab-card-title">{{ tab.title }}</p>
+        <p class="mb-0 body-2">{{ tab.url | getHost }}</p>
+      </template>
+      <v-text-field class="pt-0" hide-details v-model="edit.title" v-else></v-text-field>
+    </v-card-text>
+    <v-card-actions class="tab-card-actions grey--text bg-card">
+      <v-text-field
         v-model="edit.url"
-        :readonly="!editMode"
-        size="mini"
+        solo
+        flat
         v-if="copyUrl || editMode"
-        :autofocus="!editMode"
         :id="'copy' + index"
-      ></el-input>
-      <p class="tab-url" :title="tab.url" v-else>{{ tab.url }}</p>
-      <span class="copy-tab-url" title="Click to copy URL" @click="copyToClipboard('copy' + index, tab.url)">
-        <i class="el-icon-copy-document"></i>
-      </span>
-    </div>
-  </div>
+        hide-details
+        class="tab-card-url"
+        :autofocus="copyUrl"
+        :readonly="copyUrl"
+        height="14px"
+      ></v-text-field>
+      <div class="tab-card-url-content d-flex align-center" v-else>
+        <p class="body-2 ma-0 text-truncate" :title="tab.url">{{ tab.url }}</p>
+        <v-icon small title="Click to copy URL" class="ml-2 clickable background" @click="copyToClipboard(index, tab.url)">{{ $icons.mdiContentCopy }}</v-icon>
+      </div>
+    </v-card-actions>
+  </v-card>
 </template>
 <script>
-import Bus from '../../utils/bus';
 import url from 'url';
+import Bus from '../../utils/bus';
+
 export default {
   props: {
     tab: {
@@ -78,7 +75,7 @@ export default {
   }),
   filters: {
     getHost(value) {
-      let parseURL = url.parse(value);
+      const parseURL = url.parse(value);
       return parseURL.host;
     },
   },
@@ -90,10 +87,7 @@ export default {
   methods: {
     editTab() {
       if (this.edit.title === '' || this.edit.url === '') {
-        this.$message({
-          message: 'Tab Title/URL is blank',
-          type: 'warning',
-        });
+        this.$dialog.notify.error('Tab Title/URL is blank');
       } else {
         this.$store.commit('collections/editTab', {
           ...this.edit,
@@ -103,8 +97,8 @@ export default {
         this.clearAll();
       }
     },
-    editTabActive(tab) {
-      this.edit = { ...tab };
+    activateEditTab() {
+      this.edit = { ...this.$props.tab };
       this.editMode = true;
     },
     clearAll() {
@@ -115,7 +109,7 @@ export default {
       this.edit.url = url;
       this.copyUrl = true;
       setTimeout(() => {
-        document.querySelector(`#${id}`).select();
+        document.querySelector(`#copy${id}`).select();
         document.execCommand('copy');
       }, 100);
       setTimeout(() => {
@@ -123,8 +117,8 @@ export default {
       }, 1500);
     },
     deleteTab(tabIndex) {
-      let collectionIndex = this.$props.collectionIndex;
-      this.$store.commit('collections/removeCollectionTab', { tabIndex: tabIndex, collectionIndex: collectionIndex });
+      const { collectionIndex } = this.$props;
+      this.$store.commit('collections/removeCollectionTab', { tabIndex, collectionIndex });
     },
   },
   created() {
@@ -133,200 +127,69 @@ export default {
 };
 </script>
 <style lang="scss">
-@import '../../../assets/themes/themes';
-$transition-icon: all 0.2s ease;
-
-.copy-url {
-  width: 78% !important;
-  margin-right: 10px;
-
-  input {
-    padding-left: 7px;
+.drag-handle {
+  cursor: grab;
+}
+.tab-card-comp {
+  &.theme--dark {
+    border: 1px solid #595959;
   }
-}
-
-.edit-mode {
-  .header-image {
-    margin-bottom: 7px;
+  .tab-content-action {
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s ease;
   }
-}
-
-.header-image {
-  display: flex;
-  align-items: center;
-}
-
-.header-image-utils {
-  svg {
-    transition: $transition-icon;
+  &:hover {
+    .tab-content-action {
+      visibility: visible;
+      opacity: 1;
+    }
   }
-}
-
-.copy-tab-url {
-  padding: 5px;
-
-  @include themify($themes) {
-    background-color: themed('bg-color');
+  .clickable {
+    z-index: 1;
   }
-
-  cursor: pointer;
-  border-radius: 30px;
-
-  i {
-    font-size: 16px;
-    vertical-align: text-top;
-  }
-}
-
-.tab-delete-icon {
-  color: #a6a6a6;
-  margin-right: 3px;
-  font-size: 24px;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.tab-delete-icon:hover {
-  fill: #f56c6c;
-}
-
-.tab-edit-icon {
-  margin-right: 6px;
-  cursor: pointer;
-  opacity: 0;
-}
-
-.tab-edit-icon:hover {
-  fill: #409eff;
-}
-
-.box-card {
-  position: relative;
   .tab-link {
     z-index: 0;
     height: 100%;
     width: 100%;
     position: absolute;
   }
-  border-radius: 4px;
-  cursor: pointer;
-  display: block;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  box-shadow: 0 0 1px 1px #607d8b08, 1px 1px 10px #4341571a;
-  &:hover {
-    box-shadow: 1px 1px 10px #4341573a;
-  }
-  &__content {
-    @include themify($themes) {
-      background-color: themed('bg-color2');
-      color: themed('text-regular');
-    }
-    padding: 10px;
-  }
-
-  .tab-url {
-    font-size: 14px;
-    display: inline-block;
-    width: 78%;
-    margin: 0;
-    margin-right: 10px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    vertical-align: bottom;
-    white-space: nowrap;
-  }
 }
-
-.box-card:hover {
-  .tab-edit-icon,
-  .tab-delete-icon {
-    opacity: 1;
-  }
-}
-
-.drag-handle {
-  vertical-align: sub;
-
-  &:hover {
-    fill: #686868;
-  }
-
-  cursor: grab;
-}
-.header-image-utils *,
-.copy-tab-url {
-  z-index: 1;
-  position: relative;
-}
-.header-image-utils {
+.tab-card-url-content {
   width: 100%;
-}
-
-.header-error-favicon {
-  font-size: 26px;
-  vertical-align: bottom;
-}
-
-.header-no-favicon {
-  vertical-align: super;
-  font-size: 26px;
-  margin-right: 6px;
-}
-
-.box-card {
-  @include themify($themes) {
-    background-color: themed('card');
-  }
-  border: none !important;
-}
-
-.tab-header {
-  padding: 11px 13px;
-  @include themify($themes) {
-    background-color: themed('card');
-    border-bottom: 1px solid themed('light-border');
-  }
-  .header-favicon {
-    width: 26px;
-    margin-right: 6px;
-  }
-}
-
-.header-content {
-  display: inline-block;
-  width: 100%;
-
-  textarea {
-    padding: 5px 10px;
-  }
-
   p {
-    margin: 0;
+    width: 95%;
+    display: inline-block;
   }
+  i {
+    padding: 5px;
+    // position: absolute;
+    // right: 16px;
 
-  .tab-title {
-    @include themify($themes) {
-      color: themed('text-primary');
-    }
-
-    line-height: 1.2;
-    font-size: 15px;
-    font-weight: 600;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    max-height: 36px;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
+    cursor: pointer;
+    border-radius: 30px;
   }
+}
 
-  .tab-url-host {
-    line-height: 1.2;
-    font-size: 13px;
-
-    @include themify($themes) {
-      color: themed('text-regular');
-    }
+.tab-card-url {
+  .v-input__control {
+    border: 1px solid #0000001a;
+    height: 27px;
+    min-height: 25px !important;
+    font-size: 14px;
   }
+}
+.tab-card-title {
+  line-height: 1.2rem !important;
+  font-size: 15px !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  max-height: 36px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+.tab-card-actions {
+  padding: 10px 17px;
 }
 </style>

@@ -1,29 +1,30 @@
 <template>
-  <div class="header">
-    <div class="container-input">
-      <el-select v-if="!addCollectionMode" placeholder="Select Board" class="select-board" name="select-board" size="medium" :value="board.id" @change="activeBoardChange">
-        <el-option v-for="board in $store.getters.boardList" :key="board.id" :label="board.title" :value="board.id"> </el-option>
-      </el-select>
-      <div class="add-mode" v-else>
-        <el-input autofocus size="medium" placeholder="Add collection" :maxlength="25" v-model="title"></el-input>
-        <el-button icon="el-icon-check" size="mini" type="primary" circle @click="addCollection"></el-button>
-      </div>
-    </div>
-    <el-button
-      :disabled="!isUrl"
-      :type="addButonType"
-      plain
-      size="mini"
-      class="add-collection"
-      :class="{ 'close-button': addCollectionMode }"
-      icon="el-icon-plus"
-      circle
-      @click="addMode"
-    ></el-button>
-  </div>
+  <v-app-bar height="130px" class="header" dark color="primary" flat extended>
+    <v-row class="align-center">
+      <v-col cols="2" class="pr-0">
+        <span class="title font-weight-regular mr-n1">o</span>
+        <span class="title font-weight-bold">Tab</span>
+      </v-col>
+      <v-col cols="10">
+        <v-select
+          class="select-board"
+          flat
+          solo
+          hide-details
+          :items="$store.getters.boardList"
+          item-text="title"
+          item-value="id"
+          :value="board.id"
+          @change="activeBoardChange"
+          return-object
+        ></v-select>
+      </v-col>
+    </v-row>
+  </v-app-bar>
 </template>
 <script>
 import Bus from '../bus';
+
 export default {
   props: {
     board: {
@@ -32,32 +33,8 @@ export default {
         id: '',
       }),
     },
-    isUrl: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data: () => ({
-    addCollectionMode: false,
-    title: '',
-  }),
-  computed: {
-    addButonType() {
-      return this.addCollection ? 'default' : 'primary';
-    },
   },
   methods: {
-    addCollection() {
-      if (this.title !== '') {
-        this.$store.commit('collections/createCollection', { title: this.title });
-        this.title = '';
-        this.addCollectionMode = false;
-      }
-    },
-    addMode() {
-      this.addCollectionMode = !this.addCollectionMode;
-      this.title = '';
-    },
     activeBoardChange(boardId) {
       this.$store.commit('activeBoard', boardId);
       Bus.$emit('changeBoard');
@@ -66,31 +43,25 @@ export default {
 };
 </script>
 <style lang="scss">
-.add-mode {
-  .el-input {
-    width: 83%;
-  }
-  button {
-    margin-left: 10px;
-  }
-}
 .header {
-  padding: 13px 15px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  .v-toolbar__content {
+    align-items: start !important;
+  }
 }
 
-.container-input {
-  display: inline-block;
-  .select-board {
-    width: 100%;
+.select-board {
+  .v-input__control {
+    min-height: 0 !important;
+    .v-input__slot {
+      background: #3d96f2 !important;
+      border: 1px solid #3a8ce0;
+      height: 40px;
+    }
   }
-  width: 83%;
 }
-.close-button {
-  transform: rotate(45deg);
-}
-.add-collection {
-  transition: all 0.7s ease;
-  margin-left: 10px !important;
+
+.header-button {
+  background-color: #3f99f7 !important;
+  border: 1px solid #3a8ce0 !important;
 }
 </style>

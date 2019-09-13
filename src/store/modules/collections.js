@@ -13,7 +13,7 @@ export default {
       state.items[state.activeBoard][collectionIndex].tabs.push(payload);
     },
     editTab(state, { title, url, collectionIndex, index }) {
-      let tab = state.items[state.activeBoard][collectionIndex].tabs[index];
+      const tab = state.items[state.activeBoard][collectionIndex].tabs[index];
       tab.title = title;
       tab.url = url;
     },
@@ -23,36 +23,26 @@ export default {
     delCollection(state, index) {
       state.items[state.activeBoard].splice(index, 1);
     },
-    delCollectionTag(state, { tagId, collectionIndex }) {
-      let board = state.items[state.activeBoard];
-      let tagIndex = board[collectionIndex].tags.findIndex(tag => tag.id === tagId);
-      board[collectionIndex].tags.splice(tagIndex, 1);
+    addTag(state, { collectionIndex, tag }) {
+      state.items[state.activeBoard][collectionIndex].tags.push(tag);
     },
-    addCollectionTag(state, { allTags, select, index }) {
-      let board = state.items[state.activeBoard];
-      for (let id of select) {
-        let tagIndex = allTags.findIndex(item => item.id === id);
-        if (tagIndex !== -1) board[index].tags.push(allTags[tagIndex]);
-      }
+    delTag(state, { collectionIndex, tagId }) {
+      const { tags } = state.items[state.activeBoard][collectionIndex];
+      const findTagIndex = tags.findIndex(tag => tag.id === tagId);
+      tags.splice(findTagIndex, 1);
     },
     createCollection(state, { title, tabs }) {
-      let getTabs = typeof tabs === 'undefined' ? [] : tabs;
-      let board = state.items[state.activeBoard];
+      const getTabs = typeof tabs === 'undefined' ? [] : tabs;
+      const board = state.items[state.activeBoard];
       board.push({
-        title: title,
+        title,
         tabs: getTabs,
         tags: [],
       });
     },
     removeCollectionTab(state, { collectionIndex, tabIndex }) {
-      let board = state.items[state.activeBoard];
+      const board = state.items[state.activeBoard];
       board[collectionIndex].tabs.splice(tabIndex, 1);
-    },
-  },
-  actions: {
-    addCollectionTag({ rooState, commit, rootGetters }, { select, index }) {
-      let allTags = rootGetters.board.allTags;
-      commit('addCollectionTag', { allTags, select, index });
     },
   },
 };

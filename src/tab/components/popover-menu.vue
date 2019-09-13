@@ -1,194 +1,155 @@
 <template>
-  <el-popover :placement="direction" width="250" trigger="click" v-model="popover">
-    <div class="el-list">
-      <slot></slot>
-      <div class="el-list-item" @click="editTitleEl">
-        <div class="el-list-icon">
-          <unicon name="pen" height="20px" width="20px" title="edit" class="item-edit-icon" fill="#a6a6a6" />
+  <v-menu offset-y min-width="250px" max-width="300px" :close-on-content-click="false" v-model="menu">
+    <template v-slot:activator="{ on }">
+      <v-btn v-on="on" @click.stop icon>
+        <v-icon>{{ $icons.mdiDotsVertical }}</v-icon>
+      </v-btn>
+    </template>
+    <v-list dense nav class="popover-menu-list">
+      <slot name="content"></slot>
+      <v-list-group :prepend-icon="$icons.mdiPencil" @click="title = items.title" v-model="activeEditTitle">
+        <template v-slot:activator>
+          <v-list-item-content>
+            <span class="body-2 font-weight-medium capitalize list-title">Edit {{ name }} title</span>
+          </v-list-item-content>
+        </template>
+        <div class="edit-item-title mx-2">
+          <v-text-field class="mt-1" autofocus :label="name + ' name'" hide-details v-model="title"></v-text-field>
+          <v-btn class="mt-2" small depressed color="primary" block @click="editTitle">Save</v-btn>
         </div>
-        <div class="el-list-text">
-          <p>Edit {{ name }} Title</p>
+      </v-list-group>
+      <v-slide-y-transition mode="out-in">
+        <v-list-item @click="delItemPrompt = true" v-if="!delItemPrompt">
+          <v-list-item-icon>
+            <v-icon>{{ $icons.mdiDeleteOutline }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <span class="body-2 font-weight-medium capitalize list-title">delete {{ name }}</span>
+          </v-list-item-content>
+        </v-list-item>
+        <div class="d-flex justify-space-between my-2" v-else>
+          <v-btn small outlined @click="delItemPrompt = false">Cancel</v-btn>
+          <v-btn small color="error" depressed @click="delItem">Delete</v-btn>
         </div>
-      </div>
-      <transition name="slide-fade-up" mode="out-in">
-        <div class="el-list-item bb edit-title" v-show="editTitleActive">
-          <div class="el-list-icon">
-            <el-input :maxlength="25" show-word-limit placeholder="Please input" autofocus v-model="title" size="small"></el-input>
-          </div>
-          <div class="el-list-text">
-            <el-button size="mini" @click="editTitleActive = false">Cancel</el-button>
-            <el-button size="mini" type="primary" class="right" @click="editTitle">Done</el-button>
-          </div>
-        </div>
-      </transition>
-      <transition name="slide-fade-up2" mode="out-in">
-        <div class="el-list-item" v-if="delItemPrompt" key="delItemPrompt">
-          <div class="el-list-icon">
-            <el-button @click="delItemPrompt = false" size="small">Cancel</el-button>
-          </div>
-          <div class="el-list-text prompt">
-            <el-button @click="delCollection(index)" size="small" type="danger">Delete</el-button>
-          </div>
-        </div>
-        <div class="el-list-item" @click="delItemPrompt = true" v-else>
-          <div class="el-list-icon">
-            <i class="el-icon-close"></i>
-          </div>
-          <div class="el-list-text">
-            <p>Delete {{ name }}</p>
-          </div>
-        </div>
-      </transition>
-      <div class="el-list-item select">
-        <div class="element-select">
-          <el-select
-            multiple
-            :multiple-limit="5 - items.tags.length"
-            size="small"
-            collapse-tags
-            placeholder="Add item tag"
-            v-model="select"
-            filterable
-            :disabled="items.tags.length === 5"
-          >
-            <el-option v-for="(item, index) in tagData(items.tags)" :key="index" :label="item.name" :value="item.id" class="option-tag">
-              <p :style="{ 'background-color': item.color }">{{ item.name }}</p>
-            </el-option>
-          </el-select>
-          <el-button @click.stop="addTag" size="mini" icon="el-icon-plus" type="primary"></el-button>
-        </div>
-      </div>
-    </div>
-    <div slot="reference" @click.stop style="display: inline-block;">
-      <slot name="activator"></slot>
-    </div>
-  </el-popover>
+      </v-slide-y-transition>
+      <v-list-item>
+        <v-autocomplete
+          :disabled="items.tags.length >= 5"
+          :search-input.sync="inputValue"
+          background-color="background"
+          hide-details
+          @change="addTag"
+          solo
+          flat
+          :items="tagData(items.tags)"
+          return-object
+          item-text="name"
+          maxlength="10"
+          item-value="id"
+          :placeholder="'Add ' + name + ' tag'"
+          v-model="selected"
+          class="select-tag-popover"
+        >
+          <template v-slot:no-data>
+            <div class="add-tag" v-if="showCreateTag">
+              <p class="body-2 mb-2" @click="createTag">
+                Click to add <b>{{ inputValue }}</b>
+              </p>
+              <v-btn block depressed dark :color="tagsColors.colors[tagsColors.index]" @click="changeColor">Change color</v-btn>
+            </div>
+            <span v-else>
+              Type to add tag
+            </span>
+          </template>
+        </v-autocomplete>
+      </v-list-item>
+    </v-list>
+  </v-menu>
 </template>
 <script>
 import getUnique from '../utils/get-unique';
+import Tag from '../../mixins/tag';
+
 export default {
-  props: ['items', 'index', 'direction', 'name'],
+  mixins: [Tag],
+  props: {
+    index: {
+      type: Number,
+      default: 0,
+    },
+    items: Object,
+    name: {
+      type: String,
+      default: 'item',
+    },
+  },
   data: () => ({
-    select: [],
-    editTitleActive: false,
+    activeEditTitle: false,
+    menu: false,
+    selected: {},
+    inputValue: '',
+    showCreateTag: false,
     title: '',
-    popover: false,
     delItemPrompt: false,
   }),
+  watch: {
+    menu(value) {
+      if (!value) {
+        this.inputValue = this.title = '';
+        this.showCreateTag = this.delItemPrompt = this.activeEditTitle = false;
+        this.selected = {};
+      }
+    },
+    inputValue(val) {
+      if (val !== null) this.showCreateTag = val.length >= 1;
+    },
+  },
   methods: {
     editTitle() {
       if (this.title !== '') this.$emit('editTitle', { title: this.title, index: this.$props.index });
-      this.editTitleActive = false;
     },
-    editTitleEl() {
-      this.editTitleActive = !this.editTitleActive;
-      if (this.editTitleActive) this.title = this.$props.items.title;
-    },
-    addTag() {
-      this.$emit('addTag', { select: this.select, index: this.$props.index });
-      this.select = [];
+    addTag(tag) {
+      if (typeof tag !== 'undefined') this.$emit('addTag', { index: this.$props.index, tag });
+      this.selected = {};
     },
     tagData(tags) {
       return getUnique(tags, this.$store.getters.board.allTags, 'name');
     },
-    delCollection(index) {
+    delItem() {
       this.delItemPrompt = false;
-      this.$emit('delete', index);
-      this.popover = false;
+      this.$emit('delete', this.$props.index);
+      this.menu = false;
     },
   },
 };
 </script>
 <style lang="scss">
-@import '../../assets/slide-transitions';
-@import '../../assets/themes/themes';
-
-@include slideTransition(up, -5px, 0.3s);
-
-@include slideTransition(up2, -4px, 0.2s) .element-select {
-  display: inline-block;
-
-  button {
-    padding: 8px 16px !important;
+.select-tag-popover {
+  width: 200px;
+  .v-input__control {
+    font-size: 14px !important;
+    min-height: 35px !important;
   }
-
-  .el-select {
-    width: 75%;
-    margin-right: 6px;
+}
+.popover-menu-list {
+  .list-title {
+    margin-left: 14px;
   }
-
-  input {
-    text-transform: capitalize;
+  .v-list-group__header__append-icon {
+    margin-left: 0 !important;
+  }
+  .v-list-item__icon {
+    margin-right: 0 !important;
+    .v-icon {
+      font-size: 22px !important;
+    }
   }
 }
 
-.el-popover {
-  padding: 8px !important;
-}
-
-.edit-title {
-  padding-bottom: 10px !important;
-
-  div {
-    width: 100%;
-  }
-
-  .el-list-text {
-    padding-top: 10px;
-  }
-}
-
-.el-list-item.select {
-  button {
-    text-transform: capitalize;
-  }
-}
-
-.el-list-text.prompt {
-  float: right;
-}
-
-.el-list-item.edit-title:hover {
-  &:hover {
-    background-color: #02020208 !important;
-  }
-}
-
-.el-list-item {
-  .el-list-icon,
-  .el-list-text {
-    display: inline-block;
-  }
-  transition: all 0.2s ease;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 5px 10px;
-
-  &:hover {
-    background-color: #02020208;
-  }
-}
-
-.el-list-icon {
-  min-width: 25px;
-
-  i {
-    font-size: 18px;
-    vertical-align: text-bottom;
-  }
-
-  svg {
-    vertical-align: sub;
-  }
-}
-
-.item-popover {
-  margin-right: 10px;
-
-  button {
-    font-size: 17px;
-    transform: rotate(90deg);
-    border-radius: 30px;
+.edit-item-title {
+  .v-input__control {
+    font-size: 14px;
+    min-height: 20px !important;
   }
 }
 </style>

@@ -1,64 +1,65 @@
 <template>
-  <div style="height: 100%">
-    <div class="side-nav-notes-header">
-      <el-input size="small" v-model="search" prefix-icon="el-icon-search"></el-input>
-      <unicon name="file-plus-alt" class="add-note-btn" fill="#409eff" height="25px" width="25px" @click="newNote" />
+  <v-card color="transparent" flat width="100%" class="side-nav-notes pa-3 pb-4 scroller" :max-height="cardMaxHeight">
+    <div class="d-flex justify-space-between mb-3 align-center">
+      <p class="grey--text text-uppercase mb-0 body-2">my notes</p>
+      <v-btn color="primary" small depressed @click="newNote">
+        new note
+      </v-btn>
     </div>
-    <div class="no-open-tabs" v-if="notes.length === 0">
-      <div class="no-open-tabs-icon">
-        <span>
-          <unicon height="35px" width="35px" name="notes"></unicon>
-        </span>
-      </div>
-      <div class="no-open-tabs-content">
-        <p>It's Empty</p>
-      </div>
-    </div>
-    <el-scrollbar class="side-nav-scrollbar-notes" :native="false" v-else>
-      <Draggable class="list-group" v-model="notes" style="min-height: 200px">
-        <template v-for="(note, index) in searchHandle(notes, 'title', 'content')">
-          <el-card
-            :class="{ 'is-active': note.id === activeId, 'is-save': note.id === activeId && isUpdate }"
-            class="notes-card"
-            v-show="filterData(note)"
-            @click.native="editNote(note)"
-            :key="index + note.title"
-            shadow="never"
-          >
-            <div slot="header" class="clearfix">
-              <p class="notes-card-title">{{ note.title }}</p>
-              <p class="notes-card-text">{{ prevContent(note.content) }}</p>
-              <div class="note-tags" v-show="note.tags.length !== 0">
-                <template v-for="(tag, idx) in note.tags">
-                  <el-tag v-if="idx <= 2" effect="dark" class="capitalize collection-tag note" @click.stop="activeTag(tag.id)" size="small" :color="tag.color">
-                    {{ tag.name }}</el-tag
-                  >
-                  <el-button v-if="idx === 3" size="mini" @click.stop>+{{ note.tags.length - 3 }}</el-button>
-                </template>
-              </div>
-            </div>
-            <div class="notes-card-body">
-              <template v-if="note.id === activeNoteId">
-                <el-button size="small" @click.stop="activeNoteId = ''">Cancel</el-button>
-                <el-button size="small" type="danger" @click.stop="delNote(note.id)" class="right">Delete</el-button>
-              </template>
-              <template v-else>
-                <el-button @click.stop="activeNoteId = note.id" icon="el-icon-delete" class="del-note-btn" size="small" circle></el-button>
-                <unicon name="grip-horizontal-line" class="drag-handle note" fill="#a6a6a6" />
+    <empty-item title="It's look like you don't have a note" v-if="notes.length === 0"></empty-item>
+    <Draggable class="list-group" handle=".note-card-handle" v-else v-model="notes">
+      <template v-for="note in searchFilter(notes, 'title', 'content')">
+        <v-card
+          v-show="tagFilter(note)"
+          hover
+          width="100%"
+          :ripple="false"
+          class="note-card mt-2"
+          @click="editNote(note)"
+          :class="{ 'elevation-5': note.id === activeId, 'is-save': note.id === activeId && isUpdate }"
+        >
+          <v-card-title class="pb-1">
+            <p style="line-height: 1.4rem" class="subtitle-1 font-weight-medium mb-0">{{ note.title.slice(0, 50) }}</p>
+          </v-card-title>
+          <v-card-text class="pb-2">
+            <p class="body-2">{{ prevContent(note.content) }}</p>
+            <div class="note-card-tags">
+              <template v-for="(tag, tagIndex) in note.tags">
+                <v-chip label small dark class="note-card-tag" :color="tag.color" @click="activeTag(tag.id)" v-if="tagIndex <= 2">
+                  <span class="capitalize">{{ tag.name }}</span>
+                </v-chip>
+                <v-chip small class="note-card-tag" label v-if="tagIndex === 3"> +{{ note.tags.length - 3 }} </v-chip>
               </template>
             </div>
-          </el-card>
-        </template>
-      </Draggable>
-    </el-scrollbar>
-  </div>
+          </v-card-text>
+          <v-card-actions class="d-flex align-center justify-space-between bg-card py-1">
+            <template v-if="note.id === delPromptId">
+              <v-btn :ripple="false" small text color="grey" @click.stop="delPromptId = ''">Cancel</v-btn>
+              <v-btn small color="error" class="my-1" depressed @click.stop="delNote(note.id)">Delete</v-btn>
+            </template>
+            <template v-else>
+              <v-btn :ripple="false" class="delete-note-btn" icon color="error" @click.stop="delPromptId = note.id">
+                <v-icon>{{ $icons.mdiDeleteOutline }}</v-icon>
+              </v-btn>
+              <v-icon class="note-card-handle">{{ $icons.mdiDrag }}</v-icon>
+            </template>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </Draggable>
+  </v-card>
 </template>
 <script>
 import Draggable from 'vuedraggable';
-import SearchItem from '../../../mixins/search-item';
+
+import EmptyItem from '../empty-item';
+
+import FilterItem from '../../../mixins/filter-item';
 import Tag from '../../../mixins/tag';
+
 import getUnique from '../../utils/get-unique';
 import Bus from '../../utils/bus';
+
 export default {
   props: {
     isUpdate: {
@@ -67,8 +68,11 @@ export default {
     },
     activeId: String,
   },
-  components: { Draggable },
-  mixins: [Tag('notes/list'), SearchItem],
+  components: { Draggable, EmptyItem },
+  mixins: [FilterItem],
+  data: () => ({
+    delPromptId: '',
+  }),
   computed: {
     notes: {
       get() {
@@ -78,42 +82,44 @@ export default {
         this.$store.commit('notes/setNotes', val);
       },
     },
+    cardMaxHeight() {
+      return window.innerHeight - 100;
+    },
   },
-  data: () => ({
-    activeNoteId: '',
-  }),
   methods: {
     delNote(noteId) {
       this.$emit('delete', noteId);
     },
-    prevContent(content) {
-      return content ? content.slice(0, 50).replace(/(<([^>]+)>)/gi, '') : '';
+    prevContent(content, length = 60) {
+      return content ? content.replace(/(<([^>]+)>)/gi, '').slice(0, length) : '';
     },
     newNote() {
       this.$store.dispatch('notes/createNewNote').then(({ isFirst, note }) => {
         if (isFirst) {
           this.$emit('change', note);
         } else if (!this.$props.isUpdate && !isFirst) {
-          this.$emit('change', note);
-          Bus.$emit('changeNote');
+          this.changeNote(note);
         }
       });
     },
-    editNote(note) {
-      if (this.$props.isUpdate) {
-        this.$confirm('This note has been modified. Continue switch note?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning',
-        })
-          .then(() => {
-            this.$emit('change', note);
-          })
-          .catch(() => {});
-      } else {
-        this.$emit('change', note);
-      }
+    changeNote(note) {
+      this.$emit('change', note);
       Bus.$emit('changeNote');
+    },
+    editNote(note) {
+      const isActive = note.id === this.$props.activeId;
+      if (this.$props.isUpdate && !isActive) {
+        this.$dialog
+          .confirm({
+            text: 'This note has been modified. Continue switch note?',
+            title: 'Warning',
+          })
+          .then(confirm => {
+            confirm ? this.changeNote(note) : null;
+          });
+      } else {
+        isActive ? null : this.changeNote(note);
+      }
     },
     activeTag(tagId) {
       this.$store.commit('activeTag', tagId);
@@ -125,116 +131,34 @@ export default {
 };
 </script>
 <style lang="scss">
-@import '../../../assets/themes/themes';
-
-.collection-tag.note {
-  margin-right: 4px;
-}
-
-.add-note-btn {
-  cursor: pointer;
-
-  &:hover {
-    fill: #85bcf4;
+.note-card {
+  &-handle {
+    cursor: grab;
   }
-}
-
-.drag-handle.note {
-  margin-top: 5px;
-  float: right;
-}
-
-.del-note-btn {
-  opacity: 0;
-  transition: all 0.5s ease;
-}
-
-.note-tags {
-  display: inline-block;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.notes-card:hover {
-  .del-note-btn {
-    opacity: 1;
-  }
-}
-
-.notes-card {
-  &:first-child {
-    margin-top: 0px;
-  }
-
   &.is-save {
     border-left: 3px solid #409eff;
   }
-
-  &.is-active {
-    @include themify($themes) {
-      box-shadow: 0 2px 12px 0 themed('shadow');
-    }
+  .delete-note-btn {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s ease;
   }
-
-  margin-top: 15px;
-
-  .el-card__header {
-    padding: 12px 14px !important;
-  }
-
-  .el-card__body {
-    padding: 6px 13px !important;
-    @include themify($themes) {
-      background-color: themed('bg-color2');
+  &:hover {
+    .delete-note-btn {
+      visibility: visible;
+      opacity: 1;
     }
-  }
-
-  .notes-card-title {
-    line-height: 1.2;
-    font-size: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    margin-bottom: 3px;
-    font-weight: 600;
-    @include themify($themes) {
-      color: themed('text-primary');
-    }
-  }
-
-  .notes-card-text {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    @include themify($themes) {
-      color: themed('regular-primary');
-    }
-    margin: 0;
   }
 }
-
-.side-nav-scrollbar-notes {
-  .el-scrollbar__wrap {
-    padding: 0 19px 0 10px;
+.note-card-tag {
+  margin-left: 3px;
+  &:first-child {
+    margin-left: 0;
   }
 }
-
-.side-nav-notes-header {
-  padding: 0 10px;
-  height: 50px;
-
-  * {
-    display: inline-block;
-  }
-
-  svg {
-    vertical-align: middle;
-  }
-
-  .el-input {
-    margin-right: 7px;
-    width: 85%;
-  }
+.side-nav-notes {
+  overflow-y: auto;
+  position: sticky;
+  top: 50px;
 }
 </style>

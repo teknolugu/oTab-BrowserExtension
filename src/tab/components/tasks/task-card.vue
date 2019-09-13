@@ -1,113 +1,118 @@
 <template>
-  <div class="task-card" :class="{ checked: task.done, isEdit: edit }">
-    <el-checkbox size="medium" class="checkbox-task" :value="task.done" @change="changeStatus({ columnIndex, taskIndex, data: !task.done })"></el-checkbox>
-    <el-input
-      placeholder="Task name"
-      size="mini"
-      class="editTask-input"
-      :value="task.name"
-      @blur="editTaskHandler(columnIndex, taskIndex)"
-      @keyup.enter.native="editTaskHandler(columnIndex, taskIndex)"
-      v-if="edit || task.name === ''"
-      v-model="value"
-      @focus="setEditActive(task.name)"
-    ></el-input>
-    <p :title="task.name" class="task-name" @click="setEditActive(task.name)" v-else>{{ task.name }}</p>
-    <unicon name="grip-horizontal-line" class="task-handler right" fill="#a6a6a6" />
-    <el-button type="danger" size="mini" plain icon="el-icon-delete" class="delete-task right" circle @click="delTask(columnIndex, taskIndex)"></el-button>
-  </div>
+  <v-card class="task-card" outlined :class="{ 'checked background2': task.done, isEdit: edit }">
+    <v-list-item dense :ripple="false" @click.stop>
+      <v-list-item-icon class="mr-1">
+        <v-checkbox v-model="checkbox" hide-details color="primary" class="ma-0"></v-checkbox>
+      </v-list-item-icon>
+      <v-list-item-content @click="setEditActive" :title="task.name">
+        <v-text-field
+          hide-details
+          class="pt-0 mt-0 task-input"
+          @blur="editTask(value, 'value')"
+          v-if="edit || task.name === ''"
+          v-model="value"
+          placeholder="Task name..."
+        ></v-text-field>
+        <span class="task-name text-truncate" v-else>{{ task.name }}</span>
+      </v-list-item-content>
+      <v-list-item-action class="ml-1 d-inline-block">
+        <v-btn small icon color="error" @click="delTask" class="delTask-btn">
+          <v-icon>{{ $icons.mdiDeleteOutline }}</v-icon>
+        </v-btn>
+        <v-icon class="task-handle">{{ $icons.mdiDrag }}</v-icon>
+      </v-list-item-action>
+    </v-list-item>
+  </v-card>
 </template>
 <script>
 export default {
-  props: ['columnIndex', 'editTask', 'task', 'taskIndex'],
+  props: {
+    columnIndex: {
+      type: Number,
+      default: 0,
+    },
+    task: {
+      type: Object,
+      default: () => ({
+        done: '',
+        name: '',
+      }),
+    },
+    taskIndex: {
+      type: Number,
+      default: 0,
+    },
+  },
   data: () => ({
     edit: false,
     value: '',
   }),
   methods: {
-    delTask(columnIndex, taskIndex) {
-      this.$store.commit('tasks/delTask', { columnIndex, taskIndex });
+    delTask() {
+      this.$store.commit('tasks/delTask', { columnIndex: this.$props.columnIndex, taskIndex: this.$props.taskIndex });
     },
     clearAll() {
       this.edit = false;
       this.value = '';
     },
-    setEditActive(value) {
+    setEditActive() {
       this.edit = true;
-      this.value = value;
+      this.value = this.$props.task.name;
     },
-    changeStatus(payload) {
-      this.$store.commit('tasks/editTask', { ...payload, type: 'status' });
+    editTask(data, type) {
+      const props = this.$props;
+      this.$store.commit('tasks/editTask', { columnIndex: props.columnIndex, taskIndex: props.taskIndex, data, type });
+      this.clearAll();
     },
     editTaskHandler(columnIndex, taskIndex) {
       this.$store.commit('tasks/editTask', { columnIndex, taskIndex, data: this.value, type: 'value' });
       this.clearAll();
     },
   },
+  computed: {
+    checkbox: {
+      set(value) {
+        this.editTask(value, 'status');
+      },
+      get() {
+        return this.$props.task.done;
+      },
+    },
+  },
 };
 </script>
 <style lang="scss">
-@import '../../../assets/themes/themes';
-
-.checked {
-  .task-name {
-    color: #c0c4cc;
-    text-decoration: line-through;
-    font-style: italic;
-  }
-}
-
-.editTask-input {
-  input {
-    font-size: 14px;
-    padding: 0 !important;
-    border: none !important;
-  }
-
-  width: 65% !important;
-}
-
-.delete-task {
-  visibility: hidden;
-  transition: all 0.2s ease;
-  opacity: 0;
-}
-
 .task-card {
-  &.isEdit {
-    border: 1px solid #409eff !important;
+  .delTask-btn {
+    opacity: 0;
+    transition: all 0.2s ease;
+    visibility: hidden;
   }
-
   &:hover {
-    .delete-task {
-      visibility: visible;
+    .delTask-btn {
       opacity: 1;
+      visibility: visible;
+    }
+  }
+  .task-input {
+    .v-input__control {
+      font-size: 14px;
+    }
+  }
+  .task-handle {
+    cursor: grab;
+  }
+  &.checked {
+    .task-name {
+      text-decoration: line-through;
+      font-style: italic;
     }
   }
 
-  border-radius: 4px;
-  @include themify($themes) {
-    border: 1px solid themed('light-border');
-  }
-  padding: 10px 13px;
-  margin-top: 10px;
-
   &:first-child {
-    margin-top: 15px;
+    margin-top: 0;
   }
 
-  label {
-    margin-right: 10px;
-  }
-
-  .task-name {
-    text-overflow: ellipsis;
-    display: inline-block;
-    margin: 0;
-    overflow: hidden;
-    width: 65%;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
+  margin-top: 6px;
 }
 </style>

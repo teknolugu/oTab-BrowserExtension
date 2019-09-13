@@ -1,244 +1,94 @@
 <template>
-  <div class="note-editor">
-    <el-input
-      :disabled="$store.getters['notes/isEmpty']"
-      placeholder="Title"
-      type="textarea"
-      :autosize="{ minRows: 1 }"
-      class="note-title"
-      resize="none"
-      :value="title"
-      @input="updateTitle"
-    ></el-input>
-    <editor-floating-menu ref="floatMenu" :editor="editor" v-slot="{ commands, isActive, menu }">
+  <v-card width="100%">
+    <v-card-title class="d-flex justify-space-between align-center">
       <div>
-        <el-button icon="el-icon-plus" size="small" @click="activeFloatMenu = !activeFloatMenu" circle class="active-menu-button" :style="menuButtonStyle(menu.top)"></el-button>
-        <div class="editor__floating-menu" :class="{ 'is-active': activeFloatMenu }" :style="`top: ${menu.top}px`">
-          <el-button size="mini" :class="{ 'is-active': isActive.heading({ level: 1 }) }" class="menubar__button" @click="commands.heading({ level: 1 })">
-            <span>H1</span>
-          </el-button>
-          <el-button size="mini" :class="{ 'is-active': isActive.heading({ level: 2 }) }" class="menubar__button" @click="commands.heading({ level: 2 })">
-            <span>H2</span>
-          </el-button>
-          <el-button size="mini" :class="{ 'is-active': isActive.heading({ level: 3 }) }" class="menubar__button" @click="commands.heading({ level: 3 })">
-            <span>H3</span>
-          </el-button>
-          <el-button size="mini" :class="{ 'is-active': isActive.bold() }" class="menubar__button" @click="commands.bold">
-            <span>B</span>
-          </el-button>
-          <el-button size="mini" :class="{ 'is-active': isActive.italic() }" class="menubar__button" @click="commands.italic">
-            <span class="italic">i</span>
-          </el-button>
-          <el-button size="mini" :class="{ 'is-active': isActive.blockquote() }" class="menubar__button" @click="commands.blockquote">
-            <span>Blockquote</span>
-          </el-button>
-          <el-button size="mini" :class="{ 'is-active': isActive.code_block() }" class="menubar__button" @click="commands.code_block">
-            <span> <> </span>
-          </el-button>
-        </div>
+        <template v-if="!$store.getters['notes/isEmpty']">
+          <v-chip label draggable small class="note-editor-tag" @click:close="delTag(tag.id)" v-for="tag in note.tags" :key="tag.id" :color="tag.color" dark close>
+            <span class="capitalize">{{ tag.name }}</span>
+          </v-chip>
+          <v-menu bottom right transition="scale-transition" origin="top left">
+            <template v-slot:activator="{ on }">
+              <v-btn icon depressed v-on="on" color="grey" class="ml-2" :disabled="getTags(note.tags).length === 0 || note.tags.length >= 5">
+                <v-icon>{{ $icons.mdiPlus }}</v-icon>
+              </v-btn>
+            </template>
+            <v-card width="200">
+              <v-list dense>
+                <v-list-item v-for="tag in getTags(note.tags)" :key="tag.id" @click="addTag(tag.id)">
+                  <v-list-item-title class="capitalize body-2">{{ tag.name }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-menu>
+        </template>
       </div>
-    </editor-floating-menu>
-    <editor-content class="editor__content" :editor="editor" />
-  </div>
+      <div>
+        <v-btn text color="error" class="mr-2" @click="deleteNote">Delete</v-btn>
+        <v-btn color="primary" depressed :disabled="!isUpdate || $store.getters['notes/isEmpty']" @click="$emit('save')">
+          <v-icon left>{{ $icons.mdiContentSave }}</v-icon>
+          Save
+        </v-btn>
+      </div>
+    </v-card-title>
+    <v-divider class="mx-4" style="border-style: dashed;"></v-divider>
+    <v-card-text class="pt-3">
+      <editor-content @change="note => $emit('change', note)" :title="note.title" :content="note.content"></editor-content>
+    </v-card-text>
+  </v-card>
 </template>
 <script>
-import { Editor, EditorContent, EditorFloatingMenu } from 'tiptap';
-import Bus from '../../utils/bus';
-import { Blockquote, CodeBlock, Heading, Bold, Italic, Placeholder, History } from 'tiptap-extensions';
+import getUnique from '../../utils/get-unique';
+import EditorContent from './editor-content';
+
 export default {
-  props: ['content', 'title'],
-  components: {
-    EditorContent,
-    EditorFloatingMenu,
-  },
-  data() {
-    return {
-      changeNote: false,
-      activeFloatMenu: false,
-      editor: new Editor({
-        editable: true,
-        onUpdate: ({ getHTML }) => {
-          this.activeFloatMenu = false;
-          this.$emit('change', { title: this.$props.title, content: getHTML() });
-        },
-        extensions: [
-          new Blockquote(),
-          new CodeBlock(),
-          new Heading({ levels: [1, 2, 3] }),
-          new Bold(),
-          new Italic(),
-          new History(),
-          new Placeholder({
-            emptyNodeClass: 'is-empty',
-            emptyNodeText: 'Write something...',
-            showOnlyWhenEditable: true,
-          }),
-        ],
+  components: { EditorContent },
+  props: {
+    isUpdate: {
+      type: Boolean,
+      default: false,
+    },
+    note: {
+      type: Object,
+      default: () => ({
+        title: '',
+        tags: [],
+        id: '',
         content: '',
       }),
-    };
-  },
-  computed: {
-    editable() {
-      return this.$store.getters['notes/isEmpty'];
+      required: true,
     },
   },
   methods: {
-    updateTitle(title) {
-      this.$emit('change', { title: title, content: this.editor.getHTML() });
+    async deleteNote() {
+      const res = await this.$dialog.confirm({
+        text: 'Are you sure want to delete this note?',
+        title: 'Delete Note',
+      });
+      res ? this.$emit('delete', this.$props.note.id) : null;
     },
-    menuButtonStyle(top) {
-      return !top ? { visibility: 'hidden' } : top === 0 ? { visibility: 'hidden' } : { top: top + 'px' };
+    delTag(tagId) {
+      this.$store.commit('notes/delTag', { tagId, noteId: this.$props.note.id });
     },
-  },
-  created() {
-    Bus.$on('changeNote', () => {
-      this.$refs.floatMenu.menu.top = 0;
-      this.editor.clearContent();
-    });
-    this.editor.setContent(this.$props.content);
-  },
-  watch: {
-    editable(isEmpty) {
-      if (isEmpty) {
-        this.editor.clearContent();
-        this.editor.setOptions({
-          editable: false,
-        });
-      } else {
-        this.editor.setOptions({
-          editable: true,
-        });
+    getTags(tags) {
+      if (!this.$store.getters['notes/isEmpty']) {
+        return getUnique(tags, this.$store.getters.board.allTags, 'name');
       }
     },
-    content: {
-      handler(val) {
-        if (this.$props.content) {
-          this.editor.setContent(val);
-        }
-      },
-      deep: true,
+    addTag(tagId) {
+      const tag = this.$store.getters.board.allTags.find(tag => tag.id === tagId);
+      this.note.tags.push(tag);
     },
   },
 };
 </script>
 <style lang="scss">
-@import '../../../assets/themes/themes';
-.editor p.is-empty:first-child::before {
-  content: attr(data-empty-text);
-  float: left;
-  color: #aaa;
-  pointer-events: none;
-  height: 0;
-  font-style: italic;
-}
-
-.active-menu-button {
-  position: absolute;
-  margin-top: -0.2rem !important;
-  margin-left: -45px !important;
-}
-.note-editor {
-  .is-empty:first-child::before {
-    content: attr(data-empty-text);
-    float: left;
-    color: #aaa;
-    pointer-events: none;
-    height: 0;
-    font-size: 15px;
-    font-style: italic;
+.note-editor-tag {
+  margin-left: 6px;
+  &:first-child {
+    margin-left: 0;
   }
-
-  p {
-    margin: 0;
-    font-size: 16px;
-  }
-
-  .ProseMirror {
-    outline: none;
-    @include themify($themes) {
-      color: themed('text-regular');
-    }
-  }
-}
-.ProseMirror {
-  * {
-    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'å¾®è½¯é›…é»‘', Arial, sans-serif;
-  }
-
-  blockquote {
-    &:before {
-      content: open-quote;
-      font-size: 50px;
-      line-height: 0px;
-      vertical-align: -0.4em;
-      margin-right: 7px;
-    }
-
-    * {
-      display: inline;
-    }
-
-    background-color: #409eff29;
-    padding: 10px;
-    border-left: 3px solid #409eff;
-    border-radius: 4px;
-  }
-
-  pre {
-    &:before {
-      content: '< />';
-      position: absolute;
-      margin-top: -13px;
-      margin-left: -14px;
-      font-size: 20px;
-      opacity: 0.1;
-    }
-
-    background-color: #282c34;
-    padding: 17px 19px;
-    border-radius: 4px;
-    color: white;
-  }
-
-  h1,
-  h2,
-  h3 {
-    @include themify($themes) {
-      color: themed('text-regular') !important;
-    }
-  }
-}
-
-.editor {
-  position: relative;
-  &__floating-menu {
-    button {
-      margin: 0 2px !important;
-    }
-
-    span {
-      font-weight: 600;
-    }
-
-    .italic {
-      font-style: italic;
-    }
-
-    padding: 5px;
-    background-color: rgba(0, 0, 0, 0.12);
-    border-radius: 4px;
-    position: absolute;
-    z-index: 1;
-    margin-top: -0.25rem;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, visibility 0.2s;
-
-    &.is-active {
-      opacity: 1;
-      visibility: visible;
-    }
+  i {
+    font-size: 20px !important;
   }
 }
 </style>

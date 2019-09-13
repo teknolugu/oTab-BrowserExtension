@@ -7,11 +7,11 @@ export default {
       searchEngine: 'google',
       searchBar: true,
       homeBackground: {},
-    }
+    },
   },
   mutations: {
     changeSettings(state, data) {
-      state.items = data
+      state.items = data;
     },
     change(state, { key, value }) {
       state.items[key] = value;

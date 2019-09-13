@@ -7,13 +7,18 @@ export default {
     setNotes(state, notes) {
       state.items[state.activeBoard] = notes;
     },
+    delTag(state, { tagId, noteId }) {
+      const board = state.items[state.activeBoard];
+      const noteIndex = board.findIndex(note => note.id === noteId);
+      board[noteIndex].tags.splice(board[noteIndex].tags.findIndex(tag => tagId === tag.id), 1);
+    },
     delNote(state, noteId) {
-      let index = state.items[state.activeBoard].findIndex(note => note.id === noteId);
+      const index = state.items[state.activeBoard].findIndex(note => note.id === noteId);
       state.items[state.activeBoard].splice(index, 1);
     },
     saveNote(state, note) {
-      let board = state.items[state.activeBoard];
-      let noteIndex = board.findIndex(fNote => fNote.id === note.id);
+      const board = state.items[state.activeBoard];
+      const noteIndex = board.findIndex(fNote => fNote.id === note.id);
       board[noteIndex] = note;
     },
     newNote(state, { note, getters }) {
@@ -30,7 +35,7 @@ export default {
     },
     createNewNote({ state, getters, commit }) {
       return new Promise((resolve, reject) => {
-        let note = {
+        const note = {
           title: '',
           content: '',
           tags: [],
@@ -49,7 +54,7 @@ export default {
   },
   getters: {
     isEmpty: state => {
-      return state.items[state.activeBoard].length === 0 ? true : false;
+      return state.items[state.activeBoard].length === 0;
     },
     list: state => {
       return state.items[state.activeBoard];

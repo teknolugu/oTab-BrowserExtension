@@ -1,28 +1,50 @@
 <template>
-  <el-dialog :visible.sync="visible" width="50%" class="settings-dialog">
-    <el-tabs :value="activeTab">
-      <el-tab-pane name="home">
-        <span slot="label" class="setting-tab-title"><i class="el-icon-picture"></i> Home Theme</span>
-        <home-settings @change="commitSetting"></home-settings>
-      </el-tab-pane>
-      <el-tab-pane name="general">
-        <span slot="label" class="setting-tab-title"><i class="el-icon-s-tools"></i> General</span>
-        <general-settings :settings="settings" @change="commitSetting"></general-settings>
-      </el-tab-pane>
-    </el-tabs>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false" type="primary">Close</el-button>
-    </span>
-  </el-dialog>
+  <v-dialog v-model="visible" width="650">
+    <v-card class="pb-5 settings" color="background3">
+      <v-tabs v-model="tab" mandatory background-color="background2" class="elevation-2 mb-2" style="border-radius: unset;">
+        <v-tab>
+          <v-icon left>{{ $icons.mdiSettings }}</v-icon>
+          <span>General</span>
+        </v-tab>
+        <v-tab :disabled="!isLogin">
+          <v-icon left>{{ $icons.mdiAccount }}</v-icon>
+          <span>Profile</span>
+        </v-tab>
+        <v-tab :disabled="!isLogin">
+          <v-icon left>{{ $icons.mdiCloudUpload }}</v-icon>
+          <span>Backup</span>
+        </v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab" class="mb-2">
+        <v-tab-item>
+          <v-card min-height="300px" flat color="transparent" class="px-2">
+            <general-settings :settings="settings" @change="commitSetting"></general-settings>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item>
+          <v-card min-height="300px" flat color="transparent" class="px-2">
+            <profile-settings @change="changeTab"></profile-settings>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item>
+          <v-card min-height="300px" flat color="transparent" class="px-2">
+            <backup-settings></backup-settings>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
+    </v-card>
+  </v-dialog>
 </template>
 <script>
 import Bus from '../../utils/bus';
 import GeneralSettings from './general-settings';
-import HomeSettings from './home-settings';
+import ProfileSettings from './profile-settings';
+import BackupSettings from './backup-settings';
+
 export default {
-  components: { GeneralSettings, HomeSettings },
+  components: { GeneralSettings, ProfileSettings, BackupSettings },
   data: () => ({
-    activeTab: '',
+    tab: 0,
     visible: false,
   }),
   methods: {
@@ -30,97 +52,30 @@ export default {
       this.$store.commit('settings/change', payload);
       this.$browser.storage.sync.set({ oTabSettings: this.settings });
     },
+    changeTab(tabId) {
+      this.tab = tabId;
+    },
   },
   computed: {
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
     settings() {
       return this.$store.state.settings.items;
     },
   },
   created() {
-    Bus.$on('settings', name => {
+    Bus.$on('settings', (tabId = 0) => {
       this.visible = true;
-      this.activeTab = name;
+      this.tab = tabId;
     });
   },
 };
 </script>
 <style lang="scss">
-@import '../../../assets/themes/themes';
-
-.list-subtitle {
-  margin-bottom: 5px;
-  @include themify($themes) {
-    color: themed('text-secondary');
-  }
-}
-
-.el-list.settings {
-  box-shadow: 0 0 1px 1px #607d8b08, 1px 1px 10px #4341571a;
-  border-radius: 4px;
-
-  @include themify($themes) {
-    border: 1px solid themed('light-border');
-    background-color: themed('card');
-  }
-
-  .el-list-item {
-    border-radius: 0;
-
-    .el-list-icon {
-      min-width: 50px !important;
-    }
-
-    padding: 13px 10px;
-
-    @include themify($themes) {
-      border-bottom: 1px solid themed('light-border');
-    }
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    &:hover {
-      background-color: unset !important;
-    }
-  }
-}
-.setting-tab-title {
-  i {
-    margin-right: 3px;
-  }
-  font-size: 15px;
-}
-
-.settings-dialog {
-  .el-tabs__content {
-    padding: 10px;
-  }
-
-  .el-dialog__header {
-    .el-dialog__headerbtn {
-      top: 25px !important;
-      right: 30px !important;
-      z-index: 2;
-      i {
-        font-size: 21px;
-      }
-    }
-
-    @include themify($themes) {
-      border-bottom: 1px solid themed('base-border');
-    }
-
-    padding: 0px 20px !important;
-  }
-
-  .el-dialog__footer {
-    padding: 10px 20px !important;
-  }
-
-  .el-dialog__body {
-    min-height: 200px;
-    padding: 20px 30px !important;
+.settings {
+  .v-window {
+    background: transparent !important;
   }
 }
 </style>

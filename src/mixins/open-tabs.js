@@ -5,9 +5,9 @@ export default {
   methods: {
     async allTabs() {
       try {
-        let tabs = await this.$browser.tabs.query({});
+        const tabs = await this.$browser.tabs.query({});
         const regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        let allTabs = tabs.map(({ title, url, favIconUrl, id }) => ({ title, url, favIconUrl, id })).filter(tab => regex.test(tab.url) === true);
+        const allTabs = tabs.map(({ title, url, favIconUrl, id }) => ({ title, url, favIconUrl, id })).filter(tab => regex.test(tab.url) === true);
         return allTabs;
       } catch (err) {
         return err;
@@ -22,8 +22,8 @@ export default {
       }
     });
     this.$browser.tabs.onRemoved.addListener(id => {
-      let index = this.openTabs.findIndex(tab => tab.id === id);
-      this.openTabs.splice(index, 1);
+      const index = this.openTabs.findIndex(tab => tab.id === id);
+      if (index !== -1) this.openTabs.splice(index, 1);
     });
   },
 };
