@@ -1,0 +1,23 @@
+.dg-backdrop {
+  background-color: rgba(0, 0, 0, 0.48) !important;
+}
+.dg-content-body {
+  border: none !important;
+}
+
+.dg-content-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+.dg-btn.dg-btn--cancel {
+  @apply mr-2 bg-transparent text-gray-700 rounded transition-bg;
+}
+.dg-btn.dg-btn--cancel:hover {
+  @apply bg-gray-200;
+}
+.dg-btn.dg-btn--ok {
+  @apply bg-blue-500 text-white transition-all;
+}
+.dg-btn.dg-btn--ok:hover {
+  filter: brightness(0.9);
+}
