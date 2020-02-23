@@ -1,7 +1,7 @@
 <template>
   <card-ui class="hover:shadow-md group relative overflow-visible" min-height="60px">
     <textarea-ui
-      class="text-base font-medium group w-full"
+      class="font-medium group w-full"
       v-model="tempTitle"
       @blur="updateNote"
       v-autofocus
@@ -12,13 +12,13 @@
     <template v-else>
       <div @click="(edit = true), (tempTitle = data.title)" class="pr-2">
         <p class="text-base font-medium pr-2 text-overflow">{{ data.title }}</p>
-        <p class="text-sm text-gray-600 line-clamp text-xs">{{ data.content }}</p>
-      </div>
-      <div class="-mr-3 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
-        <button-icon small icon="pen" class="bg-white shadow mb-1"></button-icon>
-        <button-icon @click="$emit('delete', data.id)" small icon="trash" color="red" class="text-red-500 bg-white shadow"></button-icon>
+        <p class="text-sm text-default-soft line-clamp text-xs">{{ data.content | stripHTML }}</p>
       </div>
     </template>
+    <div class="-mr-3 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
+      <button-icon small icon="pen" class="bg-card shadow mb-1" @click="editNote"></button-icon>
+      <button-icon @click="$emit('delete', data.id)" small icon="trash" color="red" class="text-red bg-card shadow"></button-icon>
+    </div>
   </card-ui>
 </template>
 <script>
@@ -38,6 +38,12 @@ export default {
     tempTitle: '',
   }),
   methods: {
+    editNote() {
+      this.$emit('edit', {
+        type: 'note',
+        id: this.data.id,
+      });
+    },
     updateNote() {
       this.$emit('update', {
         id: this.data.id,

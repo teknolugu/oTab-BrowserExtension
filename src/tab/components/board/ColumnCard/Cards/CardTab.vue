@@ -6,23 +6,23 @@
           <img :src="data.favIconUrl" height="20" width="20" />
         </div>
         <unicon name="globe" class="rounded-full web-icon p-2 border" height="20" width="20" v-else></unicon>
-        <a :href="data.url" target="_blank">
-          <button-icon icon="arrow-up-right" class="open-new-tab top-0 left-0 transition" size="22" v-show="showUtil"></button-icon>
+        <a :href="data.url" :target="openInNew">
+          <button-icon icon="arrow-up-right" class="open-new-tab top-0 left-0" size="22" v-show="showUtil"></button-icon>
         </a>
       </div>
       <div class="flex-grow pl-2 flex-grow w-8/12 px-2">
         <p class="text-sm font-medium text-overflow" :title="data.title">{{ data.title }}</p>
-        <p class="text-xs text-gray-600 text-overflow">{{ data.url }}</p>
+        <p class="text-xs text-default-soft text-overflow">{{ data.url }}</p>
       </div>
       <template v-if="edit">
         <button-icon icon="multiply" size="18" @click="edit = false"></button-icon>
-        <button-icon icon="check" size="26" small color="blue" class="text-blue-500" @click="updateUrl"></button-icon>
+        <button-icon icon="check" size="26" small color="blue" class="text-primary" @click="updateUrl"></button-icon>
       </template>
       <div v-if="!edit && showUtil" class="-mr-3 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
-        <button-icon small icon="pen" class="bg-white shadow mb-1" @click="(edit = true), (tempEdit = { ...data })"></button-icon>
-        <button-icon small icon="trash" color="red" class="text-red-500 bg-white shadow" @click="$emit('delete', data.id)"></button-icon>
+        <button-icon small icon="pen" class="bg-card shadow mb-1" @click="(edit = true), (tempEdit = { ...data })"></button-icon>
+        <button-icon small icon="trash" color="red" class="text-red bg-card shadow" @click="$emit('delete', data.id)"></button-icon>
       </div>
-      <unicon v-show="!showUtil" name="grip-horizontal-line" class="fill-current cursor-move text-gray-600 handler"></unicon>
+      <unicon v-show="!showUtil" name="grip-horizontal-line" class="fill-current cursor-move text-default-soft handler"></unicon>
     </div>
     <transition enter-class-active="fadeIn" leave-class-active="fadeOut">
       <div class="mt-5" v-if="edit">
@@ -56,6 +56,11 @@ export default {
       url: '',
     },
   }),
+  computed: {
+    openInNew() {
+      return this.$store.state.settings.openURLInNewTab ? '_blank' : '';
+    },
+  },
   methods: {
     updateUrl() {
       const { title, url } = this.tempEdit;

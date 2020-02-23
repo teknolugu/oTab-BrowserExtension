@@ -1,0 +1,26 @@
+.list-ui {
+  @apply flex items-center text-base p-3 rounded-lg cursor-pointer text-base;
+  @applt transition-colors duration-200 ease-in-out;
+  &.active {
+    @apply text-primary;
+  }
+  &.small {
+    @apply p-2;
+    .list-ui__icon svg {
+      height: 22px;
+      width: 22px;
+      fill: currentColor;
+    }
+  }
+  .list-ui__icon {
+    @apply mr-3;
+  }
+  &:hover {
+    @apply bg-gray-100;
+  }
+  &.dark-theme {
+    .list-ui:hover {
+      background-color: #0000001c;
+    }
+  }
+}

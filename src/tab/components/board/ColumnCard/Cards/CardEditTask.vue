@@ -4,9 +4,9 @@
       <button-icon icon="arrow-left" size="24" @click="close"></button-icon>
       <p class="text-base font-medium ml-1">Edit task</p>
       <div class="flex-grow"></div>
-      <button-icon icon="trash" color="red" @click="deleteTask" class="text-red-500"></button-icon>
+      <button-icon icon="trash" color="red" @click="deleteTask" class="text-red"></button-icon>
     </template>
-    <div class="bg-gray-200" style="height: 1px"></div>
+    <div class="bg-gray-200 my-2" style="height: 1px"></div>
     <div class="mt-4">
       <input-ui input-style="background" placeholder="Task title" class="w-full" v-model="title"></input-ui>
       <textarea-ui class="w-full mt-3" input-style="background" min-height="130px" v-model="content" max-height="200px" placeholder="Task description"></textarea-ui>
@@ -25,16 +25,16 @@ export default {
   }),
   computed: {
     item() {
-      return this.$store.getters['item/getItemById'](this.columnId, this.id);
+      return this.$store.getters['items/getItemById'](this.columnId, this.id);
     },
   },
   methods: {
     deleteTask() {
-      this.$store.dispatch('item/delete', { columnId: this.columnId, id: this.id });
+      this.$store.dispatch('items/delete', { columnId: this.columnId, id: this.id });
       this.$emit('close');
     },
     close() {
-      this.$store.dispatch('item/update', {
+      this.$store.dispatch('items/update', {
         id: this.id,
         columnId: this.columnId,
         data: {

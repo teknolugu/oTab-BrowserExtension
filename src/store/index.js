@@ -1,56 +1,66 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import VuexORM from '@vuex-orm/core';
-import pathify from 'vuex-pathify';
-// Models
-// import Board from './models/board';
-// import Column from './models/column';
-// import Item from './models/item';
-// import Tag from './models/tag';
+
+import modules from './modules';
+import { getStorage, setStorage } from '@/utils/storage';
 
 Vue.use(Vuex);
-import modules from './modules';
-// const database = new VuexORM.Database()
-/*
 
-database.register(Board);
-database.register(Column);
-database.register(Item);
-database.register(Tag);*/
-
-// plugins: [VuexORM.install(database)],
 export default new Vuex.Store({
   namespaced: true,
-  plugins: [pathify.plugin],
   modules,
-  state: {
-    activeBoard: '193691',
-    hideSideMenu: false,
-    search: {
-      type: 'column',
-      query: '',
-    },
-    activeLabel: '',
-    labels: ['#4299e1', '#CBD5E0', '#f6ad55', '#4FD1C5', '#fc8181', '#b794f4', '#68d391'],
-  },
   mutations: {
     changeItems(state, { columnId, items }) {
-      Vue.set(state.item, columnId, items);
+      Vue.set(state.items, columnId, items);
+      setStorage('items', state.items);
     },
     changeColumns(state, columns) {
-      Vue.set(state.column, state.activeBoard, columns);
+      Vue.set(state.columns, state.activeBoard, columns);
+      setStorage('columns', state.columns);
     },
-    updateActiveLabel(state, id) {
-      state.activeLabel = id;
+    changeModules(state, { key, value }) {
+      Vue.set(state, key, value);
     },
-    updateSearch(state, { key, value }) {
-      state.search[key] = value;
+    overrideModule(state, { key, value }) {
+      state[key] = value;
+      setStorage(key, value);
     },
-    activeBoard(state, board) {
-      state.activeBoard = board;
+  },
+  actions: {
+    retrieveData({ commit }, vm) {
+      return new Promise(async resolve => {
+        const data = await getStorage(['boards', 'columns', 'items', 'labels', 'settings', 'backup']);
+        const user = vm ? await vm.$sendMessage('getUser') : null;
+
+        if (data.boards.length === 0) return resolve(null);
+
+        Object.keys(data).forEach(key => {
+          commit('changeModules', {
+            key,
+            value: data[key],
+          });
+        });
+
+        if (user !== null) commit('changeModules', { key: 'user', value: { isLogin: true, ...user } });
+
+        const { defaultBoard } = await getStorage('defaultBoard');
+        commit('ui/setState', {
+          defaultBoard,
+          activeBoard: !!defaultBoard ? defaultBoard : data.boards[0].id,
+        });
+
+        resolve(data);
+      });
     },
-    hideSideMenu(state) {
-      state.hideSideMenu = !state.hideSideMenu;
+    overrideLocalData({ commit }, data) {
+      return new Promise(resolve => {
+        Object.keys(data).forEach(key => {
+          commit('overrideModule', {
+            key,
+            value: data[key],
+          });
+        });
+      });
     },
   },
 });

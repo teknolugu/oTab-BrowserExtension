@@ -1,45 +1,61 @@
 <template>
   <div class="flex flex-col h-full">
-    <p class="font-medium text-base inline-block px-4 text-gray-600">Open Tabs</p>
+    <p class="font-medium text-base inline-block px-4 text-default-soft">Open Tabs</p>
     <div class="tabs mt-4 overflow-auto scrollbar pl-5 pr-3 mr-2 pb-5 flex-grow">
-      <div v-if="tabs.length === 0" class="text-center mt-8">
-        <unicon name="window" class="mx-auto p-5 text-gray-600 bg-gray-300 rounded-full"></unicon>
-        <p class="text-base mt-2 text-gray-600">No Data</p>
+      <div v-if="tabs.length === 0" class="text-center mt-8 text-default-soft">
+        <unicon name="window" class="mx-auto p-5 bg-gray-300 rounded-full"></unicon>
+        <p class="text-base mt-2">No Data</p>
       </div>
-      <Draggable v-else ghost-class="hidden-child" :list="tabs" :group="groupOptions">
+      <Draggable v-else ghost-class="hidden-child" v-model="tabs" :group="groupOptions" @change="closeTab" :clone="generateTabData">
         <card-tab v-for="tab in tabs" :key="tab.id" :data="tab"></card-tab>
       </Draggable>
     </div>
-    <button-ui :disabled="tabs.length === 0" button-style="outline" @click="saveSession" class="hover:bg-gray-300 mx-5">Save session</button-ui>
+    <button-ui :disabled="tabs.length === 0" type="outline" @click="saveSession" class="mx-5">Save session</button-ui>
   </div>
 </template>
 <script>
 import Draggable from 'vuedraggable';
 import CardTab from './ColumnCard/cards/CardTab';
+import dayjs from 'dayjs';
+import generateId from '@/utils/generateId';
+import isURL from '@/utils/isURL';
 
 export default {
   components: { Draggable, CardTab },
   data: () => ({
-    groupOptions: { name: 'list', pull: 'clone', put: false, revertClone: true },
     tabs: [],
   }),
   computed: {
     hide() {
-      return this.$store.state.hideOpenTabs;
+      return this.$store.state.ui.hideOpenTabs;
+    },
+    groupOptions() {
+      return {
+        name: 'list',
+        pull: this.$store.state.settings.closeTabOnSave ? true : 'clone',
+        put: false,
+      };
     },
   },
   methods: {
-    isURL(url) {
-      const URLRegex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-      return URLRegex.test(url);
+    closeTab(event) {
+      if (event.removed) this.$browser.tabs.remove(event.removed.element.id);
+    },
+    generateTabData(data) {
+      return {
+        ...data,
+        id: generateId(this.$store.state.items),
+      };
     },
     saveSession() {
-      const date = new Date(Date.now()).toString();
-      const columnTitle = `${date.slice(4, 10)}, ${date.slice(16, 21)}`;
-      this.$store.dispatch('column/add', columnTitle).then(id => {
-        this.$store.commit('item/sessionItem', { columnId: id, items: this.tabs });
+      const columnTitle = dayjs(Date.now())
+        .format('MMM Do, HH:mm')
+        .toString();
+
+      this.$store.dispatch('columns/add', columnTitle).then(id => {
+        this.$store.commit('items/sessionItem', { columnId: id, items: this.tabs });
       });
-      this.$browser.tabs.remove(this.openTabs.map(tab => tab.id));
+      this.$browser.tabs.remove(this.tabs.map(tab => tab.id));
     },
   },
   mounted() {

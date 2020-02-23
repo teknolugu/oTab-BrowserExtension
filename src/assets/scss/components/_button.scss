@@ -1,0 +1,62 @@
+.button-ui {
+  border-radius: 7px !important;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  @apply font-medium text-base text-inverse;
+  .unicon,
+  p,
+  span {
+    vertical-align: middle;
+  }
+  &.loading {
+    pointer-events: none;
+  }
+  &.btn-primary {
+    @apply bg-primary;
+  }
+  &.btn-warning {
+    background-color: var(--yellow);
+  }
+  &.btn-danger {
+    background-color: var(--red);
+  }
+  &.btn-small {
+    @apply p-1 px-2;
+    @apply text-sm #{!important};
+  }
+  &.btn-regular {
+    @apply py-2 px-4;
+  }
+  &.btn-large {
+    @apply py-3 px-6;
+  }
+  &.btn-outline {
+    background-color: transparent;
+    @apply border text-default;
+  }
+  &.btn-text {
+    background-color: transparent !important;
+    @apply text-default;
+    &:hover {
+      @apply bg-gray-200 #{!important};
+    }
+  }
+  &:hover:not(.btn-text) {
+    transform: translateY(-1px);
+    @apply shadow;
+  }
+  &:focus {
+    outline: none;
+  }
+  &:active:not(.btn-text) {
+    box-shadow: none !important;
+    transform: translateY(0px);
+    outline: none;
+  }
+  &:disabled {
+    @apply opacity-50;
+    pointer-events: none;
+  }
+}

@@ -3,12 +3,12 @@
     <template v-for="label in getLabels.slice(0, 4)">
       <div
         class="column-tag ml-1 first:ml-0 hover:brightness text-overflow"
-        :class="[showName ? 'h-6 py-1 px-2 rounded' : 'h-2']"
+        :class="[showName ? 'h-6 py-1 px-2' : 'h-2']"
         :style="{ backgroundColor: label.color }"
         :title="label.name"
         @click="showName = !showName"
       >
-        <span class="text-white font-medium text-xs" :class="[showName ? 'visible' : 'invisible']">{{ label.name }}</span>
+        <span class="text-inverse font-medium uppercase text-xs" :class="[showName ? 'visible' : 'invisible']">{{ label.name }}</span>
       </div>
     </template>
     <template v-if="getLabels.length >= 5">
@@ -16,10 +16,10 @@
         @click="showName = !showName"
         v-tooltip="{
           content: getRestLabel().join(', '),
-          classes: ['bg-white shadow-xl px-3 text-sm font-medium rounded py-2'],
+          classes: ['bg-card shadow-xl px-3 text-sm font-medium rounded-lg py-2'],
           offset: '5',
         }"
-        :class="[showName ? 'h-6 rounded' : 'h-2']"
+        :class="[showName ? 'h-6 rounded-lg' : 'h-2']"
         class="bg-gray-300 ml-1 column-tag py-1 px-2"
         style="width: 60px"
       >
@@ -44,7 +44,7 @@ export default {
   computed: {
     getLabels() {
       return this.labels.map(label => {
-        return this.$store.getters['label/getLabelByLabelId'](label);
+        return this.$store.getters['labels/getLabelByLabelId'](label);
       });
     },
   },
@@ -55,6 +55,6 @@ export default {
   width: 20%;
   border-radius: 2px;
   cursor: pointer;
-  @apply transition-all;
+  transition: all 0.2s ease;
 }
 </style>

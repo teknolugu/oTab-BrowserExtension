@@ -1,0 +1,40 @@
+:root {
+  --primary: #4299e1;
+  --secondary: #3182ce;
+  --red: #f56565;
+  --yellow: #ecc94b;
+  --green: #48bb78;
+  --red-200: #feb2b2;
+  --blue-200: #90cdf4;
+  --green-200: #9ae6b4;
+}
+
+.light-theme {
+  --color-text-default: #4a5568;
+  --color-text-default-soft: #718096;
+  --color-text-inverse: #fff;
+  --color-text-inverse-soft: #edf2f7;
+
+  --bgColor-gray-100: #f7fafc;
+  --bgColor-gray-200: #edf2f7;
+  --bgColor-gray-300: #e2e8f0;
+  --bgColor-card: #fff;
+
+  --border: #e2e8f0;
+  --scrollbar: #cbd5e0;
+}
+
+.dark-theme {
+  --color-text-default: hsla(0, 0%, 100%, 0.9);
+  --color-text-default-soft: hsla(0, 0%, 100%, 0.7);
+  --color-text-inverse: hsla(0, 0%, 100%, 0.9);
+  --color-text-inverse-soft: #edf2f7;
+
+  --bgColor-gray-100: #202124;
+  --bgColor-gray-200: #242528;
+  --bgColor-gray-300: hsla(0, 0%, 0%, 0.1);
+  --bgColor-card: #2f2f32;
+
+  --border: hsla(0, 0%, 100%, 0.05);
+  --scrollbar: rgba(255, 255, 255, 0.13);
+}

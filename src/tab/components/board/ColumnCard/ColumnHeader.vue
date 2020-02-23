@@ -9,28 +9,25 @@
       @blur="updateColumnTitle"
       style="padding: 3px"
     ></input-ui>
-    <p class="text-sm cursor-pointer text-overflow font-medium py-1 rounded px-2 hover:bg-gray-200" @click="editColumn = { active: true, title }" v-else style="max-width: 75%">
+    <p class="text-sm cursor-pointer text-overflow font-medium py-1 rounded-lg px-2 hover:bg-gray-200" @click="editColumn = { active: true, title }" v-else style="max-width: 75%">
       {{ title }}
     </p>
     <div class="flex-grow"></div>
     <v-popover placement="bottom-start" open-group="label" @hide="showLabel = false" :auto-hide="false">
-      <button-icon icon="ellipsis-h" small></button-icon>
+      <button-icon icon="ellipsis-v" small></button-icon>
       <template slot="popover">
-        <card-ui class="shadow-xl text-gray-700 absolute" style="padding: 10px 8px; right: -27px;" width="200px">
-          <div class="p-2 hover:bg-gray-100 cursor-pointer rounded" v-close-popover @click="deleteColumn">
-            <unicon name="trash" height="20" width="20" color="red" class="align-bottom text-red-500"></unicon>
-            <p class="text-sm inline-block ml-2">Delete column</p>
-          </div>
+        <card-ui class="shadow-xl text-default absolute" style="padding: 10px 8px; right: -27px;" width="200px">
+          <list-ui icon="trash" class="text-red" small v-close-popover @click="deleteColumn">
+            Delete column
+          </list-ui>
           <label-ui v-model="columnLabels" placement="right" :show="showLabel">
-            <div class="p-2 hover:bg-gray-100 cursor-pointer rounded" style="width: 185px" @click="showLabel = true">
-              <unicon name="label-alt" height="20" width="20" class="align-bottom"></unicon>
-              <p class="text-sm inline-block ml-2">Labels</p>
-            </div>
+            <list-ui icon="label-alt" small style="width: 185px" @click="showLabel = true">
+              Labels
+            </list-ui>
           </label-ui>
-          <div class="p-2 hover:bg-gray-100 cursor-pointer rounded" v-close-popover @click="openAllTabs">
-            <unicon name="arrow-up-right" height="20" width="20" class="align-bottom"></unicon>
-            <p class="text-sm inline-block ml-2">Open all tabs</p>
-          </div>
+          <list-ui icon="arrow-up-right" small v-close-popover @click="openAllTabs">
+            Open all tabs
+          </list-ui>
         </card-ui>
       </template>
     </v-popover>
@@ -57,7 +54,7 @@ export default {
         return this.labels;
       },
       set(value) {
-        this.$store.dispatch('column/update', {
+        this.$store.dispatch('columns/update', {
           id: this.columnId,
           data: {
             labels: value,
@@ -69,7 +66,7 @@ export default {
   methods: {
     updateColumnTitle() {
       if (this.editColumn.title === '') return;
-      this.$store.dispatch('column/update', {
+      this.$store.dispatch('columns/update', {
         id: this.columnId,
         data: {
           title: this.editColumn.title,
@@ -91,7 +88,7 @@ export default {
         title: 'Delete column',
         text: this.title,
         handler: confirm => {
-          if (confirm) this.$store.dispatch('column/delete', this.columnId);
+          if (confirm) this.$store.dispatch('columns/delete', this.columnId);
         },
       });
     },

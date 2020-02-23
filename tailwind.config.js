@@ -1,63 +1,33 @@
 module.exports = {
   theme: {
-    transitionProperty: {
-      // defaults to these values
-      none: 'none',
-      all: 'all',
-      color: 'color',
-      bg: 'background-color',
-      border: 'border-color',
-      colors: ['color', 'background-color', 'border-color'],
-      opacity: 'opacity',
-      transform: 'transform',
+    textColor: {
+      primary: 'var(--secondary)',
+      secondary: 'var(--secondary)',
+      default: 'var(--color-text-default)',
+      'default-soft': 'var(--color-text-default-soft)',
+      inverse: 'var(--color-text-inverse)',
+      'inverse-soft': 'var(--color-text-inverse-soft)',
+      red: 'var(--red)',
+      yellow: 'var(--yellow)',
+      green: 'var(--green)',
     },
-    transitionDuration: {
-      // defaults to these values
-      default: '250ms',
-      '0': '0ms',
-      '100': '100ms',
-      '250': '250ms',
-      '500': '500ms',
-      '750': '750ms',
-      '1000': '1000ms',
-    },
-    transitionTimingFunction: {
-      // defaults to these values
-      default: 'ease',
-      linear: 'linear',
-      ease: 'ease',
-      'ease-in': 'ease-in',
-      'ease-out': 'ease-out',
-      'ease-in-out': 'ease-in-out',
-    },
-    transitionDelay: {
-      // defaults to these values
-      default: '0ms',
-      '0': '0ms',
-      '100': '100ms',
-      '250': '250ms',
-      '500': '500ms',
-      '750': '750ms',
-      '1000': '1000ms',
-    },
-    willChange: {
-      // defaults to these values
-      auto: 'auto',
-      scroll: 'scroll-position',
-      contents: 'contents',
-      opacity: 'opacity',
-      transform: 'transform',
+    backgroundColor: {
+      primary: 'var(--primary)',
+      secondary: 'var(--secondary)',
+      'blue-200': 'var(--blue-200)',
+      'red-200': 'var(--red-200)',
+      'green-200': 'var(--green-200)',
+      'gray-100': 'var(--bgColor-gray-100)',
+      'gray-200': 'var(--bgColor-gray-200)',
+      'gray-300': 'var(--bgColor-gray-300)',
+      'red-500': 'var(--red)',
+      card: 'var(--bgColor-card)',
+      transparent: 'transparent',
     },
   },
   variants: {
-    // all the following default to ['responsive']
-    transitionProperty: ['responsive'],
-    transitionDuration: ['responsive'],
-    transitionTimingFunction: ['responsive'],
-    transitionDelay: ['responsive'],
-    willChange: ['responsive'],
     margin: ['first'],
     backgroundColor: ['group-hover', 'hover'],
+    textColor: ['group-hover', 'hover'],
   },
-  plugins: [require('tailwindcss-transitions')()],
 };

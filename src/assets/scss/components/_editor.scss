@@ -1,0 +1,60 @@
+.editor {
+  .menubar {
+    @apply rounded-lg h-full;
+    .save-button {
+      @apply bg-primary text-inverse shadow-xl mb-3;
+      @apply px-4 py-3 #{!important};
+    }
+    .content-menu {
+      @apply shadow-xl bg-card px-2 py-3 flex flex-col rounded-lg;
+    }
+  }
+  &--content {
+    @apply text-base;
+    max-height: calc(100vh - 10rem);
+    overflow: auto;
+    .ProseMirror {
+      min-height: 100px;
+      &:focus {
+        outline: none;
+      }
+    }
+    h1,
+    h2,
+    h3 {
+      @apply font-medium;
+    }
+    h1 {
+      @apply text-2xl;
+    }
+    h2 {
+      @apply text-xl;
+    }
+    h3 {
+      @apply text-lg;
+    }
+    blockquote {
+      @apply px-3 py-1 border-l-4 border-blue-500 my-3;
+    }
+    li {
+      @apply list-disc;
+      list-style-position: inside;
+      p {
+        display: inline-block;
+      }
+    }
+  }
+  .content--title {
+    padding: 0 !important;
+    width: 100%;
+    @apply mb-4 font-medium text-3xl;
+  }
+  p.is-editor-empty:first-child::before {
+    content: attr(data-empty-text);
+    float: left;
+    color: #aaa;
+    pointer-events: none;
+    height: 0;
+    font-style: italic;
+  }
+}

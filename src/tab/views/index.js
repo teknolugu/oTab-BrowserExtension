@@ -1,12 +1,12 @@
 import Board from './Board.vue';
 import Note from './Note.vue';
-import Index from './index.vue';
+import Home from './home.vue';
 
 export default [
   {
-    name: 'index',
+    name: 'home',
     path: '/',
-    component: Index,
+    component: Home,
   },
   {
     name: 'board',
@@ -15,7 +15,7 @@ export default [
   },
   {
     name: 'note',
-    path: '/note',
+    path: '/note/:id',
     component: Note,
   },
   {
