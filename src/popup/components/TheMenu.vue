@@ -1,7 +1,6 @@
 <template>
-  <div class="h-16 px-6">
+  <div class="bg-gray-100 p-4">
     <select-ui :list="boards" item-key="title" item-value="id" block v-model="activeBoard" class="w-full"></select-ui>
-    <input-ui input-style="background"></input-ui>
   </div>
 </template>
 <script>

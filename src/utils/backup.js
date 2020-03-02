@@ -12,7 +12,6 @@ const backupIntervals = {
 firebase.auth().onAuthStateChanged(user => {
   if (user && user.emailVerified) {
     browser.alarms.get('backup').then(alarm => {
-      console.log(typeof alarm);
       if (typeof alarm === 'undefined') {
         setStorage('backup', {
           active: true,

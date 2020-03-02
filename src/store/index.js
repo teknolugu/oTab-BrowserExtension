@@ -15,7 +15,7 @@ export default new Vuex.Store({
       setStorage('items', state.items);
     },
     changeColumns(state, columns) {
-      Vue.set(state.columns, state.activeBoard, columns);
+      Vue.set(state.columns, state.ui.activeBoard, columns);
       setStorage('columns', state.columns);
     },
     changeModules(state, { key, value }) {
@@ -27,12 +27,12 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    retrieveData({ commit }, vm) {
+    retrieveData({ commit }) {
       return new Promise(async resolve => {
-        const data = await getStorage(['boards', 'columns', 'items', 'labels', 'settings', 'backup']);
-        const user = vm ? await vm.$sendMessage('getUser') : null;
+        const data = await getStorage(['boards', 'columns', 'items', 'labels', 'settings', 'backup', 'user']);
+        const boardsArr = Object.keys(data.boards);
 
-        if (data.boards.length === 0) return resolve(null);
+        if (boardsArr.length === 0) return resolve(null);
 
         Object.keys(data).forEach(key => {
           commit('changeModules', {
@@ -41,15 +41,13 @@ export default new Vuex.Store({
           });
         });
 
-        if (user !== null) commit('changeModules', { key: 'user', value: { isLogin: true, ...user } });
-
         const { defaultBoard } = await getStorage('defaultBoard');
         commit('ui/setState', {
           defaultBoard,
-          activeBoard: !!defaultBoard ? defaultBoard : data.boards[0].id,
+          activeBoard: !!defaultBoard ? defaultBoard : boardsArr[0],
         });
 
-        resolve(data);
+        resolve({ ...data, defaultBoard });
       });
     },
     overrideLocalData({ commit }, data) {

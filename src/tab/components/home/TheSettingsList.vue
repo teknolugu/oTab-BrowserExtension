@@ -64,6 +64,6 @@ export default {
 </script>
 <style>
 .active-setting {
-  @apply shadow-lg text-primary !important;
+  @apply text-primary !important;
 }
 </style>

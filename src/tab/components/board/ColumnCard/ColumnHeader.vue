@@ -13,8 +13,8 @@
       {{ title }}
     </p>
     <div class="flex-grow"></div>
-    <v-popover placement="bottom-start" open-group="label" @hide="showLabel = false" :auto-hide="false">
-      <button-icon icon="ellipsis-v" small></button-icon>
+    <v-popover placement="bottom-start" open-group="label">
+      <button-icon icon="ellipsis-v" small v-close-popover.all></button-icon>
       <template slot="popover">
         <card-ui class="shadow-xl text-default absolute" style="padding: 10px 8px; right: -27px;" width="200px">
           <list-ui icon="trash" class="text-red" small v-close-popover @click="deleteColumn">

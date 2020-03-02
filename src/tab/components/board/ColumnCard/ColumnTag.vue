@@ -3,12 +3,12 @@
     <template v-for="label in getLabels.slice(0, 4)">
       <div
         class="column-tag ml-1 first:ml-0 hover:brightness text-overflow"
-        :class="[showName ? 'h-6 py-1 px-2' : 'h-2']"
+        :class="[showName ? 'h-6 px-2' : 'h-2']"
         :style="{ backgroundColor: label.color }"
         :title="label.name"
         @click="showName = !showName"
       >
-        <span class="text-inverse font-medium uppercase text-xs" :class="[showName ? 'visible' : 'invisible']">{{ label.name }}</span>
+        <span class="text-inverse font-medium uppercase text-xs tag-name" :class="[showName ? 'visible' : 'invisible']">{{ label.name }}</span>
       </div>
     </template>
     <template v-if="getLabels.length >= 5">
@@ -50,11 +50,14 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .column-tag {
   width: 20%;
   border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s ease;
+  .tag-name {
+    line-height: 1.5rem;
+  }
 }
 </style>

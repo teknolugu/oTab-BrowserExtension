@@ -2,7 +2,9 @@
   <div class="content-wrapper flex h-full editor">
     <div class="content flex-grow mr-5">
       <input-ui v-model="tempTitle" input-style="transparent" placeholder="Title" class="content--title"></input-ui>
-      <editor-content :editor="editor" class="scrollbar editor--content" />
+      <scrollbar class="editor--scroller">
+        <editor-content :editor="editor" class="editor--content" />
+      </scrollbar>
     </div>
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar flex flex-col">
@@ -49,8 +51,11 @@ import '@/assets/scss/components/_editor.scss';
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import { Blockquote, HardBreak, Heading, Bold, Code, Italic, Link, Underline, History, TrailingNode, Placeholder, BulletList, ListItem } from 'tiptap-extensions';
 
+import scrollbar from 'vue-perfect-scrollbar';
+
 export default {
   components: {
+    scrollbar,
     EditorContent,
     EditorMenuBar,
   },

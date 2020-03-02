@@ -18,7 +18,7 @@
         <button-icon icon="multiply" size="18" @click="edit = false"></button-icon>
         <button-icon icon="check" size="26" small color="blue" class="text-primary" @click="updateUrl"></button-icon>
       </template>
-      <div v-if="!edit && showUtil" class="-mr-3 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
+      <div v-if="!edit && showUtil" class="-mr-2 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
         <button-icon small icon="pen" class="bg-card shadow mb-1" @click="(edit = true), (tempEdit = { ...data })"></button-icon>
         <button-icon small icon="trash" color="red" class="text-red bg-card shadow" @click="$emit('delete', data.id)"></button-icon>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="board content-wrapper height-with-menu flex flex-col" style="padding-bottom: 3px">
     <the-header></the-header>
-    <draggable v-model="columns" draggable=".list-wrapper" class="flex-grow rounded-lg mt-4 pb-1 scrollbar flex overflow-x-auto overflow-y-hidden flex-no-wrap">
+    <draggable v-model="columns" draggable=".list-wrapper" class="flex-grow rounded-lg mt-4 pb-1 flex overflow-x-auto overflow-y-hidden flex-no-wrap">
       <div class="list-wrapper ml-5 first:ml-0" v-for="column in columns" :key="column.id">
         <column-card :column="column"></column-card>
       </div>
@@ -15,8 +15,10 @@
         </div>
         <template v-else>
           <input-ui @keyup.enter.native="addColumn" v-model="addColumnInput.title" autofocus input-style="transparent" placeholder="Column name" class="text-sm w-8/12"></input-ui>
-          <button-icon icon="multiply" small @click="addColumnInput.active = false"></button-icon>
-          <span class="bg-primary shadow-md ml-3 px-3 py-1 text-sm rounded-lg text-inverse" @click="addColumn">ADD</span>
+          <div class="inline-block w-4/12 pl-2">
+            <button-icon icon="multiply" class="align-middle" small @click="addColumnInput.active = false"></button-icon>
+            <button-ui size="small" class="ml-2 align-middle" @click="addColumn">ADD</button-ui>
+          </div>
         </template>
       </div>
     </draggable>

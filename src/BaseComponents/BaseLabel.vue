@@ -38,7 +38,7 @@
           </div>
         </template>
         <template v-else>
-          <div class="labels mt-4 overflow-y-auto scrollbar" style="max-height: 230px">
+          <scrollbar class="labels mt-4" style="max-height: 230px">
             <template v-for="label in filteredLabels">
               <div class="h-10 mt-2 cursor-pointer first:mt-0 flex items-center">
                 <div
@@ -55,7 +55,7 @@
                 <button-icon icon="pen" @click="setEditLabel(label)" size="20" class="ml-1 text-default-soft"></button-icon>
               </div>
             </template>
-          </div>
+          </scrollbar>
           <button-ui type="text" @click="addLabelSection = true" size="small" block v-if="!!search && filteredLabels.length === 0">
             Create <b>{{ search }}</b> as label
           </button-ui>
@@ -68,7 +68,10 @@
   </v-popover>
 </template>
 <script>
+import scrollbar from 'vue-perfect-scrollbar';
+
 export default {
+  components: { scrollbar },
   props: {
     value: {
       type: [Array, String],

@@ -4,6 +4,11 @@
   border-color: var(--border);
 }
 
+html,
+body {
+  overflow: hidden;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
 }

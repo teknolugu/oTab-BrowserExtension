@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full overflow-y-auto px-5 scrollbar">
+  <scrollbar class="h-full px-5 scrollbar">
     <div class="add-note hover:bg-gray-300" @click="addNote">
       <unicon name="file-plus" height="22" width="22" class="align-top"></unicon>
       <p class="font-medium text-base inline-block ml-1">Add note</p>
@@ -23,10 +23,13 @@
         </div>
       </card-ui>
     </div>
-  </div>
+  </scrollbar>
 </template>
 <script>
+import scrollbar from 'vue-perfect-scrollbar';
+
 export default {
+  components: { scrollbar },
   data: () => ({
     columnId: '',
     itemId: '',

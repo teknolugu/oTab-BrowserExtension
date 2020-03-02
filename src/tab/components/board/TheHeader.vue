@@ -18,9 +18,9 @@
       placeholder="Board name"
       autofocus
     ></input-ui>
-    <h3 class="text-overflow transition-colors hover:bg-gray-200 board-title" v-else @click="(editBoardTitle.active = true), (editBoardTitle.title = board.title)">
+    <p class="text-overflow transition-colors hover:bg-gray-200 board-title" v-else @click="(editBoardTitle.active = true), (editBoardTitle.title = board.title)">
       {{ board.title }}
-    </h3>
+    </p>
     <div class="bg-gray-300 mx-4" style="width: 1px; height: 30px"></div>
     <div class="input-filter">
       <input-ui input-style="background" icon="search" placeholder="Search..." v-model="searchQuery" width="100px"></input-ui>

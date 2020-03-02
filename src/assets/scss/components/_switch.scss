@@ -19,14 +19,15 @@
     }
   }
   .slider {
-    @apply bg-gray-200;
     bottom: 0;
     cursor: pointer;
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
-    transition: all 0.4s ease;
+    @apply transition-colors transition-transform bg-gray-200;
+    transition-duration: 0.4s;
+    transition-timing-function: ease;
     &.round {
       border-radius: 34px;
       &:before {
@@ -39,7 +40,6 @@
       content: '';
       height: 20px;
       position: absolute;
-      -webkit-transition: 0.4s;
       transition: 0.4s;
       width: 20px;
       left: 4px;

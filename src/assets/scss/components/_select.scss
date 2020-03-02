@@ -1,4 +1,5 @@
 .select-ui {
+  @apply text-default;
   &.block {
     .trigger {
       display: block !important;

@@ -1,6 +1,7 @@
 import Vue from 'vue';
+const browser = require('webextension-polyfill');
 import generateId from '@/utils/generateId';
-import { setStorage } from '@/utils/storage';
+import { setStorage, getStorage } from '@/utils/storage';
 
 export default {
   state: () => ({}),
@@ -47,7 +48,6 @@ export default {
         const board = {
           title,
           createdDate: Date.now(),
-          starred: false,
         };
 
         commit('addBoard', { id, board });

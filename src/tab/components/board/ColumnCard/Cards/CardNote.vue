@@ -7,7 +7,9 @@
       v-autofocus
       v-if="edit || !data.title"
       placeholder="Note title"
+      input-style="transparent"
       max-height="120px"
+      style="padding: 0"
     ></textarea-ui>
     <template v-else>
       <div @click="(edit = true), (tempTitle = data.title)" class="pr-2">
@@ -15,7 +17,7 @@
         <p class="text-sm text-default-soft line-clamp text-xs">{{ data.content | stripHTML }}</p>
       </div>
     </template>
-    <div class="-mr-3 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
+    <div class="-mr-2 top-0 flex flex-col group-hover:visible invisible right-0 absolute">
       <button-icon small icon="pen" class="bg-card shadow mb-1" @click="editNote"></button-icon>
       <button-icon @click="$emit('delete', data.id)" small icon="trash" color="red" class="text-red bg-card shadow"></button-icon>
     </div>

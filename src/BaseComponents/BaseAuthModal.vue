@@ -22,7 +22,7 @@
           <ValidationProvider tag="div" rules="required|email" v-slot="{ errors, invalid, failed }">
             <input-ui placeholder="Email" :error="failed" large input-style="background" v-model="email" block />
             {{ errors[0] }}
-            <button-ui class="mt-8" block :disabled="invalid">Send reset email</button-ui>
+            <button-ui class="mt-8" block :loading="isLoading" :disabled="invalid" @click="sendResetEmail">Send reset email</button-ui>
           </ValidationProvider>
         </template>
         <template v-else>
@@ -80,27 +80,27 @@ export default {
   methods: {
     formHandler() {
       this.isLoading = true;
+
+      this.isLogin ? this.login() : this.signUp();
+    },
+    login() {
       const timeout = setTimeout(() => {
         this.isLoading = false;
         this.$toast.error('Connection timeout');
       }, 10000);
-
-      if (this.isLogin) this.login();
-      else this.signUp();
-    },
-    login() {
       this.$sendMessage('login', {
         email: this.email,
         password: this.password,
       })
         .then(user => {
           this.$store.commit('changeModules', { key: 'user', value: { isLogin: true, ...user } });
-          clearTimeout(this.timeout);
+
+          clearTimeout(timeout);
           this.checkUserData();
         })
         .catch(err => {
           this.$toast.error('Wrong email/password');
-          clearTimeout(this.timeout);
+          clearTimeout(timeout);
           this.isLoading = false;
         });
     },
@@ -119,12 +119,12 @@ export default {
           this.$toast.info('Check email inbox to verify your email');
 
           this.$modal.hide('auth');
-          clearTimeout(this.timeout);
+          clearTimeout(timeout);
           this.isLoading = false;
         })
         .catch(err => {
           this.$toast.error('Email already use by another account');
-          clearTimeout(this.timeout);
+          clearTimeout(timeout);
           this.isLoading = false;
         });
     },
@@ -145,9 +145,13 @@ export default {
         });
     },
     sendResetEmail() {
+      this.isLoading = true;
       this.$sendMessage('sendPasswordResetEmail', {
         email: this.email,
-      }).then(() => this.$toast.info('Check your email inbox'));
+      }).then(() => {
+        this.isLoading = false;
+        this.$toast.info('Check your email inbox');
+      });
     },
   },
 };

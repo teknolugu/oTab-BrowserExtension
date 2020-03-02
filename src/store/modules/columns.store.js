@@ -33,7 +33,7 @@ export default {
     },
     getColumnsByBoardId: (state, getters) => boardId => {
       const activeBoard = boardId ? boardId : getters.getActiveBoardId;
-      return state[activeBoard];
+      return typeof state[activeBoard] !== 'undefined' ? state[activeBoard] : [];
     },
   },
 

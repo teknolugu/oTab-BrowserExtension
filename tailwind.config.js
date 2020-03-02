@@ -24,6 +24,11 @@ module.exports = {
       card: 'var(--bgColor-card)',
       transparent: 'transparent',
     },
+    extend: {
+      borderColor: {
+        primary: 'var(--primary)',
+      },
+    },
   },
   variants: {
     margin: ['first'],

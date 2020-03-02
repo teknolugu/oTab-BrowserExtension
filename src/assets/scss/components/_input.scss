@@ -1,12 +1,17 @@
 .input-ui {
-  @apply text-base px-3 py-2 bg-transparent;
-  transition: all 0.4s ease;
+  @apply text-base px-3 py-2 text-default bg-transparent;
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
   .unicon svg {
     height: 22px;
     width: 22px;
   }
   input {
     background-color: transparent;
+  }
+  &:focus-within {
+    @apply border-primary;
   }
   &--default {
     @apply border-b;

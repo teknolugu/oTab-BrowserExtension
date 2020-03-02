@@ -70,7 +70,17 @@ export default {
       });
       setStorage('labels', state);
     },
-    delete({ commit, getters, state, dispatch }, labelId) {
+    delete({ commit, getters, state, dispatch, rootState }, labelId) {
+      if (rootState.ui.activeLabel === labelId)
+        commit(
+          'ui/update',
+          {
+            key: 'activeLabel',
+            value: '',
+          },
+          { root: true }
+        );
+
       const boardId = getters.getActiveBoardId;
       const findLabelIndex = state[boardId].findIndex(label => label.id === labelId);
 

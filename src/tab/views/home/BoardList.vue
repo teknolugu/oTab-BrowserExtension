@@ -12,19 +12,10 @@
             <div class="flex-grow"></div>
             <p class="float-right text-xs text-default-soft">{{ board.createdDate | formatTimestamp }}</p>
           </template>
-          <textarea-ui
-            max-height="41px"
-            autofocus
-            v-model="tempTitle"
-            width="100%"
-            class="mt-1 text-sm"
-            @blur="updateBoard(board)"
-            v-if="board.id === editBoardId"
-            input-style="background"
-          ></textarea-ui>
+          <input-ui autofocus v-model="editBoard.title" block class="mt-2 text-sm" @blur="updateBoard" v-if="board.id === editBoard.id" input-style="background"></input-ui>
           <p v-else @click="gotoBoard(board.id)" class="board--title line-clamp" style="height: 47px;">{{ board.title }}</p>
           <div class="mt-3" style="height: 30px">
-            <button-icon square small class="border" icon="pen" @click="(editBoardId = board.id), (tempTitle = board.title)"></button-icon>
+            <button-icon square small class="border" icon="pen" @click="editBoard = board"></button-icon>
             <button-icon square small class="border text-red ml-1" icon="trash" @click="deleteBoard(board)"></button-icon>
             <button-icon
               icon="star"
@@ -48,8 +39,10 @@ dayjs.extend(advancedFormat);
 
 export default {
   data: () => ({
-    editBoardId: '',
-    tempTitle: '',
+    editBoard: {
+      id: '',
+      title: '',
+    },
     search: '',
   }),
   computed: {
@@ -85,16 +78,17 @@ export default {
         },
       });
     },
-    updateBoard({ id, title }) {
-      if (this.tempTitle === title) return (this.editBoardId = '');
-
+    updateBoard() {
       this.$store.dispatch('boards/update', {
-        id,
+        boardId: this.editBoard.id,
         data: {
-          title: this.tempTitle,
+          title: this.editBoard.title,
         },
       });
-      this.editBoardId = '';
+      this.editBoard = {
+        title: '',
+        id: '',
+      };
     },
     deleteBoard({ title, id }) {
       this.$modal.show('delete', {

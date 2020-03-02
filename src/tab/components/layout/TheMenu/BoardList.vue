@@ -8,15 +8,8 @@
       <template slot="popover">
         <card-ui class="absolute shadow-xl" width="250px" style="padding: 17px 14px">
           <input-ui v-model="search" icon="search" input-style="background" class="text-default-soft text-sm w-full" placeholder="Search board"></input-ui>
-          <div class="mt-3 scrollbar overflow-y-auto" style="max-height: 300px">
-            <list-ui
-              v-for="board in boards"
-              :key="board.id"
-              :active="board.id === $store.state.ui.activeBoard"
-              v-close-popover
-              small
-              @click="updateUIState('activeBoard', board.id)"
-            >
+          <scrollbar class="mt-3" style="max-height: 300px">
+            <list-ui v-for="board in boards" :key="board.id" :active="board.id === $store.state.ui.activeBoard" small @click="updateUIState('activeBoard', board.id)">
               <p class="capitalize text-overflow" style="max-width: 160px">{{ board.title }}</p>
               <button-icon
                 slot="suffix"
@@ -30,7 +23,7 @@
                 @click="updateUIState('defaultBoard', board.id)"
               ></button-icon>
             </list-ui>
-          </div>
+          </scrollbar>
           <div @click="addBoard" class="mt-3 cursor-pointer p-2 rounded-lg hover:bg-gray-100 text-sm font-medium transition-colors text-default">
             <unicon name="plus" class="align-bottom"></unicon>
             <span v-if="boards.length === 0 && !!search">Create "{{ search }}" board</span>
@@ -42,7 +35,10 @@
   </div>
 </template>
 <script>
+import scrollbar from 'vue-perfect-scrollbar';
+
 export default {
+  components: { scrollbar },
   data: () => ({
     search: '',
   }),

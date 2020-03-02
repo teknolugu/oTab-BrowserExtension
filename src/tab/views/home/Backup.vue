@@ -74,11 +74,7 @@ export default {
       if (!this.backup.active) return;
 
       this.loading = true;
-      const timeout = setTimeout(() => {
-        this.$toast.error('Connection timeout');
-        this.loading = false;
-        clearTimeout(timeout);
-      }, 20000);
+
       this.$sendMessage('backupData')
         .then(() => {
           setTimeout(() => {
@@ -89,7 +85,6 @@ export default {
             });
             this.$store.commit('backup/update', { key: 'lastBackup', value: Date.now() });
             this.loading = false;
-            clearTimeout(timeout);
           }, 2000);
         })
         .catch(() => {

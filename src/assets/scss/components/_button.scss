@@ -1,10 +1,9 @@
 .button-ui {
-  border-radius: 7px !important;
   vertical-align: middle;
   display: inline-block;
   cursor: pointer;
   transition: all 0.2s ease;
-  @apply font-medium text-base text-inverse;
+  @apply font-medium text-base text-inverse rounded-md;
   .unicon,
   p,
   span {
@@ -40,7 +39,7 @@
     background-color: transparent !important;
     @apply text-default;
     &:hover {
-      @apply bg-gray-200 #{!important};
+      background-color: #0000000f #{!important};
     }
   }
   &:hover:not(.btn-text) {

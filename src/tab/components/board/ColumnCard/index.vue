@@ -13,11 +13,13 @@
           <p class="inline-block text-sm">Add task</p>
         </button-ui>
       </div>
-      <draggable v-model="items" class="content scrollbar overflow-y-auto relative px-3 pb-4" group="list" ghost-class="hidden-child">
-        <template v-for="item in filteredItems">
-          <component class="mt-3 first:mt-0 cursor-pointer" :is="item.type" @update="updateItem" @delete="deleteItem" @edit="editItem" showUtil :data="item"></component>
-        </template>
-      </draggable>
+      <scrollbar class="overflow-y-auto content pr-4 pl-3 pb-4">
+        <draggable v-model="items" group="list" ghost-class="hidden-child">
+          <template v-for="item in filteredItems">
+            <component class="mt-3 first:mt-0 cursor-pointer" :is="item.type" @update="updateItem" @delete="deleteItem" @edit="editItem" showUtil :data="item"></component>
+          </template>
+        </draggable>
+      </scrollbar>
     </div>
     <transition name="slide" enter-active-class="slideInLeft" leave-active-class="slideOutLeft">
       <card-edit-task :columnId="column.id" :id="editTask.id" style="animation-duration: 0.5s" @close="editTask.active = false" v-if="editTask.active"></card-edit-task>
@@ -26,6 +28,7 @@
 </template>
 <script>
 import draggable from 'vuedraggable';
+import scrollbar from 'vue-perfect-scrollbar';
 
 import task from './cards/CardTask.vue';
 import note from './cards/CardNote.vue';
@@ -35,7 +38,7 @@ import ColumnHeader from './ColumnHeader.vue';
 import ColumnTag from './ColumnTag.vue';
 
 export default {
-  components: { task, note, tab, CardEditTask, draggable, ColumnHeader, ColumnTag },
+  components: { task, note, tab, CardEditTask, draggable, ColumnHeader, ColumnTag, scrollbar },
   props: {
     column: {
       type: Object,
@@ -112,11 +115,11 @@ export default {
 </script>
 <style>
 .list-card {
-  width: 300px;
+  width: 320px;
 }
 .list-card .content {
   width: 100%;
   min-height: 300px;
-  max-height: calc(100vh - 15.5rem);
+  max-height: calc(100vh - 16rem);
 }
 </style>

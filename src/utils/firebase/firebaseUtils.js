@@ -34,15 +34,24 @@ class FirebaseUtils {
     return new Promise(async (resolve, reject) => {
       try {
         const { user } = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        const userData = {
+          name,
+          email,
+          emailVerified: false,
+          createdAt: Date.now(),
+          lastLogin: Date.now(),
+        };
+
         user.updateProfile({
           displayName: name,
         });
         user.sendEmailVerification();
-        resolve({
-          name,
-          email,
-          emailVerified: false,
+        setStorage('user', {
+          isLogin: true,
+          ...userData,
         });
+
+        resolve(userData);
       } catch (err) {
         reject(err);
       }
@@ -55,15 +64,23 @@ class FirebaseUtils {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(({ user }) => {
-          resolve({
+          const userData = {
             name: user.displayName,
             email: user.email,
             emailVerified: user.emailVerified,
             lastLogin: user.metadata.lastSignInTime,
             createdAt: user.metadata.creationTime,
+          };
+
+          setStorage('user', {
+            isLogin: true,
+            ...userData,
           });
+          resolve(userData);
         })
-        .catch(err => reject({ ...err }));
+        .catch(err => {
+          reject(err);
+        });
     });
   }
 
@@ -146,6 +163,9 @@ class FirebaseUtils {
 
   signOut() {
     return new Promise((resolve, reject) => {
+      setStorage('user', {
+        isLogin: false,
+      });
       firebase.auth().signOut();
       resolve();
     });

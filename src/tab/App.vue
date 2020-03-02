@@ -8,8 +8,8 @@
           <the-side-menu></the-side-menu>
           <router-view></router-view>
         </div>
-        <base-dialog></base-dialog>
       </template>
+      <base-dialog></base-dialog>
     </template>
     <p class="text-xl text-center text-default-soft mt-4" v-else>Loading...</p>
   </div>
@@ -19,7 +19,7 @@
 import TheMenu from './components/layout/TheMenu/index.vue';
 import TheSideMenu from './components/layout/TheSideMenu.vue';
 import EmptyBoard from './components/layout/TheEmptyBoard.vue';
-import BaseDialog from './components/ui/BaseDialog.vue';
+import BaseDialog from '@/BaseComponents/BaseDialog.vue';
 
 export default {
   components: { TheMenu, TheSideMenu, BaseDialog, EmptyBoard },
@@ -37,6 +37,8 @@ export default {
     },
   },
   created() {
+    this.$browser.storage.local.get('test').then(data => console.log(data));
+    // this.$browser.storage.local.clear()
     this.$store.watch(
       state => state.settings.dark,
       function(value) {
@@ -44,9 +46,10 @@ export default {
         body.classList = value ? 'dark-theme' : 'light-theme';
       }
     );
-
-    this.$store.dispatch('retrieveData', this).then(() => {
+    this.$store.dispatch('retrieveData').then(data => {
       this.retrieved = true;
+
+      if (data && !!data.defaultBoard) this.$router.push('/board');
     });
 
     this.$browser.storage.onChanged.addListener(async changes => {

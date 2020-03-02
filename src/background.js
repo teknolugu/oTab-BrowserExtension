@@ -1,33 +1,26 @@
 const browser = require('webextension-polyfill');
 import backup from './utils/backup';
 import firebaseUtils from './utils/firebase/firebaseUtils';
+import { setStorage, getStorage } from './utils/storage';
 
 browser.runtime.onMessage.addListener(request => {
   if (request.to === 'background') return firebaseUtils[request.type](request.data);
 });
 
 browser.runtime.onInstalled.addListener(async () => {
-  const storage = browser.storage.sync;
-  const items = ['boards', 'columns', 'items', 'labels', 'defaultBoard', 'settings', 'backup'];
-  const getItems = await storage.get(items);
+  const items = ['boards', 'columns', 'items', 'labels', 'defaultBoard', 'settings', 'backup', 'user'];
+  const getItems = await getStorage(items);
 
   if (Object.keys(getItems).length === 0) {
-    storage.set({
+    setStorage({
       boards: {},
       columns: {},
       items: {},
       labels: {},
       settings: {},
       backup: {},
+      user: {},
       defaultBoard: '',
     });
   }
 });
-
-// browser.alarms.create('backup', {
-// 	periodInMinutes: 0.10
-// })
-// browser.alarms.onAlarm.addListener(alarm => {
-// 	alert('test')
-// 	console.log(alarm)
-// })

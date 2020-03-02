@@ -1,14 +1,11 @@
-.scrollbar {
-  &::-webkit-scrollbar {
-    background-color: transparent;
-    width: 7px;
-    height: 11px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar);
-    border-radius: 16px;
-  }
+.ps__thumb-y {
+  background-color: var(--scrollbar) !important;
+}
+.ps .ps__rail-x.ps--clicking,
+.ps .ps__rail-x:focus,
+.ps .ps__rail-x:hover,
+.ps .ps__rail-y.ps--clicking,
+.ps .ps__rail-y:focus,
+.ps .ps__rail-y:hover {
+  background-color: unset !important;
 }

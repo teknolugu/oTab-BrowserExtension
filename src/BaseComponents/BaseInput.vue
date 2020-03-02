@@ -19,7 +19,6 @@
   </div>
 </template>
 <script>
-import { validationMixin } from 'vuelidate';
 import '@/assets/scss/components/_input.scss';
 
 const booleanProps = {
@@ -29,7 +28,6 @@ const booleanProps = {
 
 export default {
   inheritAttrs: false,
-  mixins: [validationMixin],
   props: {
     icon: {
       type: String,

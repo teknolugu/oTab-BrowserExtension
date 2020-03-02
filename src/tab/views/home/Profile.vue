@@ -16,7 +16,7 @@
         <p class="font-medium float-right inline-block">{{ user.lastLogin.slice(0, 16) }}</p>
       </div>
       <div class="text-sm py-3 px-2">
-        <p class="inline-block">Created at</p>
+        <p class="inline-block">Joined at</p>
         <p class="font-medium float-right inline-block">{{ user.createdAt.slice(0, 16) }}</p>
       </div>
     </card-ui>

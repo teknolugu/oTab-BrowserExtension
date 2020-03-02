@@ -3,14 +3,16 @@
     <div class="select-ui__wrapper" :class="{ small }">
       <unicon :name="icon" v-if="!!icon" class="mr-2 icon"></unicon>
       <p class="select-none w-11/12 text-overflow">{{ getValueName }}</p>
-      <unicon name="angle-down" :class="{ 'rotate-icon-180': showPopover }" class="select-ui__arrow-icon"></unicon>
+      <unicon name="angle-down" :class="{ 'rotate-icon-180': showPopover }" class="select-ui__arrow-icon ml-3"></unicon>
     </div>
 
     <template slot="popover">
       <card-ui class="shadow-xl" style="padding: 10px" min-width="160px">
         <template v-if="list.length !== 0">
           <list-ui v-for="(item, index) in list" small :class="{ 'text-primary': isActiveItem(item), [listClass]: true }" :key="index" v-close-popover @click="emitEvent(item)">
-            {{ typeof item === 'object' ? item[itemKey] : item }}
+            <p class="text-overflow" style="max-width: 240px">
+              {{ typeof item === 'object' ? item[itemKey] : item }}
+            </p>
           </list-ui>
         </template>
         <p v-else class="text-sm text-default-soft text-center">No data</p>
