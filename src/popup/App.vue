@@ -13,7 +13,6 @@ import TheMenu from './components/TheMenu.vue';
 import TheColumns from './components/TheColumns.vue';
 import BottomMenu from './components/TheBottomMenu.vue';
 import isURL from '@/utils/isURL';
-
 export default {
   components: { TheMenu, TheColumns, BottomMenu },
   data: () => ({
@@ -27,18 +26,13 @@ export default {
       state => state.ui.activeBoard,
       boardId => {
         const columns = this.$store.getters['columns/getColumnsByBoardId']();
-
         if (columns.length !== 0) this.columnId = columns[0].id;
       }
     );
-
     this.$store.dispatch('retrieveData').then(async ({ boards }) => {
       const tab = await this.$browser.tabs.query({ active: true });
-
       this.activeTab = tab[0];
-
       if (Object.keys(boards).length === 0 || !isURL(tab[0].url)) return;
-
       this.retrieved = true;
     });
   },
