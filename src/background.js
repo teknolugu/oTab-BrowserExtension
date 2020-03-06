@@ -7,7 +7,6 @@ const browser = require('webextension-polyfill');
 browser.runtime.onMessage.addListener(request => {
   if (request.to === 'background') return firebaseUtils[request.type](request.data);
 });
-
 browser.runtime.onInstalled.addListener(async () => {
   const items = ['boards', 'columns', 'items', 'labels', 'defaultBoard', 'settings', 'backup', 'user'];
   const getItems = await getStorage(items);
@@ -24,4 +23,9 @@ browser.runtime.onInstalled.addListener(async () => {
       defaultBoard: '',
     });
   }
+
+  browser.tabs.create({
+    active: true,
+    url: browser.runtime.getURL('/tab/tab.html'),
+  });
 });
