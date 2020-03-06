@@ -1,6 +1,6 @@
 {
-  "name": "otab",
-  "description": "A Vue.js web extension",
+  "name": "oTab - BrowserExtension",
+  "description": "A better way to organize your browser tabs",
   "version": null,
   "manifest_version": 2,
   "icons": {
@@ -8,7 +8,7 @@
     "128": "icons/icon_128.png"
   },
   "browser_action": {
-    "default_title": "otab",
+    "default_title": "oTab - BrowserExtension",
     "default_popup": "popup/popup.html"
   },
   "background": {

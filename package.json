@@ -1,7 +1,7 @@
 {
-  "name": "otab",
+  "name": "oTab - BrowserExtension",
   "version": "1.5.0",
-  "description": "A Vue.js web extension",
+  "description": "A better way to organize your browser tabs",
   "author": "kholid060 <kholid060@gmail.com>",
   "license": "MIT",
   "engines": {
