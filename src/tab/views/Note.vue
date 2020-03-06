@@ -119,8 +119,13 @@ export default {
       this.isEdited = false;
     },
   },
+  metaInfo() {
+    return {
+      title: this.tempTitle,
+    };
+  },
   watch: {
-    '$route.params'() {
+    '$route.params': function() {
       this.setContent();
     },
     tempTitle() {

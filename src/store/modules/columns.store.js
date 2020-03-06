@@ -12,7 +12,7 @@ export default {
       setStorage('columns', state);
     },
     updateColumn(state, { index, boardId, data }) {
-      const dataSet = Object.assign({}, state[boardId][index], data);
+      const dataSet = { ...state[boardId][index], ...data };
       Vue.set(state[boardId], index, dataSet);
     },
     deleteColumn(state, { index, boardId }) {
@@ -32,14 +32,14 @@ export default {
       return rootState.ui.activeBoard;
     },
     getColumnsByBoardId: (state, getters) => boardId => {
-      const activeBoard = boardId ? boardId : getters.getActiveBoardId;
+      const activeBoard = boardId || getters.getActiveBoardId;
       return typeof state[activeBoard] !== 'undefined' ? state[activeBoard] : [];
     },
   },
 
   actions: {
     update({ commit, state, getters }, { id, boardId, data }) {
-      const activeBoardId = boardId ? boardId : getters.getActiveBoardId;
+      const activeBoardId = boardId || getters.getActiveBoardId;
       const columnIndex = indexFinder(state[activeBoardId], id);
 
       if (columnIndex !== -1) {

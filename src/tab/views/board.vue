@@ -45,7 +45,7 @@ export default {
         const { searchType, searchQuery, activeLabel } = this.$store.state.ui;
         return this.$store.getters['columns/getColumnsByBoardId']()
           .filter(column => {
-            if (!!activeLabel) return column.labels.includes(activeLabel);
+            if (activeLabel) return column.labels.includes(activeLabel);
 
             return column;
           })
@@ -59,6 +59,11 @@ export default {
         this.$store.commit('changeColumns', columns);
       },
     },
+  },
+  metaInfo() {
+    return {
+      title: this.$store.getters['boards/getActiveBoard'].title,
+    };
   },
   methods: {
     addColumn() {

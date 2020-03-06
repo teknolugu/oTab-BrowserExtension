@@ -82,7 +82,7 @@ export default {
     },
   },
   watch: {
-    '$route.params'() {
+    '$route.params': function() {
       this.setIds();
     },
   },

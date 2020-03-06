@@ -64,6 +64,12 @@ export default {
       });
     });
   },
+  metaInfo() {
+    return {
+      title: 'New Tab',
+      titleTemplate: '%s - oTab',
+    };
+  },
 };
 </script>
 <style>

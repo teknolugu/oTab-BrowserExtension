@@ -9,6 +9,7 @@ import './plugins/v-tooltip';
 import './plugins/vue-js-modal';
 import './plugins/vee-validate';
 import './plugins/vue-toastification';
+import './plugins/vue-meta';
 
 // CSS
 import '../assets/scss/base/tailwind.scss';
@@ -29,6 +30,7 @@ Vue.filter('stripHTML', value => {
 
 global.browser = require('webextension-polyfill');
 
+Vue.prototype.$title = title => (document.title = title);
 Vue.prototype.$browser = global.browser;
 Vue.prototype.$sendMessage = (type, data) => browser.runtime.sendMessage({ to: 'background', type, data });
 

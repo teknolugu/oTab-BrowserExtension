@@ -10,7 +10,7 @@ export default {
       state[boardId].push(data);
     },
     updateLabel(state, { boardId, index, data }) {
-      const label = Object.assign({}, state[boardId][index], data);
+      const label = { ...state[boardId][index], ...data };
       Vue.set(state[boardId], index, label);
     },
     addEntity(state, boardId) {
@@ -29,7 +29,7 @@ export default {
       return rootState.ui.activeBoard;
     },
     getLabelsByBoardId: (state, getters) => id => {
-      const boardId = id ? id : getters.getActiveBoardId;
+      const boardId = id || getters.getActiveBoardId;
 
       return state[boardId];
     },

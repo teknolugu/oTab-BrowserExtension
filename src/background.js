@@ -1,7 +1,8 @@
-const browser = require('webextension-polyfill');
 import backup from './utils/backup';
 import firebaseUtils from './utils/firebase/firebaseUtils';
 import { setStorage, getStorage } from './utils/storage';
+
+const browser = require('webextension-polyfill');
 
 browser.runtime.onMessage.addListener(request => {
   if (request.to === 'background') return firebaseUtils[request.type](request.data);

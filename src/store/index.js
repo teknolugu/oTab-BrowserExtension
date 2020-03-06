@@ -44,7 +44,7 @@ export default new Vuex.Store({
         const { defaultBoard } = await getStorage('defaultBoard');
         commit('ui/setState', {
           defaultBoard,
-          activeBoard: !!defaultBoard ? defaultBoard : boardsArr[0],
+          activeBoard: defaultBoard || boardsArr[0],
         });
 
         resolve({ ...data, defaultBoard });

@@ -1,4 +1,5 @@
 const browser = require('webextension-polyfill');
+
 const storage = browser.storage.local;
 
 export function setStorage(key, value) {

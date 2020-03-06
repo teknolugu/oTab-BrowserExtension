@@ -15,7 +15,7 @@ export default {
   computed: {
     mainButtonIcon() {
       if (this.$route.name === 'note') return 'arrow-left';
-      else return 'home-alt';
+      return 'home-alt';
     },
   },
   methods: {

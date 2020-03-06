@@ -1,7 +1,8 @@
 import Vue from 'vue';
-const browser = require('webextension-polyfill');
 import generateId from '@/utils/generateId';
 import { setStorage, getStorage } from '@/utils/storage';
+
+const browser = require('webextension-polyfill');
 
 export default {
   state: () => ({}),
@@ -23,7 +24,7 @@ export default {
 
   mutations: {
     updateBoard(state, { boardId, data }) {
-      const dataSet = Object.assign({}, state[boardId], data);
+      const dataSet = { ...state[boardId], ...data };
       Vue.set(state, boardId, dataSet);
     },
     addBoard(state, { id, board }) {
@@ -37,7 +38,7 @@ export default {
   actions: {
     update({ commit, rootState, state }, { boardId, data }) {
       commit('updateBoard', {
-        boardId: boardId ? boardId : rootState.ui.activeBoard,
+        boardId: boardId || rootState.ui.activeBoard,
         data,
       });
       setStorage('boards', state);

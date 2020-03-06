@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Unicon from 'vue-unicons';
-import { h1, h2, h3, save, quote } from './my-custom-icon';
 import {
   uniEye,
   uniBrightnessLow,
@@ -47,6 +46,7 @@ import {
   uniWindow,
   uniAngleLeft,
 } from 'vue-unicons/src/icons';
+import { h1, h2, h3, save, quote } from './my-custom-icon';
 
 Unicon.add([
   uniEye,

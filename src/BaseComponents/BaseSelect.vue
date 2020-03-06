@@ -71,9 +71,8 @@ export default {
     getValueName() {
       if (typeof this.list[0] === 'object') {
         return this.list.find(item => item[this.itemValue] === this.value)[this.itemKey];
-      } else {
-        return this.value;
       }
+      return this.value;
     },
   },
 };

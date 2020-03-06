@@ -143,7 +143,7 @@ export default {
     },
     validate(label) {
       if (Array.isArray(this.value)) return this.value.includes(label.id);
-      else if (typeof this.value === 'string') return label.id === this.value;
+      if (typeof this.value === 'string') return label.id === this.value;
     },
     setEditLabel({ name, color, id }) {
       this.addLabelSection = true;

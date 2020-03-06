@@ -1,7 +1,8 @@
-const browser = require('webextension-polyfill');
 import firebase from './firebase';
 import { setStorage, getStorage } from './storage';
 import firebaseUtils from './firebase/firebaseUtils';
+
+const browser = require('webextension-polyfill');
 
 const backupIntervals = {
   day: 8.64e7,

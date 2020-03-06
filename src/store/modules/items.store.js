@@ -17,7 +17,7 @@ export default {
 
   mutations: {
     updateItem(state, { columnId, index, data }) {
-      const dataSet = Object.assign({}, state[columnId][index], data);
+      const dataSet = { ...state[columnId][index], ...data };
       Vue.set(state[columnId], index, dataSet);
     },
     deleteItem(state, { columnId, index }) {
