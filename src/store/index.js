@@ -32,14 +32,14 @@ export default new Vuex.Store({
         const data = await getStorage(['boards', 'columns', 'items', 'labels', 'settings', 'backup', 'user']);
         const boardsArr = Object.keys(data.boards);
 
-        if (boardsArr.length === 0) return resolve(null);
-
         Object.keys(data).forEach(key => {
           commit('changeModules', {
             key,
             value: data[key],
           });
         });
+
+        if (boardsArr.length === 0) return resolve(null);
 
         const { defaultBoard } = await getStorage('defaultBoard');
         commit('ui/setState', {

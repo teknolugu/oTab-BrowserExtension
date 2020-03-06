@@ -36,8 +36,6 @@ export default {
     },
   },
   created() {
-    this.$browser.storage.local.get('test').then(data => console.log(data));
-    // this.$browser.storage.local.clear()
     this.$store.watch(
       state => state.settings.dark,
       function(value) {

@@ -13,11 +13,11 @@
       </div>
       <div class="text-sm py-3 px-2">
         <p class="inline-block">Last login</p>
-        <p class="font-medium float-right inline-block">{{ user.lastLogin.slice(0, 16) }}</p>
+        <p class="font-medium float-right inline-block">{{ getDate(user.lastLogin) }}</p>
       </div>
       <div class="text-sm py-3 px-2">
         <p class="inline-block">Joined at</p>
-        <p class="font-medium float-right inline-block">{{ user.createdAt.slice(0, 16) }}</p>
+        <p class="font-medium float-right inline-block">{{ getDate(user.createdAt) }}</p>
       </div>
     </card-ui>
     <card-ui class="flex-grow ml-5">
@@ -61,6 +61,8 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs';
+
 export default {
   data: () => ({
     tempName: '',
@@ -113,6 +115,9 @@ export default {
     },
     resendVerifyEmail() {
       this.$sendMessage('resendVerifyEmail').then(() => this.$toast('Check your email inbox'));
+    },
+    getDate(date) {
+      return typeof date === 'string' ? date.slice(0, 16) : dayjs(date).format('ddd, DD MMM YYYY');
     },
   },
   computed: {
