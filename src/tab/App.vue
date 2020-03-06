@@ -1,88 +1,87 @@
 <template>
-  <v-app id="#app">
-    <template v-if="$store.state.isLoaded">
-      <Menu v-show="$store.state.boards.length !== 0"></Menu>
-      <v-content>
-        <template v-if="$store.state.boards.length !== 0">
-          <main-app></main-app>
-        </template>
-        <template v-else>
-          <empty-item :icon="$icons.developerBoard">
-            <p class="subtitle-2">
-              You have no board, click
-              <v-icon @click="newBoard" style="border-radius: 30px; cursor: pointer;" class="pa-1 pink white--text elevation-2 mx-1">{{ $icons.mdiPlus }}</v-icon> button to create
-              new one
-            </p>
-          </empty-item>
-        </template>
-      </v-content>
+  <div class="app">
+    <template v-if="retrieved">
+      <empty-board v-if="boards.length === 0"></empty-board>
+      <template v-else>
+        <the-menu></the-menu>
+        <div class="height-with-menu main-content relative h-full duration-700" :class="{ 'hide-side-menu': !$store.state.ui.hideSideMenu }">
+          <the-side-menu></the-side-menu>
+          <router-view></router-view>
+        </div>
+      </template>
+      <base-dialog></base-dialog>
     </template>
-    <v-progress-circular indeterminate color="primary" class="mx-auto mt-4" v-else></v-progress-circular>
-  </v-app>
+    <p class="text-xl text-center text-default-soft mt-4" v-else>Loading...</p>
+  </div>
 </template>
-<script>
-import Menu from './components/menu/menu';
-import MainApp from './views/main-app';
-import EmptyItem from './components/empty-item';
-import Bus from './utils/bus';
 
+<script>
+import TheMenu from './components/layout/TheMenu/index.vue';
+import TheSideMenu from './components/layout/TheSideMenu.vue';
+import EmptyBoard from './components/layout/TheEmptyBoard.vue';
+import BaseDialog from '@/BaseComponents/BaseDialog.vue';
 export default {
-  components: {
-    MainApp,
-    Menu,
-    EmptyItem,
-  },
-  watch: {
-    activeBoard(val) {
-      Bus.$emit('changeBoard', val);
-    },
-  },
-  data: () => ({
-    isEmpty: false,
-  }),
-  methods: {
-    async newBoard() {
-      const result = await this.$dialog.prompt({
-        text: 'Board name',
-        title: 'Please input board name',
-      });
-      if (typeof result === 'string') {
-        this.$store.dispatch('createNewBoard', result).catch(message => {
-          this.$dialog.notify.error(message);
-        });
-      }
-    },
+  components: { TheMenu, TheSideMenu, BaseDialog, EmptyBoard },
+  data() {
+    return {
+      retrieved: false,
+    };
   },
   computed: {
-    activeBoard() {
-      return this.$store.state.activeBoard;
+    boards() {
+      return this.$store.getters['boards/getAllBoards'];
     },
-    allData() {
-      return this.$store.getters.allData;
+    isDark() {
+      return this.$store.state.settings.dark;
     },
   },
-  async created() {
-    const { lastBackup } = await browser.storage.sync.get('lastBackup');
-    this.sendMessage('getUser').then(user => {
-      if (user) {
-        this.$store.commit('changeUser', { ...user });
-        this.$store.commit('changeBoolean', { key: 'isLogin', data: true });
+  created() {
+    this.$browser.storage.local.get('test').then(data => console.log(data));
+    // this.$browser.storage.local.clear()
+    this.$store.watch(
+      state => state.settings.dark,
+      function(value) {
+        const body = document.querySelector('body');
+        body.classList = value ? 'dark-theme' : 'light-theme';
       }
+    );
+    this.$store.dispatch('retrieveData').then(data => {
+      this.retrieved = true;
+      if (data && !!data.defaultBoard) this.$router.push('/board');
     });
-    // Initialize all data
-    this.$store.dispatch('initData');
-    // set theme
-    this.$browser.storage.sync.get('oTabSettings').then(settings => {
-      this.$vuetify.theme.dark = settings.oTabSettings.dark;
+    this.$browser.storage.onChanged.addListener(async changes => {
+      const { active } = await this.$browser.tabs.getCurrent();
+      if (active) return;
+      Object.keys(changes).forEach(key => {
+        this.$store.commit('changeModules', {
+          key,
+          value: changes[key].newValue,
+        });
+      });
     });
+  },
+  metaInfo() {
+    return {
+      title: 'New Tab',
+      titleTemplate: '%s - oTab',
+    };
   },
 };
 </script>
-<style lang="scss">
-.overflow-y-hidden {
-  overflow-y: hidden;
+<style>
+.app {
+  @apply bg-gray-100 h-screen relative text-default overflow-hidden;
 }
-.v-menu__content {
-  border-radius: 4px !important;
+.input-first-board {
+  @apply text-3xl !important;
+}
+.main-content.hide-side-menu {
+  padding-left: 335px;
+}
+.content-wrapper {
+  @apply pl-16 pr-6 pt-6 pb-4;
+}
+.hide-side-menu .content-wrapper {
+  @apply pl-0 !important;
 }
 </style>

@@ -1,29 +1,27 @@
-import * as defaultData from './assets/default-data.json';
+import backup from './utils/backup';
+import firebaseUtils from './utils/firebase/firebaseUtils';
+import { setStorage, getStorage } from './utils/storage';
 
-import firebaseUtils from './firebase-utils';
+const browser = require('webextension-polyfill');
 
-global.browser = require('webextension-polyfill');
+browser.runtime.onMessage.addListener(request => {
+  if (request.to === 'background') return firebaseUtils[request.type](request.data);
+});
 
-browser.runtime.onMessage.addListener(request => firebaseUtils[request.type](request.data));
+browser.runtime.onInstalled.addListener(async () => {
+  const items = ['boards', 'columns', 'items', 'labels', 'defaultBoard', 'settings', 'backup', 'user'];
+  const getItems = await getStorage(items);
 
-// Set Data Into Storage when extension installed
-
-browser.runtime.onInstalled.addListener(() => {
-  const requireData = ['oTabSettings', 'boards', 'collections', 'notes', 'tasks', 'starBoard', 'oTabMenu', 'homeCollection', 'backupInterval'];
-  browser.storage.local.set({
-    myGallery: [],
-  });
-  const storage = browser.storage.sync;
-  requireData.forEach(async item => {
-    const isDataExist = await storage.get(item);
-    if (Object.entries(isDataExist).length === 0 && isDataExist.constructor === Object) {
-      storage.set({
-        [item]: defaultData.default[item],
-      });
-    } else {
-      storage.set({
-        [item]: isDataExist[item],
-      });
-    }
-  });
+  if (Object.keys(getItems).length === 0) {
+    setStorage({
+      boards: {},
+      columns: {},
+      items: {},
+      labels: {},
+      settings: {},
+      backup: {},
+      user: {},
+      defaultBoard: '',
+    });
+  }
 });

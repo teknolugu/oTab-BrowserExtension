@@ -1,0 +1,20 @@
+$btnColors: red, blue, green, gray;
+
+.btn-icon {
+  @apply p-2 transition duration-200 ease-in-out rounded-full;
+  &.small {
+    @apply p-1;
+  }
+  &.square {
+    @apply rounded-lg;
+  }
+  &.disabled {
+    @apply opacity-50;
+    pointer-events: none;
+  }
+  @each $color in $btnColors {
+    &--#{$color}:hover {
+      @apply bg-#{$color}-200;
+    }
+  }
+}

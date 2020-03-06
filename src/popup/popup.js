@@ -1,12 +1,22 @@
 import Vue from 'vue';
 import App from './App';
 import store from '../store';
-import '../assets/style.scss';
 
-import vuetify from '../vuetify';
-import Icons from './icons';
+// Plugins
+import './plugins/v-tooltip';
+import './plugins/vue-unicons';
 
-Vue.prototype.$icons = Icons;
+// CSS
+import '../assets/scss/base/tailwind.scss';
+import '../assets/scss/style.scss';
+import '../assets/css/fonts.css';
+import '../assets/css/theme.css';
+
+// UI Components
+import '@/BaseComponents';
+
+// Directives
+import '../directives/VAutofocus';
 
 global.browser = require('webextension-polyfill');
 
@@ -15,7 +25,6 @@ Vue.prototype.$browser = global.browser;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  vuetify,
   store,
   render: h => h(App),
 });

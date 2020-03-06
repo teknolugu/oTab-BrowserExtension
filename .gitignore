@@ -2,7 +2,4 @@
 /*.log
 /dist
 /dist-zip
-*.crx
-*.pem
-firebase-config.json
-/src/store/models
+.env

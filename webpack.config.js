@@ -1,12 +1,12 @@
 const webpack = require('webpack');
 const ejs = require('ejs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const ExtensionReloader = require('webpack-extension-reloader');
+const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const { VueLoaderPlugin } = require('vue-loader');
 const { version } = require('./package.json');
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
-const Fiber = require('fibers');
 
 const config = {
   mode: process.env.NODE_ENV,
@@ -19,10 +19,13 @@ const config = {
   output: {
     path: __dirname + '/dist',
     filename: '[name].js',
-    publicPath: '/',
   },
   resolve: {
     extensions: ['.js', '.vue'],
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+      Utils: path.resolve(__dirname, 'src/utils/'),
+    },
   },
   module: {
     rules: [
@@ -33,14 +36,52 @@ const config = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        options: {
-          plugins: ['@babel/plugin-syntax-dynamic-import'],
-        },
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [require('tailwindcss'), require('autoprefixer')],
+            },
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [require('tailwindcss'), require('autoprefixer')],
+            },
+          },
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.sass$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax'],
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|ico)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: '/images/',
+          emitFile: false,
+        },
       },
       {
         test: /\.(ttf|otf|eot|woff|woff2)$/,
@@ -51,37 +92,10 @@ const config = {
           },
         },
       },
-      {
-        test: /\.s(c|a)ss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              implementation: require('sass'),
-              fiber: require('fibers'),
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(png|jpg|gif|svg|ico)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?emitFile=false',
-        },
-      },
     ],
   },
   plugins: [
-    new VuetifyLoaderPlugin({
-      match(originalTag, { kebabTag, camelTag, path, component }) {
-        if (kebabTag.startsWith('core-')) {
-          return [camelTag, `import ${camelTag} from '@/components/core/${camelTag.substring(4)}.vue'`];
-        }
-      },
-    }),
+    new Dotenv(),
     new webpack.DefinePlugin({
       global: 'window',
     }),
@@ -89,7 +103,7 @@ const config = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
-    new CopyWebpackPlugin([
+    new CopyPlugin([
       { from: 'icons', to: 'icons', ignore: ['icon.xcf'] },
       { from: 'popup/popup.html', to: 'popup/popup.html', transform: transformHtml },
       { from: 'tab/tab.html', to: 'tab/tab.html', transform: transformHtml },

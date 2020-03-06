@@ -1,114 +1,50 @@
 <template>
-  <v-app id="app">
-    <v-content>
-      <ce-header :isUrl="isUrl" :board="board"></ce-header>
-      <v-card class="mx-auto" max-width="330" style="margin-top: -57px;">
-        <v-toolbar flat>
-          <v-text-field
-            :autofocus="editMode"
-            hide-details
-            :prepend-inner-icon="editMode ? $icons.mdiBookmarkOutline : $icons.mdiMagnify"
-            :placeholder="editMode ? 'Collection name' : 'Search collections'"
-            v-model="search"
-          ></v-text-field>
-          <v-btn
-            icon
-            :disabled="$store.state.boards.length === 0"
-            @click="editMode = !editMode"
-            class="ml-4 mr-1 background"
-            :class="{ rotate45: editMode }"
-            height="32px"
-            width="32px"
-          >
-            <v-icon>{{ $icons.mdiPlus }}</v-icon>
-          </v-btn>
-          <v-slide-x-reverse-transition mode="out-in">
-            <v-btn v-show="editMode" :disabled="collectionName === ''" icon @click="addCollection" class="ml-2 mr-1 primary" dark height="32px" width="32px">
-              <v-icon>{{ $icons.mdiCheck }}</v-icon>
-            </v-btn>
-          </v-slide-x-reverse-transition>
-        </v-toolbar>
-        <v-divider></v-divider>
-        <v-card-text style="height: 275px; overflow-y: auto" class="scroller">
-          <collection-card :search="searchValue"> </collection-card>
-        </v-card-text>
-        <v-card-actions>
-          <actions :isUrl="isUrl"></actions>
-        </v-card-actions>
-      </v-card>
-    </v-content>
-  </v-app>
+  <div class="popup bg-gray-200 flex flex-col" v-if="retrieved">
+    <the-menu></the-menu>
+    <div class="px-4 mt-4">
+      <input-ui input-style="outline" placeholder="Search column" block v-model="search" icon="search"></input-ui>
+    </div>
+    <the-columns :search="search" v-model="columnId"></the-columns>
+    <bottom-menu :active-tab="activeTab" :columnId="columnId"></bottom-menu>
+  </div>
 </template>
 <script>
-import SaveData from '../mixins/save-data';
-
-import CeHeader from './components/header';
-import CollectionCard from './components/collection-card';
-import Actions from './components/actions';
-
+import TheMenu from './components/TheMenu.vue';
+import TheColumns from './components/TheColumns.vue';
+import BottomMenu from './components/TheBottomMenu.vue';
+import isURL from '@/utils/isURL';
 export default {
-  components: { CeHeader, CollectionCard, Actions },
-  mixins: [SaveData],
+  components: { TheMenu, TheColumns, BottomMenu },
   data: () => ({
-    searchValue: '',
-    isUrl: false,
-    editMode: false,
-    collectionName: '',
+    retrieved: false,
+    search: '',
+    columnId: '',
+    activeTab: null,
   }),
-  async created() {
-    const { oTabSettings } = await this.$browser.storage.sync.get('oTabSettings');
-    this.$vuetify.theme.dark = oTabSettings.dark;
-    this.$store.dispatch('initData');
-    this.checkUrl();
-  },
-  methods: {
-    addCollection() {
-      this.searchValue = '';
-      if (this.collectionName !== '') {
-        this.$store.commit('collections/createCollection', { title: this.collectionName });
-        this.collectionName = '';
-        this.editMode = false;
+  created() {
+    this.$store.watch(
+      state => state.ui.activeBoard,
+      boardId => {
+        const columns = this.$store.getters['columns/getColumnsByBoardId']();
+        if (columns.length !== 0) this.columnId = columns[0].id;
       }
-    },
-    async checkUrl() {
-      const regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-      const tab = await this.$browser.tabs.query({ active: true, currentWindow: true });
-      this.isUrl = regex.test(tab[0].url);
-    },
-  },
-  computed: {
-    search: {
-      set(value) {
-        !this.editMode ? (this.searchValue = value) : (this.collectionName = value);
-      },
-      get() {
-        return !this.editMode ? this.searchValue : this.collectionName;
-      },
-    },
-    allData() {
-      return this.$store.getters.allData;
-    },
-    board() {
-      return this.$store.getters.board;
-    },
+    );
+    this.$store.dispatch('retrieveData').then(async ({ boards }) => {
+      const tab = await this.$browser.tabs.query({ active: true });
+      this.activeTab = tab[0];
+      if (Object.keys(boards).length === 0 || !isURL(tab[0].url)) return;
+      this.retrieved = true;
+    });
   },
 };
 </script>
-<style lang="scss">
-#app,
-html,
-body {
-  overflow: hidden;
+<style>
+.popup {
+  height: 470px;
+  width: 320px;
 }
-.rotate45 {
-  transition: all 0.2s ease;
-  transform: rotate(-45deg);
-}
-#app {
-  .v-application--wrap {
-    min-height: 0 !important;
-  }
-  width: 355px;
-  height: 510px !important;
+.column-container {
+  height: 250px;
+  overflow-y: auto;
 }
 </style>

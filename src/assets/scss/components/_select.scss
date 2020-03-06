@@ -1,0 +1,31 @@
+.select-ui {
+  @apply text-default;
+  &.block {
+    .trigger {
+      display: block !important;
+    }
+  }
+  &__wrapper {
+    @apply flex items-center cursor-pointer rounded-lg border p-2 text-base;
+    .icon svg {
+      height: 22px;
+      width: 22px;
+    }
+    &:focus {
+      @apply shadow;
+    }
+    &__arrow-icon {
+      @apply ml-3;
+    }
+    &.small {
+      @apply py-1 text-sm h-8 px-2;
+      .icon svg {
+        height: 19px;
+        width: 19px;
+      }
+    }
+  }
+}
+.select-ui__option {
+  transition: all 0.2s ease;
+}

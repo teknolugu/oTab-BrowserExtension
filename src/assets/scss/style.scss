@@ -1,0 +1,67 @@
+@import './components/_scrollbar.scss';
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.align-super {
+  vertical-align: super;
+}
+
+.fill-current {
+  fill: currentColor !important;
+}
+
+.hidden-child {
+  @apply bg-gray-300 #{!important};
+  box-shadow: none !important;
+}
+.hidden-child * {
+  visibility: hidden;
+}
+
+.height-with-menu {
+  height: calc(100vh - 3rem);
+}
+
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unicon {
+  fill: currentColor !important;
+}
+.rotate-icon-180 svg {
+  transform: rotate(180deg);
+}
+
+.popover:focus {
+  outline: none;
+}
+
+.group:hover .group-hover\:visible {
+  visibility: visible;
+}
+
+.hover\:brightness:hover {
+  filter: brightness(1.1);
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
