@@ -1,5 +1,5 @@
 {
-  "name": "oTab - BrowserExtension",
+  "name": "oTab-BrowserExtension",
   "version": "1.5.0",
   "description": "A better way to organize your browser tabs",
   "author": "kholid060 <kholid060@gmail.com>",
@@ -42,6 +42,7 @@
     "vue-meta": "^2.3.3",
     "vue-perfect-scrollbar": "^0.2.1",
     "vue-router": "^3.0.1",
+    "vue-shepherd": "^0.0.1",
     "vue-toastification": "^0.8.0",
     "vue-unicons": "^2.0.3",
     "vue2-animate": "^2.1.3",

@@ -51,7 +51,7 @@ export default {
       };
     },
     async saveSession() {
-      const tabs = this.$tabs.query({});
+      const tabs = this.$browser.tabs.query({});
       const columnTitle = dayjs(Date.now())
         .format('MMM Do, HH:mm')
         .toString();
