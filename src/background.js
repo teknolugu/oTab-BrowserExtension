@@ -13,10 +13,25 @@ browser.runtime.onInstalled.addListener(async () => {
 
   if (Object.keys(getItems).length === 0) {
     setStorage({
-      boards: {},
-      columns: {},
-      items: {},
-      labels: {},
+      boards: {
+        anu: {
+          createdDate: Date.now(),
+          title: 'primary board',
+        },
+      },
+      columns: {
+        anu: [{ id: 'una', labels: ['label1'], title: 'my column' }],
+      },
+      items: {
+        una: [
+          { content: 'click me to quick edit', done: false, id: 'task1', title: 'something to do', type: 'task' },
+          { content: '<h1>Hi!!</h1>', title: 'my note', id: 'note1', type: 'note' },
+          { favIconUrl: 'https://github.githubassets.com/favicon.ico', id: 'url1', title: 'oTab', type: 'tab', url: 'https://github.com/WinTenDev/oTab-BrowserExtension' },
+        ],
+      },
+      labels: {
+        anu: [{ color: '#4299e1', id: 'label1', name: 'work' }],
+      },
       settings: {},
       backup: {},
       user: {},

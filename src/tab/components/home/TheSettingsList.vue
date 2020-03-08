@@ -51,7 +51,7 @@ export default {
     },
     loginRequire(id) {
       const user = this.$store.state.user;
-      console.log(user, !user.isLogin && user.emailVerified);
+
       if (id === 'profile') return !user.isLogin;
       else if (id === 'backup') return user.isLogin && !user.emailVerified;
 
