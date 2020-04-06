@@ -1,7 +1,7 @@
 .editor {
   .menubar {
     @apply rounded-lg h-full;
-    .save-button {
+    .shortcut-btn {
       @apply bg-primary text-inverse shadow-xl mb-3;
       @apply px-4 py-3 #{!important};
     }
@@ -10,7 +10,7 @@
     }
   }
   &--scroller {
-    max-height: calc(100vh - 10rem);
+    max-height: calc(100vh - 7rem);
     overflow: auto;
     @apply pr-4;
   }

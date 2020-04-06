@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Unicon from 'vue-unicons';
 import {
+  uniCornerUpRight,
   uniEye,
   uniBrightnessLow,
   uniExternalLinkAlt,
@@ -10,6 +11,7 @@ import {
   uniUserMinus,
   uniEnvelopeExclamation,
   uniEntry,
+  uniImageV,
   uniEyeSlash,
   uniCloudUpload,
   uniSwatchbook,
@@ -49,12 +51,14 @@ import {
 import { h1, h2, h3, save, quote } from './my-custom-icon';
 
 Unicon.add([
+  uniCornerUpRight,
   uniEye,
   uniBrightnessLow,
   uniExternalLinkAlt,
   uniEnvelopeAlt,
   uniCloudCheck,
   uniKeySkeleton,
+  uniImageV,
   uniUserMinus,
   uniEnvelopeExclamation,
   uniEntry,

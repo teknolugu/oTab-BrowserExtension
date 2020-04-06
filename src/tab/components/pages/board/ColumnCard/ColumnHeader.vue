@@ -16,16 +16,20 @@
     <v-popover placement="bottom-start" open-group="label">
       <button-icon icon="ellipsis-v" small v-close-popover.all></button-icon>
       <template slot="popover">
-        <card-ui class="shadow-xl text-default absolute" style="padding: 10px 8px; right: -27px;" width="200px">
+        <card-ui class="shadow-xl text-default">
           <list-ui icon="trash" class="text-red" small v-close-popover @click="deleteColumn">
             Delete column
           </list-ui>
           <label-ui v-model="columnLabels" placement="right" :show="showLabel">
-            <list-ui icon="label-alt" small style="width: 185px" @click="showLabel = true">
+            <list-ui icon="label-alt" small style="width: 220px" class="mt-1" @click="showLabel = true">
               Labels
             </list-ui>
           </label-ui>
-          <list-ui icon="arrow-up-right" small v-close-popover @click="openAllTabs">
+          <hr class="my-2" />
+          <list-ui icon="check" small v-close-popover @click="deleteCompleteTask">
+            Delete completed tasks
+          </list-ui>
+          <list-ui icon="arrow-up-right" small class="mt-1" v-close-popover @click="openAllTabs">
             Open all tabs
           </list-ui>
         </card-ui>
@@ -64,6 +68,14 @@ export default {
     },
   },
   methods: {
+    deleteCompleteTask() {
+      const taskIds = this.items.filter(item => item.type === 'task' && item.done).map(item => item.id);
+
+      this.$store.dispatch('items/delete', {
+        columnId: this.columnId,
+        id: taskIds,
+      });
+    },
     updateColumnTitle() {
       if (this.editColumn.title === '') return;
       this.$store.dispatch('columns/update', {

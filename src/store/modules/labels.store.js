@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import indexFinder from '@/utils/indexFinder';
-import generateId from '@/utils/generateId';
-import { setStorage } from '@/utils/storage';
+import indexFinder from '~/utils/indexFinder';
+import generateId from '~/utils/generateId';
+import { setStorage } from '~/utils/storage';
 
 export default {
   state: () => ({}),

@@ -13,10 +13,10 @@
           <p class="inline-block text-sm">Add task</p>
         </button-ui>
       </div>
-      <scrollbar class="overflow-y-auto content pr-4 pl-3 pb-4">
-        <draggable v-model="items" group="list" ghost-class="hidden-child">
+      <scrollbar class="overflow-y-auto content pr-4 pl-3 pt-3 pb-4">
+        <draggable v-model="items" group="list" ghost-class="hidden-child" style="min-height: 300px">
           <template v-for="item in filteredItems">
-            <component class="mt-3 first:mt-0 cursor-pointer" :is="item.type" @update="updateItem" @delete="deleteItem" @edit="editItem" showUtil :data="item"></component>
+            <component class="mt-2 first:mt-0 cursor-pointer" :is="item.type" @update="updateItem" @delete="deleteItem" @edit="editItem" showUtil :data="item"></component>
           </template>
         </draggable>
       </scrollbar>
@@ -120,6 +120,6 @@ export default {
 .list-card .content {
   width: 100%;
   min-height: 300px;
-  max-height: calc(100vh - 16rem);
+  max-height: calc(100vh - 13.5rem);
 }
 </style>

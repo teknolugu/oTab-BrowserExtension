@@ -1,5 +1,5 @@
 <template>
-  <div class="list-ui" :class="{ small: small, active }" @click="$emit('click')">
+  <div class="list-ui" :class="{ small, active, block }" @click="$emit('click')">
     <unicon class="list-ui__icon" :name="icon" v-if="!!icon"></unicon>
     <slot name="prefix"></slot>
     <div class="list-ui__content flex-grow">
@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import '@/assets/scss/components/_list.scss';
+import '~/assets/scss/components/_list.scss';
 
 export default {
   props: {
@@ -22,6 +22,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    block: Boolean,
   },
 };
 </script>

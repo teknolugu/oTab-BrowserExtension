@@ -1,0 +1,19 @@
+.card-ui {
+  @apply rounded-lg p-4 bg-card text-default;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+  transition-property: background-color, color, box-shadow, transform;
+  min-width: 200px;
+  &.is-hover:hover {
+    @apply shadow-xl;
+    transform: translateY(-2px);
+  }
+  &.disabled {
+    pointer-events: none;
+    @apply text-default-soft;
+    box-shadow: none !important;
+  }
+  &.small {
+    @apply p-2;
+  }
+}

@@ -13,7 +13,7 @@
   </textarea>
 </template>
 <script>
-import '@/assets/scss/components/_input.scss';
+import '~/assets/scss/components/_input.scss';
 
 export default {
   props: {

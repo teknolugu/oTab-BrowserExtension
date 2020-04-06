@@ -21,12 +21,7 @@
   </v-popover>
 </template>
 <script>
-import '@/assets/scss/components/_select.scss';
-
-const booleanProp = {
-  type: Boolean,
-  default: false,
-};
+import '~/assets/scss/components/_select.scss';
 
 export default {
   props: {
@@ -41,9 +36,9 @@ export default {
         return ['default', 'background'].indexOf(value) !== -1;
       },
     },
-    small: booleanProp,
-    returnObject: booleanProp,
-    block: booleanProp,
+    small: Boolean,
+    returnObject: Boolean,
+    block: Boolean,
     placement: {
       type: String,
       default: 'bottom',

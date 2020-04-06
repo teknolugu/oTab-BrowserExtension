@@ -1,5 +1,5 @@
 <template>
-  <v-popover placement="left" offset="5">
+  <v-popover placement="right-start" offset="10">
     <button-icon icon="user" class="bg-gray-200 cursor-pointer"></button-icon>
     <template slot="popover">
       <card-ui class="shadow-xl" width="240px">

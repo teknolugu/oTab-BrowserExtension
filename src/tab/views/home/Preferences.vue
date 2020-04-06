@@ -2,8 +2,7 @@
   <div class="bg-card rounded-lg preferences px-5 py-4 w-full">
     <p class="text-xl mb-5 font-medium">Preferences</p>
     <list-ui v-for="setting in settingList" :key="setting.key">
-      <unicon :name="setting.icon" :height="setting.size" :width="setting.size" slot="prefix"></unicon>
-      <template slot="suffix">
+      <template slot="prefix">
         <switch-ui :value="settings[setting.key]" @change="updateSetting(setting.key, $event)"></switch-ui>
       </template>
       <p class="ml-6">{{ setting.name }}</p>
@@ -16,9 +15,10 @@ import { mapState } from 'vuex';
 export default {
   data: () => ({
     settingList: [
-      { name: 'Dark theme', key: 'dark', icon: 'brightness-low', size: '27' },
-      { name: 'Open tab URL in new tab', key: 'openURLInNewTab', icon: 'external-link-alt', size: '24' },
-      { name: 'Close open tab on save', key: 'closeTabOnSave', icon: 'window', size: '22' },
+      { name: 'Dark theme', key: 'dark' },
+      { name: 'Use oTab as default new tab', key: 'defaultNewTab' },
+      { name: 'Open tab URL in new tab', key: 'openURLInNewTab' },
+      { name: 'Close open tab on save', key: 'closeTabOnSave' },
     ],
   }),
   methods: {

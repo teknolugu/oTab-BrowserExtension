@@ -13,6 +13,8 @@
   </div>
 </template>
 <script>
+import '~/assets/scss/components/_card.scss';
+
 export default {
   props: {
     height: String,
@@ -37,14 +39,3 @@ export default {
   },
 };
 </script>
-<style>
-.card-ui {
-  transition-timing-function: ease;
-  @apply transition duration-200 rounded-lg text-default text-sm bg-card px-4 py-3;
-}
-.card-ui.disabled {
-  pointer-events: none;
-  @apply text-default-soft;
-  box-shadow: none !important;
-}
-</style>

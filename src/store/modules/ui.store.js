@@ -1,10 +1,9 @@
 import Vue from 'vue';
-import { setStorage } from '@/utils/storage';
+import { setStorage } from '~/utils/storage';
 
 export default {
   state: () => ({
     activeBoard: '',
-    hideSideMenu: false,
     searchType: 'column',
     searchQuery: '',
     defaultBoard: '',

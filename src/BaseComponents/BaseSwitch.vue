@@ -5,7 +5,7 @@
   </label>
 </template>
 <script>
-import '@/assets/scss/components/_switch.scss';
+import '~/assets/scss/components/_switch.scss';
 
 export default {
   props: {

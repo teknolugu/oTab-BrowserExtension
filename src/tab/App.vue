@@ -1,30 +1,33 @@
 <template>
-  <div class="app">
+  <div class="app h-screen">
     <template v-if="retrieved">
       <empty-board v-if="boards.length === 0"></empty-board>
       <template v-else>
-        <the-menu></the-menu>
-        <div class="height-with-menu main-content relative h-full duration-700" :class="{ 'hide-side-menu': !$store.state.ui.hideSideMenu }">
-          <the-side-menu></the-side-menu>
-          <router-view></router-view>
+        <div class="flex h-full relative duration-700">
+          <side-menu></side-menu>
+          <side-content v-model="hideSideMenu"></side-content>
+          <main class="overflow-auto pl-12 pr-8 pt-8 main-content flex-grow" :class="{ 'hide-side-menu': hideSideMenu }">
+            <router-view></router-view>
+          </main>
         </div>
       </template>
       <base-dialog></base-dialog>
     </template>
-    <p class="text-xl text-center text-default-soft mt-4" v-else>Loading...</p>
+    <p class="text-xl text-center text-default-soft pt-4" v-else>Loading...</p>
   </div>
 </template>
 
 <script>
-import TheMenu from './components/layout/TheMenu/index.vue';
-import TheSideMenu from './components/layout/TheSideMenu.vue';
+import SideMenu from './components/layout/SideMenu/index.vue';
+import SideContent from './components/layout/SideContent.vue';
 import EmptyBoard from './components/layout/TheEmptyBoard.vue';
-import BaseDialog from '@/BaseComponents/BaseDialog.vue';
+import BaseDialog from '~/BaseComponents/BaseDialog.vue';
 
 export default {
-  components: { TheMenu, TheSideMenu, BaseDialog, EmptyBoard },
+  components: { SideMenu, SideContent, BaseDialog, EmptyBoard },
   data() {
     return {
+      hideSideMenu: false,
       retrieved: false,
     };
   },
@@ -60,7 +63,6 @@ export default {
         });
       });
     });
-    console.log(this.$store.state);
   },
   metaInfo() {
     return {
@@ -70,20 +72,20 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="scss">
 .app {
-  @apply bg-gray-100 h-screen relative text-default overflow-hidden;
+  @apply bg-gray-100 relative text-default;
 }
 .input-first-board {
-  @apply text-3xl !important;
+  @apply text-3xl #{!important};
 }
-.main-content.hide-side-menu {
-  padding-left: 335px;
-}
-.content-wrapper {
-  @apply pl-16 pr-6 pt-6 pb-4;
+.main-content {
+  width: calc(100vw - 22.75rem);
+  &.hide-side-menu {
+    width: calc(100vw - 5rem);
+  }
 }
 .hide-side-menu .content-wrapper {
-  @apply pl-0 !important;
+  @apply pl-0 #{!important};
 }
 </style>

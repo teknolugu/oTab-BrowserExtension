@@ -27,9 +27,9 @@
 <script>
 import draggable from 'vuedraggable';
 
-import OpenTabs from '../components/board/TheOpenTabs.vue';
-import ColumnCard from '../components/board/ColumnCard/index.vue';
-import TheHeader from '../components/board/TheHeader.vue';
+import OpenTabs from '../components/pages/board/TheOpenTabs.vue';
+import ColumnCard from '../components/pages/board/ColumnCard/index.vue';
+import TheHeader from '../components/pages/board/TheHeader.vue';
 
 export default {
   components: { OpenTabs, ColumnCard, TheHeader, draggable },

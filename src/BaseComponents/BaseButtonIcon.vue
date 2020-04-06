@@ -10,7 +10,7 @@
   ></unicon>
 </template>
 <script>
-import '@/assets/scss/components/_button-icon.scss';
+import '~/assets/scss/components/_button-icon.scss';
 
 export default {
   props: {

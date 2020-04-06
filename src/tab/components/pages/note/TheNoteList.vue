@@ -9,7 +9,7 @@
         hover
         v-for="note in notes"
         :key="note.id"
-        class="mt-2 first:mt-0 relative"
+        class="mb-4 first:mt-0 relative"
         @click="changeActiveNote(note.id)"
         :class="{ 'border border-blue-500 shadow-xl': isActiveNote(note.id) }"
       >

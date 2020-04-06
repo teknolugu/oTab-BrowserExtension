@@ -23,7 +23,7 @@ const config = {
   resolve: {
     extensions: ['.js', '.vue'],
     alias: {
-      '@': path.resolve(__dirname, 'src/'),
+      '~': path.resolve(__dirname, 'src/'),
       Utils: path.resolve(__dirname, 'src/utils/'),
     },
   },

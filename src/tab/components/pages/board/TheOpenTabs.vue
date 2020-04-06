@@ -7,7 +7,7 @@
         <p class="text-base mt-2">No Data</p>
       </div>
       <Draggable v-else ghost-class="hidden-child" v-model="tabs" :group="groupOptions" @change="closeTab" :clone="generateTabData">
-        <card-tab v-for="tab in tabs" :key="tab.id" :data="tab"></card-tab>
+        <card-tab v-for="tab in tabs" :key="tab.id" :data-id="tab.id" :data="tab"></card-tab>
       </Draggable>
     </scrollbar>
     <button-ui :disabled="tabs.length === 0" type="outline" @click="saveSession" class="mx-5 mt-3">Save session</button-ui>
@@ -18,8 +18,8 @@ import Draggable from 'vuedraggable';
 import dayjs from 'dayjs';
 import scrollbar from 'vue-perfect-scrollbar';
 
-import generateId from '@/utils/generateId';
-import isURL from '@/utils/isURL';
+import generateId from '~/utils/generateId';
+import isURL from '~/utils/isURL';
 
 import CardTab from './ColumnCard/cards/CardTab';
 

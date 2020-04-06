@@ -1,6 +1,9 @@
 .list-ui {
   @apply flex items-center text-base p-3 rounded-lg cursor-pointer text-base;
   @applt transition-colors duration-200 ease-in-out;
+  &.block {
+    width: 100%;
+  }
   &.active {
     @apply text-primary;
   }

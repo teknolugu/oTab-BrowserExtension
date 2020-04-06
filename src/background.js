@@ -7,6 +7,7 @@ const browser = require('webextension-polyfill');
 browser.runtime.onMessage.addListener(request => {
   if (request.to === 'background') return firebaseUtils[request.type](request.data);
 });
+
 browser.runtime.onInstalled.addListener(async () => {
   const items = ['boards', 'columns', 'items', 'labels', 'defaultBoard', 'settings', 'backup', 'user'];
   const getItems = await getStorage(items);
@@ -32,9 +33,14 @@ browser.runtime.onInstalled.addListener(async () => {
       labels: {
         anu: [{ color: '#4299e1', id: 'label1', name: 'work' }],
       },
-      settings: {},
+      settings: {
+        defaultNewTab: true,
+      },
       backup: {},
-      user: {},
+      user: {
+        isLogin: false,
+        emailVerified: false,
+      },
       defaultBoard: '',
     });
   }
@@ -43,4 +49,17 @@ browser.runtime.onInstalled.addListener(async () => {
     active: true,
     url: browser.runtime.getURL('/tab/tab.html'),
   });
+});
+
+const regex = /chrome:\/\/newtab\/|about:newtab|about:home/g;
+browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  if (regex.test(tab.url)) {
+    const { settings } = await getStorage('settings');
+
+    if (settings.defaultNewTab) {
+      browser.tabs.update(tabId, {
+        url: '/tab/tab.html#/home',
+      });
+    }
+  }
 });

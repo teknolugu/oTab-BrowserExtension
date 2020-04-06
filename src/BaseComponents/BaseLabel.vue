@@ -3,7 +3,7 @@
     <slot></slot>
     <template slot="popover">
       <card-ui class="shadow-xl" width="250px">
-        <div class="flex items-center mb-4 pb-2 border-b text-default text-base">
+        <div class="flex items-center mb-6 text-default text-base">
           <template v-if="addLabelSection">
             <button-icon icon="angle-left" small size="24" @click="(search = ''), (addLabelSection = false)"></button-icon>
             <p class="font-medium ml-2">{{ editLabel ? 'Update label' : 'Create label' }}</p>

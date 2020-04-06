@@ -1,12 +1,12 @@
 <template>
   <div class="bottom-menu mt-3">
-    <button-ui class="mr-2 w-6/12" :disabled="columnId === ''" @click="saveCurrentTab">Save current</button-ui>
+    <button-ui class="mr-2 w-6/12" :disabled="columnId === '' || !isValidURL" @click="saveCurrentTab">Save current</button-ui>
     <button-ui class="w-6/12" @click="saveSession">Save session</button-ui>
   </div>
 </template>
 <script>
 import dayjs from 'dayjs';
-import isURL from '@/utils/isURL';
+import isURL from '~/utils/isURL';
 
 export default {
   props: {
@@ -55,6 +55,11 @@ export default {
           type: 'tab',
         },
       });
+    },
+  },
+  computed: {
+    isValidURL() {
+      return isURL(this.activeTab.url);
     },
   },
 };

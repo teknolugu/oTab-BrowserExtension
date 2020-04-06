@@ -1,0 +1,6 @@
+.tooltip-ui {
+  @apply bg-card shadow-xl text-base px-4 py-2 rounded-lg text-default;
+}
+.popover-ui {
+  z-index: 88;
+}

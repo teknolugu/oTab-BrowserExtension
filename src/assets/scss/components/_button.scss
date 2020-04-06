@@ -2,7 +2,9 @@
   vertical-align: middle;
   display: inline-block;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+  transition-property: color background-color fill box-shadow;
   @apply font-medium text-base text-inverse rounded-md;
   .unicon,
   p,

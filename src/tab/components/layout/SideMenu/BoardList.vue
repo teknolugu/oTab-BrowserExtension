@@ -1,14 +1,11 @@
 <template>
   <div class="board-list">
-    <v-popover placement="bottom-start" offset="5">
-      <div class="hover:bg-secondary cursor-pointer transition-colors rounded-lg px-2 border border-blue-600 flex items-center" style="height: 38px">
-        <unicon name="apps" height="20" width="20" class="text-inverse-soft"></unicon>
-        <p class="text-sm text-inverse ml-2">Boards</p>
-      </div>
+    <v-popover placement="right-start" offset="10">
+      <unicon name="apps" v-tooltip.right="'Boards'" class="hover:bg-secondary cursor-pointer transition-colors rounded-lg p-2 text-inverse-soft"></unicon>
       <template slot="popover">
         <card-ui class="absolute shadow-xl" width="250px" style="padding: 17px 14px">
           <input-ui v-model="search" icon="search" input-style="background" class="text-default-soft text-sm w-full" placeholder="Search board"></input-ui>
-          <scrollbar class="mt-3" style="max-height: 300px">
+          <scrollbar class="mt-3" style="max-height: 250px">
             <list-ui v-for="board in boards" :key="board.id" :active="board.id === $store.state.ui.activeBoard" small @click="updateUIState('activeBoard', board.id)">
               <p class="capitalize text-overflow" style="max-width: 160px">{{ board.title }}</p>
               <button-icon
@@ -59,7 +56,12 @@ export default {
       } else {
         this.$modal.show('prompt', {
           title: 'Add board',
-          text: 'You are too awesome',
+          type: 'text',
+          placeholder: 'Board name',
+          button: {
+            color: 'primary',
+            text: 'Create board',
+          },
           handler: title => {
             if (!title) return;
             this.$store.dispatch('boards/add', title);

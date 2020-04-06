@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import modules from './modules';
-import { getStorage, setStorage } from '@/utils/storage';
+import { getStorage, setStorage } from '~/utils/storage';
 
 Vue.use(Vuex);
 

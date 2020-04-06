@@ -3,11 +3,11 @@
     <modal name="delete" width="500px" @before-open="beforeOpenDialog">
       <div class="flex px-5 items-center border-b text-red bg-card" style="height: 80px;">
         <unicon name="trash" class="p-3 rounded-full bg-red-200" height="24" width="24"></unicon>
-        <p class="text-lg ml-3 font-medium">{{ dialogParams.title }}</p>
+        <p class="text-lg ml-3 font-medium">{{ params.title }}</p>
       </div>
-      <div class="bg-gray-200 py-8 px-6" style="height: 220px">
+      <div class="bg-gray-200 py-8 px-6 flex justify-center flex-col" style="height: 220px">
         <p class="text-lg text-center">
-          Are you sure want to delete <b> {{ dialogParams.text }}</b
+          Are you sure want to delete <b> {{ params.text }}</b
           >?
         </p>
         <div class="mt-8 text-sm px-12 flex">
@@ -22,58 +22,63 @@
     </modal>
     <modal name="prompt" width="400px" height="200px" @before-open="beforeOpenDialog">
       <div class="p-5">
-        <p class="text-lg font-medium mb-5">{{ dialogParams.title }}</p>
+        <p class="text-lg font-medium mb-5">{{ params.title }}</p>
         <input-ui
           autofocus
           class="w-full text-base"
           v-model="promptText"
           @keyup.enter.native="dialogHandler"
-          :max="dialogParams.max"
-          :type="dialogParams.type === 'password' ? 'password' : 'text'"
+          :max="params.max"
+          :type="params.type"
           input-style="background"
-          :placeholder="dialogParams.type === 'password' ? 'Password' : 'Board name'"
+          :placeholder="params.placeholder"
         ></input-ui>
         <div class="mt-8 flex justify-end">
-          <button-ui style="width: 100px;" class="mr-3" type="text" @click="hideDialog">Cancel</button-ui>
-          <button-ui color="danger" v-if="dialogParams.type === 'password'" @click="dialogHandler">Delete</button-ui>
-          <button-ui v-else style="width: 100px;" @click="dialogHandler" :disabled="!promptText">Create</button-ui>
+          <button-ui style="width: 100px;" type="text" class="mr-3" @click="hideDialog">Cancel</button-ui>
+          <button-ui style="min-width: 100px;" :color="params.button.color" @click="dialogHandler" :disabled="!promptText">{{ params.button.text }}</button-ui>
         </div>
       </div>
     </modal>
-    <base-auth-modal></base-auth-modal>
+    <auth-modal></auth-modal>
     <v-dialog />
   </div>
 </template>
 <script>
-import BaseAuthModal from './BaseAuthModal.vue';
+import AuthModal from './BaseAuthModal.vue';
 
 export default {
-  components: { BaseAuthModal },
+  components: { AuthModal },
   data: () => ({
     activeDialog: '',
-    dialogParams: {
+    params: {
       title: 'Dialog',
       text: 'some text',
+      type: 'text',
+      button: {
+        color: 'primary',
+        text: 'Create board',
+      },
     },
     promptText: '',
   }),
   methods: {
     beforeOpenDialog({ params, name }) {
       this.activeDialog = name;
-      this.dialogParams = params;
+      this.params = params;
     },
     dialogHandler() {
-      if (typeof this.dialogParams.handler === 'function') {
-        this.dialogParams.handler(this.activeDialog === 'prompt' ? this.promptText : true);
+      if (typeof this.params.handler === 'function') {
+        this.params.handler(this.activeDialog === 'prompt' ? this.promptText : true);
       }
       this.promptText = '';
-      this.dialogParams = {
+      this.params = {
         title: 'Dialog',
         text: 'some text',
       };
       this.hideDialog();
     },
     hideDialog() {
+      this.promptText = '';
       this.$modal.hide(this.activeDialog);
     },
   },

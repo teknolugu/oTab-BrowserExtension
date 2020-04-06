@@ -17,8 +17,8 @@
   </button>
 </template>
 <script>
-import '@/assets/scss/components/_button.scss';
-import '@/assets/css/spinner.css';
+import '~/assets/scss/components/_button.scss';
+import '~/assets/css/spinner.css';
 
 export default {
   props: {

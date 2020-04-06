@@ -34,7 +34,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-import { setStorage } from '@/utils/storage';
+import { setStorage } from '~/utils/storage';
 
 dayjs.extend(relativeTime);
 

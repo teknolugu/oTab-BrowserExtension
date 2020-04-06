@@ -19,7 +19,7 @@ import '../assets/css/theme.css';
 import 'vue2-animate/dist/vue2-animate.min.css';
 
 // UI Components
-import '@/BaseComponents';
+import '~/BaseComponents';
 
 // Directives
 import '../directives/VAutofocus';

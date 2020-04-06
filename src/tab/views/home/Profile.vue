@@ -91,6 +91,11 @@ export default {
               this.$modal.show('prompt', {
                 title: 'Enter password',
                 type: 'password',
+                placeholder: 'Password',
+                button: {
+                  color: 'danger',
+                  text: 'Delete',
+                },
                 handler: password => {
                   this.$sendMessage('deleteAccount', { password })
                     .then(() => {

@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import generateId from '@/utils/generateId';
-import { setStorage, getStorage } from '@/utils/storage';
+import generateId from '~/utils/generateId';
+import { setStorage, getStorage } from '~/utils/storage';
 
 const browser = require('webextension-polyfill');
 

@@ -5,6 +5,7 @@
       <input
         v-autofocus="autofocus"
         @input="$emit('input', $event.target.value)"
+        @change="$emit('change', $event.target.value)"
         @focus="$emit('focus')"
         @blur="$emit('blur')"
         :type="type"
@@ -19,7 +20,7 @@
   </div>
 </template>
 <script>
-import '@/assets/scss/components/_input.scss';
+import '~/assets/scss/components/_input.scss';
 
 const booleanProps = {
   type: Boolean,

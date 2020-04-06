@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import indexFinder from '@/utils/indexFinder';
-import generateId from '@/utils/generateId';
-import { setStorage } from '@/utils/storage';
+import indexFinder from '~/utils/indexFinder';
+import generateId from '~/utils/generateId';
+import { setStorage } from '~/utils/storage';
 
 export default {
   state: () => ({}),
@@ -68,14 +68,22 @@ export default {
     },
     delete({ state, commit }, { columnId, id }) {
       return new Promise((resolve, reject) => {
-        const index = indexFinder(state[columnId], id);
+        const commitDelete = idParam => {
+          const index = indexFinder(state[columnId], idParam);
 
-        if (index !== -1) {
-          commit('deleteItem', { columnId, index });
+          if (index !== -1) commit('deleteItem', { columnId, index });
+        };
+
+        if (Array.isArray(id)) {
+          id.forEach(item => {
+            commitDelete(item);
+          });
           setStorage('items', state);
           resolve();
-        } else {
-          reject("Can't find item");
+        } else if (typeof id === 'string') {
+          commitDelete(id);
+          setStorage('items', state);
+          resolve();
         }
       });
     },

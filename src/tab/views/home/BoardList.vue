@@ -4,9 +4,9 @@
       <input-ui v-model="search" icon="search" class="text-sm" placeholder="Search board" input-style="background"></input-ui>
       <button-ui class="float-right text-inverse " @click="createBoard">Create board</button-ui>
     </div>
-    <div class="boards-list">
-      <div class="board-wrapper pt-3 pl-3 inline-block" v-for="board in boards">
-        <card-ui hover class="border" width="230px">
+    <div class="boards-list mt-8">
+      <div class="board-wrapper pt-4 pr-5 inline-block" v-for="board in boards">
+        <card-ui class="border" hover width="230px">
           <template slot="header">
             <p class="text-xs text-default-soft">{{ getColumnsLength(board.id) }} COLUMN(s)</p>
             <div class="flex-grow"></div>
@@ -72,6 +72,12 @@ export default {
     createBoard() {
       this.$modal.show('prompt', {
         title: 'Add board',
+        type: 'text',
+        placeholder: 'Board name',
+        button: {
+          color: 'primary',
+          text: 'Create board',
+        },
         handler: title => {
           if (!title) return;
           this.$store.dispatch('boards/add', title);

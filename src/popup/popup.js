@@ -13,7 +13,7 @@ import '../assets/css/fonts.css';
 import '../assets/css/theme.css';
 
 // UI Components
-import '@/BaseComponents';
+import '~/BaseComponents';
 
 // Directives
 import '../directives/VAutofocus';
