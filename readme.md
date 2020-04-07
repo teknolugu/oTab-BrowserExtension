@@ -1,6 +1,6 @@
-<div align="center">
 !['screenshoot'](https://res.cloudinary.com/kholid060/image/upload/v1586230021/Primary_okaqvp.png)
 
+<div align="center">
 !['mozilla firefox'](https://img.shields.io/amo/v/otab) !['issue'](https://img.shields.io/github/issues/WinTenDev/oTab-BrowserExtension) !['license'](https://img.shields.io/github/license/WinTenDev/oTab-BrowserExtension)
 
 </div>
