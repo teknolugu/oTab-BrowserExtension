@@ -5,7 +5,7 @@ export default {
   state: () => ({
     dark: false,
     defaultNewTab: true,
-    openURLInNewTab: true,
+    openURLInNewTab: false,
     closeTabOnSave: true,
   }),
   mutations: {
