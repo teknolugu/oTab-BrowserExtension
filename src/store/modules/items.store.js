@@ -80,7 +80,7 @@ export default {
           });
           setStorage('items', state);
           resolve();
-        } else if (typeof id === 'string' || !isNaN(id)) {
+        } else if (typeof id === 'string' || (typeof id === 'number' && !isNaN(id))) {
           commitDelete(id);
           setStorage('items', state);
           resolve();
