@@ -6,7 +6,7 @@ export default {
     dark: false,
     defaultNewTab: true,
     openURLInNewTab: true,
-    closeTabOnSave: false,
+    closeTabOnSave: true,
   }),
   mutations: {
     updateSetting(state, { key, value }) {

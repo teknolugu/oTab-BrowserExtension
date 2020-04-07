@@ -19,7 +19,14 @@ export default new Vuex.Store({
       setStorage('columns', state.columns);
     },
     changeModules(state, { key, value }) {
-      Vue.set(state, key, value);
+      const mainData = ['boards', 'columns', 'items', 'labels'];
+
+      if (mainData.includes(key)) {
+        Vue.set(state, key, value);
+      } else {
+        const assignData = Object.assign({}, state[key], value);
+        Vue.set(state, key, assignData);
+      }
     },
     overrideModule(state, { key, value }) {
       state[key] = value;

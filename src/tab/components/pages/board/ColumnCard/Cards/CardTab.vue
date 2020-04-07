@@ -42,6 +42,7 @@ export default {
     data: {
       type: Object,
       default: () => ({
+        index: 0,
         favIconUrl: '',
         title: '',
         url: '',
