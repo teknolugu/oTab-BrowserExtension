@@ -30,10 +30,10 @@
 import draggable from 'vuedraggable';
 import scrollbar from 'vue-perfect-scrollbar';
 
-import task from './cards/CardTask.vue';
-import note from './cards/CardNote.vue';
-import tab from './cards/CardTab.vue';
-import CardEditTask from './cards/CardEditTask.vue';
+import task from './Cards/CardTask.vue';
+import note from './Cards/CardNote.vue';
+import tab from './Cards/CardTab.vue';
+import CardEditTask from './Cards/CardEditTask.vue';
 import ColumnHeader from './ColumnHeader.vue';
 import ColumnTag from './ColumnTag.vue';
 

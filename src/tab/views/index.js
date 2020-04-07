@@ -1,4 +1,4 @@
-import Home from './home.vue';
+import Home from './Home.vue';
 import Board from './Board.vue';
 import Note from './Note.vue';
 

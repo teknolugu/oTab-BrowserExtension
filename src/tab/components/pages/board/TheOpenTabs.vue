@@ -21,7 +21,7 @@ import scrollbar from 'vue-perfect-scrollbar';
 import generateId from '~/utils/generateId';
 import isURL from '~/utils/isURL';
 
-import CardTab from './ColumnCard/cards/CardTab';
+import CardTab from './ColumnCard/Cards/CardTab';
 
 export default {
   components: { Draggable, CardTab, scrollbar },
