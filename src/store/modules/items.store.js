@@ -21,7 +21,7 @@ export default {
       Vue.set(state[columnId], index, dataSet);
     },
     deleteItem(state, { columnId, index }) {
-      state[columnId].splice(index, 1);
+      Vue.delete(state[columnId], index);
     },
     changeItems(state, { columnId, data }) {
       state[columnId] = [...data];
