@@ -10,7 +10,10 @@
 
 A browser extension that gonna help you to organize your rowser tabs
 
-[!['as'](https://extensionworkshop.com/assets/77ca79-91ea38a24305d30ee5f9b27e889b798dbaa23dcb08b55b5670d192a7171a001b.png)](https://addons.mozilla.org/en-US/firefox/addon/otab/)
+# Download
+
+- Google Chrome: [Download](https://chrome.google.com/webstore/detail/otab-tab-organizer/hpdfakengmhknkiajloheeklpjndnhbe)
+- Mozilla Firefox: [Download](https://addons.mozilla.org/en-US/firefox/addon/otab/)
 
 # Contribute
 
